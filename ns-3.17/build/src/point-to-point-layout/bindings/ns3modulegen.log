@@ -1,0 +1,224 @@
+>>>>>>>>>>>>>>>> [['void', 'ns3::Ptr<ns3::Socket>', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty'], ['void', 'ns3::Ptr<ns3::Socket>', 'unsigned int', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty'], ['void', 'ns3::Ptr<ns3::Socket>', 'ns3::Address const&', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty'], ['bool', 'ns3::Ptr<ns3::Socket>', 'ns3::Address const&', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty', 'ns3::empty'], ['void', 'ns3::Ptr<ns3::NetDevice>', 'ns3::Ptr<ns3::Packet const>', 'unsigned short', 'ns3::Address const&', 'ns3::Address const&', 'ns3::NetDevice::PacketType', 'ns3::empty', 'ns3::empty', 'ns3::empty']]
+***** registering callback handler: 'ns3::Callback< void, ns3::Ptr< ns3::Socket >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'
+***** registering callback handler: 'ns3::Callback< void, ns3::Ptr< ns3::Socket >, unsigned int, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'
+***** registering callback handler: 'ns3::Callback< void, ns3::Ptr< ns3::Socket >, ns3::Address const &, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'
+***** registering callback handler: 'ns3::Callback< bool, ns3::Ptr< ns3::Socket >, ns3::Address const &, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'
+***** registering callback handler: 'ns3::Callback< void, ns3::Ptr< ns3::NetDevice >, ns3::Ptr< ns3::Packet const >, unsigned short, ns3::Address const &, ns3::Address const &, ns3::NetDevice::PacketType, ns3::empty, ns3::empty, ns3::empty >'
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:511: Warning: exception TypeConfigurationError('direction not given',) in wrapper <pybindgen.cppmethod.CppConstructor object at 0x7f4270949f50>
+  cls.add_constructor([param('uint8_t', 'type'), param('uint8_t const *', 'buffer'), param('uint8_t', 'len')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:522: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::CopyAllFrom (params?);
+  [param('uint8_t const *', 'buffer'), param('uint8_t', 'len')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:527: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::CopyAllTo (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:531: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::CopyFrom (params?);
+  [param('uint8_t const *', 'buffer'), param('uint8_t', 'len')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:536: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::CopyTo (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:825: Warning: exception TypeLookupError(['std::_List_const_iterator< ns3::AttributeConstructionList::Item >'],) in wrapper public: retval? ???::Begin (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:830: Warning: exception TypeLookupError(['std::_List_const_iterator< ns3::AttributeConstructionList::Item >'],) in wrapper public: retval? ???::End (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:881: Warning: exception TypeLookupError(['std::ostream *'],) in wrapper public: retval? ???::CopyData (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:886: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::CopyData (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:900: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Deserialize (params?);
+  [param('uint8_t const *', 'buffer'), param('uint32_t', 'size')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:930: Warning: exception TypeLookupError(['uint8_t *'],) in wrapper public: retval? ???::PeekData (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:943: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Serialize (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:998: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Read (params?);
+  [param('uint8_t *', 'buffer'), param('uint32_t', 'size')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1042: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Write (params?);
+  [param('uint8_t const *', 'buffer'), param('uint32_t', 'size')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1228: Warning: exception TypeLookupError(['ns3::Ptr< ns3::EventImpl > &'],) in wrapper <pybindgen.cppmethod.CppConstructor object at 0x7f42707af790>
+  cls.add_constructor([param('ns3::Ptr< ns3::EventImpl > const &', 'impl'), param('uint64_t', 'ts'), param('uint32_t', 'context'), param('uint32_t', 'uid')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1262: Warning: exception TypeConfigurationError('Either caller_owns_return or self.reference_existing_object must be given',) in wrapper public: retval? ???::PeekEventImpl (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1427: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Deserialize (params?);
+  is_static=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1492: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: retval? ???::Print (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1497: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Serialize (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1610: Warning: exception TypeLookupError(['std::pair< ns3::Ptr< ns3::Ipv4 >, unsigned int >'],) in wrapper public: retval? ???::Add (params?);
+  [param('std::pair< ns3::Ptr< ns3::Ipv4 >, unsigned int >', 'ipInterfacePair')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1619: Warning: exception TypeLookupError(['__gnu_cxx::__normal_iterator< std::pair< ns3::Ptr< ns3::Ipv4 >, unsigned int > const, std::vector< std::pair< ns3::Ptr< ns3::Ipv4 >, unsigned int > > >'],) in wrapper public: retval? ???::Begin (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1624: Warning: exception TypeLookupError(['__gnu_cxx::__normal_iterator< std::pair< ns3::Ptr< ns3::Ipv4 >, unsigned int > const, std::vector< std::pair< ns3::Ptr< ns3::Ipv4 >, unsigned int > > >'],) in wrapper public: retval? ???::End (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1629: Warning: exception TypeLookupError(['std::pair< ns3::Ptr< ns3::Ipv4 >, unsigned int >'],) in wrapper public: retval? ???::Get (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1702: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: retval? ???::Print (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1719: Warning: exception TypeConfigurationError('direction not given',) in wrapper <pybindgen.cppmethod.CppConstructor object at 0x7f4270642c90>
+  cls.add_constructor([param('uint8_t *', 'address')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1737: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Deserialize (params?);
+  is_static=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1762: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::GetBytes (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1846: Warning: exception TypeLookupError(['ns3::Mac48Address'],) in wrapper public: retval? ???::MakeAutoconfiguredAddress (params?);
+  is_static=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1851: Warning: exception TypeLookupError(['ns3::Mac48Address'],) in wrapper public: retval? ???::MakeAutoconfiguredLinkLocalAddress (params?);
+  is_static=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1866: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: retval? ???::Print (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1871: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Serialize (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:1879: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Set (params?);
+  [param('uint8_t *', 'address')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2000: Warning: exception TypeLookupError(['__gnu_cxx::__normal_iterator< std::pair< ns3::Ptr< ns3::Ipv6 >, unsigned int > const, std::vector< std::pair< ns3::Ptr< ns3::Ipv6 >, unsigned int > > >'],) in wrapper public: retval? ???::Begin (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2005: Warning: exception TypeLookupError(['__gnu_cxx::__normal_iterator< std::pair< ns3::Ptr< ns3::Ipv6 >, unsigned int > const, std::vector< std::pair< ns3::Ptr< ns3::Ipv6 >, unsigned int > > >'],) in wrapper public: retval? ???::End (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2038: Warning: exception TypeConfigurationError('direction not given',) in wrapper <pybindgen.cppmethod.CppConstructor object at 0x7f42705eb710>
+  cls.add_constructor([param('uint8_t *', 'prefix')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2051: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::GetBytes (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2086: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: retval? ???::Print (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2116: Warning: exception TypeLookupError(['__gnu_cxx::__normal_iterator< ns3::Ptr< ns3::NetDevice > const, std::vector< ns3::Ptr< ns3::NetDevice > > >'],) in wrapper public: retval? ???::Begin (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2121: Warning: exception TypeLookupError(['__gnu_cxx::__normal_iterator< ns3::Ptr< ns3::NetDevice > const, std::vector< ns3::Ptr< ns3::NetDevice > > >'],) in wrapper public: retval? ???::End (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2167: Warning: exception TypeLookupError(['__gnu_cxx::__normal_iterator< ns3::Ptr< ns3::Node > const, std::vector< ns3::Ptr< ns3::Node > > >'],) in wrapper public: retval? ???::Begin (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2180: Warning: exception TypeLookupError(['__gnu_cxx::__normal_iterator< ns3::Ptr< ns3::Node > const, std::vector< ns3::Ptr< ns3::Node > > >'],) in wrapper public: retval? ???::End (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2268: Warning: exception TypeConfigurationError('Missing transfer_ownership option',) in wrapper public: retval? ???::Delete (params?);
+  is_static=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2341: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Deserialize (params?);
+  [param('uint8_t const *', 'buffer'), param('uint32_t', 'size')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2382: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Serialize (params?) const;
+  is_const=True)
+bindings/python/ns3modulegen-modular.py:27: UserWarning: exception TypeLookupError(['uint8_t [ 20 ]'],) in wrapper None
+  warnings.warn("exception %r in wrapper %s" % (exception, wrapper))
+bindings/python/ns3modulegen-modular.py:27: UserWarning: exception TypeConfigurationError('Either caller_owns_return or self.reference_existing_object must be given',) in wrapper None
+  warnings.warn("exception %r in wrapper %s" % (exception, wrapper))
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2509: Warning: exception TypeLookupError(['uint32_t &'],) in wrapper public: retval? ???::Diff (params?);
+  is_static=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2563: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Read (params?);
+  [param('uint8_t * const', 'data'), param('uint32_t', 'maxBytes'), param('uint32_t &', 'tsSec'), param('uint32_t &', 'tsUsec'), param('uint32_t &', 'inclLen'), param('uint32_t &', 'origLen'), param('uint32_t &', 'readLen')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2567: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Write (params?);
+  [param('uint32_t', 'tsSec'), param('uint32_t', 'tsUsec'), param('uint8_t const * const', 'data'), param('uint32_t', 'totalLen')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2963: Warning: exception TypeLookupError(['ns3::Ptr< ns3::SimulatorImpl >', 'ns3::SimulatorImpl *'],) in wrapper public: retval? ???::GetImplementation (params?);
+  is_static=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:2998: Warning: exception TypeLookupError(['ns3::Ptr< ns3::SimulatorImpl >', 'ns3::SimulatorImpl *'],) in wrapper public: retval? ???::SetImplementation (params?);
+  is_static=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:3040: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: virtual retval? ???::Print (params?) const = 0;
+  is_pure_virtual=True, is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:3052: Warning: exception TypeConfigurationError('direction not given',) in wrapper <pybindgen.cppmethod.CppConstructor object at 0x7f4270322f10>
+  cls.add_constructor([param('uint8_t *', 'start'), param('uint8_t *', 'end')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:3060: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Read (params?);
+  [param('uint8_t *', 'buffer'), param('uint32_t', 'size')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:3088: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Write (params?);
+  [param('uint8_t const *', 'buffer'), param('uint32_t', 'size')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:3237: Warning: exception TypeLookupError(['ns3::Callback< ns3::ObjectBase *, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'],) in wrapper public: retval? ???::GetConstructor (params?) const;
+  is_const=True)
+bindings/python/ns3modulegen-modular.py:27: UserWarning: exception TypeLookupError(['short unsigned int'],) in wrapper None
+  warnings.warn("exception %r in wrapper %s" % (exception, wrapper))
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:3502: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: virtual retval? ???::Print (params?) const = 0;
+  is_pure_virtual=True, is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:3530: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: virtual retval? ???::Print (params?) const = 0;
+  is_pure_virtual=True, is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:3582: Warning: exception TypeLookupError(['ns3::Ipv4RoutingHelper &'],) in wrapper public: retval? ???::SetRoutingHelper (params?);
+  [param('ns3::Ipv4RoutingHelper const &', 'routing')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:3586: Warning: exception TypeLookupError(['ns3::Ipv6RoutingHelper &'],) in wrapper public: retval? ???::SetRoutingHelper (params?);
+  [param('ns3::Ipv6RoutingHelper const &', 'routing')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:3725: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: virtual retval? ???::Print (params?) const;
+  is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:3853: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: virtual retval? ???::Print (params?) const;
+  is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:4000: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Write (params?);
+  [param('ns3::Time', 't'), param('uint8_t const *', 'buffer'), param('uint32_t', 'length')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:4309: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Recv (params?);
+  [param('uint8_t *', 'buf'), param('uint32_t', 'size'), param('uint32_t', 'flags')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:4322: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::RecvFrom (params?);
+  [param('uint8_t *', 'buf'), param('uint32_t', 'size'), param('uint32_t', 'flags'), param('ns3::Address &', 'fromAddress')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:4335: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Send (params?);
+  [param('uint8_t const *', 'buf'), param('uint32_t', 'size'), param('uint32_t', 'flags')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:4344: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::SendTo (params?);
+  [param('uint8_t const *', 'buf'), param('uint32_t', 'size'), param('uint32_t', 'flags'), param('ns3::Address const &', 'address')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:4528: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: virtual retval? ???::Print (params?) const;
+  is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:4574: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: virtual retval? ???::Print (params?) const;
+  is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:4620: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: virtual retval? ???::Print (params?) const;
+  is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:4666: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: virtual retval? ???::Print (params?) const;
+  is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:4712: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: virtual retval? ???::Print (params?) const;
+  is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:4766: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: virtual retval? ???::Print (params?) const;
+  is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:4982: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: virtual retval? ???::Print (params?) const = 0;
+  is_pure_virtual=True, is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:5183: Warning: exception TypeLookupError(['ns3::Callback< void, ns3::Ptr< ns3::Packet >, ns3::Ipv4Address, ns3::Ipv4Address, unsigned char, ns3::Ptr< ns3::Ipv4Route >, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'],) in wrapper public: virtual retval? ???::GetDownTarget (params?) const = 0;
+  is_pure_virtual=True, is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:5188: Warning: exception TypeLookupError(['ns3::Callback< void, ns3::Ptr< ns3::Packet >, ns3::Ipv6Address, ns3::Ipv6Address, unsigned char, ns3::Ptr< ns3::Ipv6Route >, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'],) in wrapper public: virtual retval? ???::GetDownTarget6 (params?) const = 0;
+  is_pure_virtual=True, is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:5203: Warning: exception TypeLookupError(['ns3::Ptr< ns3::Ipv4Interface >', 'ns3::Ipv4Interface *'],) in wrapper public: virtual retval? ???::Receive (params?) = 0;
+  is_pure_virtual=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:5213: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: virtual retval? ???::ReceiveIcmp (params?);
+  is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:5218: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: virtual retval? ???::ReceiveIcmp (params?);
+  is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:5223: Warning: exception TypeLookupError(['ns3::Callback< void, ns3::Ptr< ns3::Packet >, ns3::Ipv4Address, ns3::Ipv4Address, unsigned char, ns3::Ptr< ns3::Ipv4Route >, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'],) in wrapper public: virtual retval? ???::SetDownTarget (params?) = 0;
+  is_pure_virtual=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:5228: Warning: exception TypeLookupError(['ns3::Callback< void, ns3::Ptr< ns3::Packet >, ns3::Ipv6Address, ns3::Ipv6Address, unsigned char, ns3::Ptr< ns3::Ipv6Route >, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'],) in wrapper public: virtual retval? ???::SetDownTarget6 (params?) = 0;
+  is_pure_virtual=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:5477: Warning: exception TypeLookupError(['ns3::Ptr< ns3::Ipv4Interface >', 'ns3::Ipv4Interface *'],) in wrapper public: retval? ???::GetInterface (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:5823: Warning: exception TypeLookupError(['ns3::Callback< void, ns3::Ptr< ns3::Ipv4Route >, ns3::Ptr< ns3::Packet const >, ns3::Ipv4Header const &, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'],) in wrapper public: virtual retval? ???::RouteInput (params?) = 0;
+  is_pure_virtual=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:5900: Warning: exception TypeLookupError(['ns3::Ptr< ns3::Ipv6RoutingProtocol >', 'ns3::Ipv6RoutingProtocol *'],) in wrapper public: virtual retval? ???::GetRoutingProtocol (params?) const = 0;
+  is_pure_virtual=True, is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:5950: Warning: exception TypeLookupError(['ns3::Ptr< ns3::Ipv6RoutingProtocol >', 'ns3::Ipv6RoutingProtocol *'],) in wrapper public: virtual retval? ???::SetRoutingProtocol (params?) = 0;
+  is_pure_virtual=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6201: Warning: exception TypeLookupError(['ns3::Ptr< ns3::Ipv6Route >', 'ns3::Ipv6Route *'],) in wrapper public: retval? ???::Send (params?);
+  [param('ns3::Ptr< ns3::Packet >', 'packet'), param('ns3::Ipv6Address', 'source'), param('ns3::Ipv6Address', 'destination'), param('uint8_t', 'protocol'), param('ns3::Ptr< ns3::Ipv6Route >', 'route')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6206: Warning: exception TypeLookupError(['ns3::Ptr< ns3::Ipv6RoutingProtocol >', 'ns3::Ipv6RoutingProtocol *'],) in wrapper public: virtual retval? ???::SetRoutingProtocol (params?);
+  is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6211: Warning: exception TypeLookupError(['ns3::Ptr< ns3::Ipv6RoutingProtocol >', 'ns3::Ipv6RoutingProtocol *'],) in wrapper public: virtual retval? ???::GetRoutingProtocol (params?) const;
+  is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6311: Warning: exception TypeLookupError(['ns3::Ptr< ns3::Icmpv6L4Protocol >', 'ns3::Icmpv6L4Protocol *'],) in wrapper public: retval? ???::GetIcmpv6 (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6411: Warning: exception TypeLookupError(['ns3::Callback< void, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'],) in wrapper public: virtual retval? ???::AddLinkChangeCallback (params?) = 0;
+  is_pure_virtual=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6426: Warning: exception TypeLookupError(['ns3::Ptr< ns3::Channel >', 'ns3::Channel *'],) in wrapper public: virtual retval? ???::GetChannel (params?) const = 0;
+  is_pure_virtual=True, is_const=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6521: Warning: exception TypeLookupError(['ns3::Callback< bool, ns3::Ptr< ns3::NetDevice >, ns3::Ptr< ns3::Packet const >, short unsigned int, ns3::Address const &, ns3::Address const &, ns3::NetDevice::PacketType, ns3::empty, ns3::empty, ns3::empty >'],) in wrapper public: virtual retval? ???::SetPromiscReceiveCallback (params?) = 0;
+  is_pure_virtual=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6526: Warning: exception TypeLookupError(['ns3::Callback< bool, ns3::Ptr< ns3::NetDevice >, ns3::Ptr< ns3::Packet const >, short unsigned int, ns3::Address const &, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'],) in wrapper public: virtual retval? ???::SetReceiveCallback (params?) = 0;
+  is_pure_virtual=True, is_virtual=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6588: Warning: exception TypeLookupError(['ns3::Ptr< ns3::Application >', 'ns3::Application *'],) in wrapper public: retval? ???::AddApplication (params?);
+  [param('ns3::Ptr< ns3::Application >', 'application')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6602: Warning: exception TypeLookupError(['ns3::Ptr< ns3::Application >', 'ns3::Application *'],) in wrapper public: retval? ???::GetApplication (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6636: Warning: exception TypeLookupError(['ns3::Callback< void, ns3::Ptr< ns3::NetDevice >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'],) in wrapper public: retval? ???::RegisterDeviceAdditionListener (params?);
+  [param('ns3::Callback< void, ns3::Ptr< ns3::NetDevice >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >', 'listener')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6644: Warning: exception TypeLookupError(['ns3::Callback< void, ns3::Ptr< ns3::NetDevice >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >'],) in wrapper public: retval? ???::UnregisterDeviceAdditionListener (params?);
+  [param('ns3::Callback< void, ns3::Ptr< ns3::NetDevice >, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty, ns3::empty >', 'listener')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6707: Warning: exception TypeLookupError(['std::ostream *'],) in wrapper <pybindgen.cppmethod.CppConstructor object at 0x7f426f9549d0>
+  cls.add_constructor([param('std::ostream *', 'os')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6711: Warning: exception TypeLookupError(['std::ostream *'],) in wrapper public: retval? ???::GetStream (params?);
+  [])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6723: Warning: exception TypeConfigurationError('direction not given',) in wrapper <pybindgen.cppmethod.CppConstructor object at 0x7f426f95b890>
+  cls.add_constructor([param('uint8_t const *', 'buffer'), param('uint32_t', 'size'), param('bool', 'magic')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6725: Warning: exception TypeConfigurationError('direction not given',) in wrapper <pybindgen.cppmethod.CppConstructor object at 0x7f426f95b910>
+  cls.add_constructor([param('uint8_t const *', 'buffer'), param('uint32_t', 'size')])
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6766: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::CopyData (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6771: Warning: exception TypeLookupError(['std::ostream *'],) in wrapper public: retval? ???::CopyData (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6826: Warning: exception TypeLookupError(['uint8_t *'],) in wrapper public: retval? ???::PeekData (params?) const;
+  deprecated=True, is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6845: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: retval? ???::Print (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6850: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: retval? ???::PrintByteTags (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6855: Warning: exception TypeLookupError(['std::ostream &'],) in wrapper public: retval? ???::PrintPacketTags (params?) const;
+  is_const=True)
+/home/tommaso/OldNS3/ns-allinone-3.17/ns-3.17/src/point-to-point-layout/bindings/modulegen__gcc_LP64.py:6888: Warning: exception TypeConfigurationError('direction not given',) in wrapper public: retval? ???::Serialize (params?) const;
+  is_const=True)

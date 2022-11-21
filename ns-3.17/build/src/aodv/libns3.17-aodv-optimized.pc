@@ -1,0 +1,10 @@
+prefix=/usr/local
+libdir=/usr/local/lib
+includedir=/usr/local/include/ns3.17
+
+Name: libns3-aodv
+Description: ns-3 module ns3-aodv
+Version: 3.17
+Libs: -L${libdir} -Wl,-Bdynamic -lns3.17-aodv-optimized
+Cflags: -I${includedir}
+Requires: libns3.17-internet-optimized libns3.17-wifi-optimized libns3.17-applications-optimized libns3.17-mesh-optimized libns3.17-point-to-point-optimized libns3.17-virtual-net-device-optimized

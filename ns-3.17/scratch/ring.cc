@@ -21,7 +21,7 @@
 #include "ns3/applications-module.h"
 #include "ns3/logsim.h"
 #include "ns3/logsim-helper.h"
-#include "ns3/logsim-module.h"
+#include "ns3/lgs-module.h"
 #include "ns3/error-model.h"
 #include "ns3/node.h"
 #include "ns3/packet-sink.h"

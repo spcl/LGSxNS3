@@ -301,7 +301,7 @@ Ipv4GlobalRouting::LookupGlobal (const Ipv4Header &header, Ptr<const Packet> ipP
       if (m_randomEcmpRouting)
         {
           selectIndex = m_rand->GetInteger (0, allRoutes.size ()-1);
-          printf("Setting per packet ECMP, Num choices %d - Selected Index %d\n", allRoutes.size (),selectIndex );
+          //printf("Setting per packet ECMP, Num choices %d - Selected Index %d\n", allRoutes.size (),selectIndex );
         }
 	  else  if (m_flowEcmpRouting && (allRoutes.size () > 1))
 		{

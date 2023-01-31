@@ -1,0 +1,83 @@
+# -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+# def options(opt):
+#     pass
+
+# def configure(conf):
+#     conf.check_nonfatal(header_name='stdint.h', define_name='HAVE_STDINT_H')
+
+def build(bld):
+    module = bld.create_ns3_module('lgs', ['internet', 'core', 'applications'])
+    module.source = [
+        'model/logsim.cc',
+        'helper/logsim-helper.cc',
+        'model/LogGOPSim.cpp',
+        'model/cmdline.c',
+        ]
+
+    module_test = bld.create_ns3_module_test_library('lgs')
+    module_test.source = [
+        'test/logsim-test-suite.cc',
+        ]
+
+    headers = bld(features='ns3header')
+    headers.module = 'lgs'
+    headers.source = [
+        'model/logsim.h',
+        'helper/logsim-helper.h',
+        'model/LogGOPSim.hpp',
+        ]
+
+    if bld.env.ENABLE_EXAMPLES:
+        bld.recurse('examples')
+
+    # bld.ns3_python_bindings()
+
+
+
+'''
+# -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+# def options(opt):
+#     pass
+
+# def configure(conf):
+#     conf.check_nonfatal(header_name='stdint.h', define_name='HAVE_STDINT_H')
+
+def build(bld):
+    module = bld.create_ns3_module('logsim', ['core'])
+    module.source = [
+        'model/logsim.cc',
+        'helper/logsim-helper.cc',
+        'model/LogGOPSim.cpp',
+        'model/LogGOPSim.hpp',
+        'model/Network.hpp',
+        'model/Noise.hpp',
+        'model/Parser.hpp',
+        'model/Goal.hpp',
+        'model/cmdline_txt2bin.c',
+        'model/cmdline_txt2bin.h',
+        'model/MersenneTwister.h',
+        'model/cmdline.c',
+        'model/cmdline.h',
+        'model/txt2bin.cpp',
+        ]
+
+    module_test = bld.create_ns3_module_test_library('logsim')
+    module_test.source = [
+        'test/logsim-test-suite.cc',
+        ]
+
+    headers = bld(features='ns3header')
+    headers.module = 'logsim'
+    headers.source = [
+        'model/logsim.h',
+        'helper/logsim-helper.h',
+        ]
+
+    if bld.env.ENABLE_EXAMPLES:
+        bld.recurse('examples')
+
+    # bld.ns3_python_bindings()
+
+'''

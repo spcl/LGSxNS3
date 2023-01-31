@@ -12,14 +12,35 @@ Note that this is an early release and there might be some problems or unexplore
 ## Components 
 We have 3 main components in this architecture:
 
-- LogGOPSim (LGS) which is a simulator for parallel applications and algorithms that uses the LogGOPS (or LogP, LogGP, or LogGPS) network model to simulate the execution of parallel algorithms and full applications. 
+- [LogGOPSim (LGS)](https://htor.inf.ethz.ch/research/LogGOPSim/) which is a simulator for parallel applications and algorithms that uses the LogGOPS (or LogP, LogGP, or LogGPS) network model to simulate the execution of parallel algorithms and full applications. 
 
 - Schedgen which is used to generate the GOAL input language that is then parsed by LGS.
 
-- NS-3 which is the network backend but also the entry point of the application as we implement LGS as a module of NS-3.
+- [NS-3](https://www.nsnam.org/) which is the network backend but also the entry point of the application as we implement LGS as a module of NS-3.
 
 ## How to use
 The current code already allows users to run any kind of GOAL workload using some simple topologies and protocols. Running a workload of any kind of complexity requires the user to only change the name of the GOAL input file to use.
+
+### Requirements
+
+Note that for backward compability reasons we currently require to use an older GCC version and Python2. In the long term we will be porting the remaining part of the code to a more modern version of GCC and Python.
+
+In particular to install the tested GCC version run:
+
+```
+sudo apt-get install gcc-4.7
+```
+
+Once that has been completed, choose the relevant gcc and g++ version using:
+
+```
+sudo update-alternatives --config g++
+sudo update-alternatives --config gcc
+```
+
+Using the same commands it is also possible to switch back to the current GCC version.
+
+
 
 ### GOAL input language
 The GOAL language was first proposed here [2] and it is basically a language consisting of 4 primitives representing different network operations: Send, Recv, Depends and Compute.  The following is a very basic example of a GOAL file witth two ranks and some basic operations.
@@ -50,7 +71,22 @@ The GOAL input file can be generated in Schedgen which supports already a number
 
 ### Running a Simulation
 
-Once the repository has been downloaded and installed like a standard NS-3 instance (please check [this official guide for details](https://www.nsnam.org/wiki/Installation)), the repository provides a toy TCP or UDP application that can be run using the default run command of NS-3 such as:
+Move into the ns-3.17 directory.
+```
+cd ns-3.17
+```
+Then configure the build of the simulator with the following command:
+```
+CXXFLAGS="-Wall -std=c++11" ./waf configure --disable-python --disable-tests
+```
+Finally build the code using:
+```
+./waf build
+```
+If everything was succesful NS-3 should be built after several minutes. For more detailed information check out the official [NS-3]() guide.
+
+
+Once the repository has been downloaded and installed the repository provides a toy TCP or UDP application that can be run using the default run command of NS-3 such as:
 ```
 ./waf --run "scratch/ring --goal_filename='pingpong.bin' --protocol='UDP' --packet_size='512'
 ```
@@ -109,3 +145,9 @@ We add to each packet (usually in the application layer) some metadata to it (no
 
 ### Data Collection
 By default, each simulation collects some statistics about the duration of the simulation, the individual running time of NS-3 and LGS in order to calculate its overhead. The thorughput of each message being sent in the network and the running time of each individual rank.
+
+## References
+
+[1] Torsten Hoefler, Timo Schneider and Andrew Lumsdaine; LogGOPSim: simulating large-scale applications in the LogGOPS model
+
+[2] Torsten Hoefler, Christian Siebert and Andrew Lumsdaine; Group Operation Assembly Language - A Flexible Way to Express Collective Communication

@@ -15,6 +15,8 @@ ns3_html_theme/static/ns3_version.js
 *.pcap
 *.bin
 
+*/build/
+
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -27,3 +29,6 @@ ns3_html_theme/static/ns3_version.js
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+
+!/ns-3.17/src/lgs/model/pingpong_example.bin

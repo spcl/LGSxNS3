@@ -27,6 +27,7 @@
 #include "ns3/simulator.h"
 #include "ns3/abort.h"
 #include "ns3/node.h"
+#include <cmath>
 
 NS_LOG_COMPONENT_DEFINE ("TcpTahoe");
 
@@ -51,7 +52,10 @@ TcpTahoe::GetTypeId (void)
   return tid;
 }
 
-TcpTahoe::TcpTahoe (void) : m_initialCWnd (1), m_retxThresh (3)
+TcpTahoe::TcpTahoe (void)
+  : m_initialCWnd (1),
+    m_retxThresh (3),
+    m_ssThreshLastChange (0)
 {
   NS_LOG_FUNCTION (this);
 }
@@ -61,7 +65,8 @@ TcpTahoe::TcpTahoe (const TcpTahoe& sock)
     m_cWnd (sock.m_cWnd),
     m_ssThresh (sock.m_ssThresh),
     m_initialCWnd (sock.m_initialCWnd),
-    m_retxThresh (sock.m_retxThresh)
+    m_retxThresh (sock.m_retxThresh),
+    m_ssThreshLastChange (sock.m_ssThreshLastChange)
 {
   NS_LOG_FUNCTION (this);
   NS_LOG_LOGIC ("Invoked the copy constructor");
@@ -139,6 +144,7 @@ TcpTahoe::DupAck (const TcpHeader& t, uint32_t count)
       // from the highest ack and run slow start again.
       // (Fall & Floyd 1996, sec.1)
       m_ssThresh = std::max (static_cast<unsigned> (m_cWnd / 2), m_segmentSize * 2);  // Half ssthresh
+      m_ssThreshLastChange = Simulator::Now ();
       m_cWnd = m_segmentSize; // Run slow start again
       m_nextTxSequence = m_txBuffer.HeadSequence (); // Restart from highest Ack
       NS_LOG_INFO ("Triple Dup Ack: new ssthresh " << m_ssThresh << " cwnd " << m_cWnd);
@@ -158,6 +164,7 @@ void TcpTahoe::Retransmit (void)
   if (m_state <= ESTABLISHED && m_txBuffer.HeadSequence () >= m_highTxMark) return;
 
   m_ssThresh = std::max (static_cast<unsigned> (m_cWnd / 2), m_segmentSize * 2);  // Half ssthresh
+  m_ssThreshLastChange = Simulator::Now ();
   m_cWnd = m_segmentSize;                   // Set cwnd to 1 segSize (RFC2001, sec.2)
   m_nextTxSequence = m_txBuffer.HeadSequence (); // Restart from highest Ack
   m_rtt->IncreaseMultiplier ();             // Double the next RTO
@@ -175,6 +182,7 @@ void
 TcpTahoe::SetSSThresh (uint32_t threshold)
 {
   m_ssThresh = threshold;
+  m_ssThreshLastChange = Simulator::Now ();
 }
 
 uint32_t
@@ -196,7 +204,7 @@ TcpTahoe::GetInitialCwnd (void) const
   return m_initialCWnd;
 }
 
-void 
+void
 TcpTahoe::InitializeCwnd (void)
 {
   /*
@@ -205,6 +213,44 @@ TcpTahoe::InitializeCwnd (void)
    * m_segmentSize are set by the attribute system in ns3::TcpSocket.
    */
   m_cWnd = m_initialCWnd * m_segmentSize;
+}
+
+void
+TcpTahoe::HalveCwnd(void)
+{
+  if (m_ssThreshLastChange + m_rtt->GetCurrentEstimate () < Simulator::Now())
+    {
+      m_ssThreshLastChange = Simulator::Now ();
+      m_ssThresh = std::max ((uint32_t) (m_cWnd / 2), m_segmentSize * 2);  // Half ssthresh
+    }
+  double d = 1;
+  if (m_deadline != 0)
+    {
+      double B = m_bytesToTx - m_rtt->GetBytesSent ();
+      if (B <= 0)
+        {
+          d = 0.5;
+        }
+      else
+        {
+          double Tc = B * m_rtt->GetCurrentEstimate ().GetSeconds () / (3.0 * m_cWnd.Get() / 4.0);
+          double D = (m_deadlineFinish.GetSeconds ()) - Simulator::Now().GetSeconds ();
+          if (D <= 0)
+            {
+              d = 2.0;
+            }
+          else
+            {
+              d = Tc / D;
+              d = std::min(d, 2.0);
+              d = std::max(d, 0.5);
+            }
+        }
+    }
+  double alpha = m_DCTCP ? m_rtt->GetAlpha () : 1;
+  double p = std::pow(alpha, d);
+  double tmp = m_cWnd.Get() * (1 - p / 2);
+  m_cWnd = std::max((uint32_t)tmp, m_segmentSize);
 }
 
 } // namespace ns3

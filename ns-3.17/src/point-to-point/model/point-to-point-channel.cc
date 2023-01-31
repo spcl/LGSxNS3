@@ -22,6 +22,7 @@
 #include "ns3/packet.h"
 #include "ns3/simulator.h"
 #include "ns3/log.h"
+#include <iostream>
 
 NS_LOG_COMPONENT_DEFINE ("PointToPointChannel");
 
@@ -106,6 +107,10 @@ uint32_t
 PointToPointChannel::GetNDevices (void) const
 {
   NS_LOG_FUNCTION_NOARGS ();
+
+  //std::cout<<m_nDevices<<"\n";
+  //std::cout.flush();
+
   return m_nDevices;
 }
 

@@ -29,6 +29,7 @@
 #include "point-to-point-net-device.h"
 #include "point-to-point-channel.h"
 #include "ppp-header.h"
+#include "ns3/custom_tag.h"
 
 NS_LOG_COMPONENT_DEFINE ("PointToPointNetDevice");
 
@@ -313,6 +314,7 @@ PointToPointNetDevice::Receive (Ptr<Packet> packet)
       // If we have an error model and it indicates that it is time to lose a
       // corrupted packet, don't forward this packet up, let it go.
       //
+	  //exit(-1);
       m_phyRxDropTrace (packet);
     }
   else 
@@ -468,6 +470,16 @@ PointToPointNetDevice::Send (
   NS_LOG_FUNCTION_NOARGS ();
   NS_LOG_LOGIC ("p=" << packet << ", dest=" << &dest);
   NS_LOG_LOGIC ("UID is " << packet->GetUid ());
+
+
+  CustomDataTag tag;
+  if (packet->FindFirstMatchingByteTag(tag))
+  {
+    //printf("I am Node %d (from %d) - Am I am final NIC? %d - Size %d\n", tag.GetNodeId(), m_node->GetId(), m_node->isNic, packet->GetSize());
+  } else {
+
+    //printf("No TAG I am Node %d (from %d) - Am I am final NIC? %d - Size %d\n",tag.GetNodeId(), m_node->GetId(), m_node->isNic, packet->GetSize());
+  }
 
   //
   // If IsLinkUp() is false it means there is no channel to send any packet 

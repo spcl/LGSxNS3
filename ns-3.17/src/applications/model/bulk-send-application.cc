@@ -18,8 +18,6 @@
  * Author: George F. Riley <riley@ece.gatech.edu>
  */
 
-#define __STDC_FORMAT_MACROS 1
-#include <inttypes.h>
 #include "ns3/log.h"
 #include "ns3/address.h"
 #include "ns3/node.h"
@@ -27,20 +25,15 @@
 #include "ns3/socket.h"
 #include "ns3/simulator.h"
 #include "ns3/socket-factory.h"
-#include "ns3/network-module.h"
-#include "ns3/internet-module.h"
-#include "ns3/point-to-point-module.h"
-
 #include "ns3/packet.h"
 #include "ns3/uinteger.h"
-#include "custom_tag.h"
 #include "ns3/trace-source-accessor.h"
 #include "ns3/tcp-socket-factory.h"
 #include "bulk-send-application.h"
 
-namespace ns3 {
-
 NS_LOG_COMPONENT_DEFINE ("BulkSendApplication");
+
+namespace ns3 {
 
 NS_OBJECT_ENSURE_REGISTERED (BulkSendApplication);
 
@@ -49,7 +42,6 @@ BulkSendApplication::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::BulkSendApplication")
     .SetParent<Application> ()
-    .SetGroupName("Applications") 
     .AddConstructor<BulkSendApplication> ()
     .AddAttribute ("SendSize", "The amount of data to send each time.",
                    UintegerValue (512),
@@ -66,11 +58,13 @@ BulkSendApplication::GetTypeId (void)
                    "that there is no limit.",
                    UintegerValue (0),
                    MakeUintegerAccessor (&BulkSendApplication::m_maxBytes),
-                   MakeUintegerChecker<uint64_t> ())
+                   MakeUintegerChecker<uint32_t> ())
     .AddAttribute ("Protocol", "The type of protocol to use.",
                    TypeIdValue (TcpSocketFactory::GetTypeId ()),
                    MakeTypeIdAccessor (&BulkSendApplication::m_tid),
                    MakeTypeIdChecker ())
+    .AddTraceSource ("Tx", "A new packet is created and is sent",
+                     MakeTraceSourceAccessor (&BulkSendApplication::m_txTrace))
   ;
   return tid;
 }
@@ -90,10 +84,14 @@ BulkSendApplication::~BulkSendApplication ()
 }
 
 void
-BulkSendApplication::SetMaxBytes (uint64_t maxBytes)
+BulkSendApplication::SetMaxBytes (uint32_t maxBytes)
 {
   NS_LOG_FUNCTION (this << maxBytes);
   m_maxBytes = maxBytes;
+}
+
+void BulkSendApplication::SetPairs (std::vector <std::pair<Ipv4Address, int>> my) {
+  address_pair = my;
 }
 
 Ptr<Socket>
@@ -111,16 +109,6 @@ BulkSendApplication::DoDispose (void)
   m_socket = 0;
   // chain up
   Application::DoDispose ();
-}
-
-void ReceivePacket (Ptr<Socket> socket)
-{
-  //printf("\n\n -------------- LOL ------------\n");
-  while (socket->Recv ())
-    {
-      NS_LOG_UNCOND ("Received one packet!");
-      //printf("\n\n -------------- LOL ------------\n");
-    }
 }
 
 // Application Methods
@@ -142,21 +130,7 @@ void BulkSendApplication::StartApplication (void) // Called at time specified by
                           "In other words, use TCP instead of UDP.");
         }
 
-      if (Inet6SocketAddress::IsMatchingType (m_peer))
-        {
-          if (m_socket->Bind6 () == -1)
-            {
-              NS_FATAL_ERROR ("Failed to bind socket");
-            }
-        }
-      else if (InetSocketAddress::IsMatchingType (m_peer))
-        {
-          if (m_socket->Bind () == -1)
-            {
-              NS_FATAL_ERROR ("Failed to bind socket");
-            }
-        }
-
+      m_socket->Bind ();
       m_socket->Connect (m_peer);
       m_socket->ShutdownRecv ();
       m_socket->SetConnectCallback (
@@ -164,8 +138,6 @@ void BulkSendApplication::StartApplication (void) // Called at time specified by
         MakeCallback (&BulkSendApplication::ConnectionFailed, this));
       m_socket->SetSendCallback (
         MakeCallback (&BulkSendApplication::DataSend, this));
-
-      m_socket->SetRecvCallback (MakeCallback(&ReceivePacket));
     }
   if (m_connected)
     {
@@ -195,62 +167,21 @@ void BulkSendApplication::SendData (void)
 {
   NS_LOG_FUNCTION (this);
 
-
-  printf(" *************** BulkSend -> %d %d\n", m_maxBytes, m_totBytes);
-
-
   while (m_maxBytes == 0 || m_totBytes < m_maxBytes)
     { // Time to send more
-
-      // uint64_t to allow the comparison later.
-      // the result is in a uint32_t range anyway, because
-      // m_sendSize is uint32_t.
-      uint64_t toSend = m_sendSize;
+      uint32_t toSend = m_sendSize;
       // Make sure we don't send too many
       if (m_maxBytes > 0)
         {
-          toSend = std::min (toSend, m_maxBytes - m_totBytes);
+          toSend = std::min (m_sendSize, m_maxBytes - m_totBytes);
         }
-
       NS_LOG_LOGIC ("sending packet at " << Simulator::Now ());
-      printf("sending packet at  %" PRIu64 "ns or %fs\n", Simulator::Now().GetNanoSeconds(), Simulator::Now().GetSeconds());
       Ptr<Packet> packet = Create<Packet> (toSend);
-      CustomDataTag tag;
-      
-
-      InetSocketAddress iaddr = InetSocketAddress::ConvertFrom (m_peer);
-      tag.SetReceivingNode (iaddr.GetIpv4().Get());
-      tag.SetPersonalTag (0);
-      Address addr;
-
-      m_socket->GetSockName (addr);
-      InetSocketAddress iaddr2 = InetSocketAddress::ConvertFrom (addr);
-      tag.SetNodeId (iaddr2.GetIpv4().Get());
-      //timestamp is set in the default constructor of the CustomDataTag class as Simulator::Now()
-      
-      //attach the tag to the packet
-      packet->AddByteTag (tag);
-
-       CustomDataTag tag2;
-      if (packet->FindFirstMatchingByteTag (tag2))
-      {
-
-         
-          
-          //printf("*******TAG IS %d to %d - %d*******\n", iaddr2.GetIpv4().Get(), tag2.GetReceivingNode(), tag2.GetPersonalTag());
-
-          
-          //InetSocketAddress iaddr = InetSocketAddress::ConvertFrom (m_peer);
-          //printf("COPIUM IS %d %s\n",  iaddr.GetIpv4().Get(), packet->ToString().c_str());
-          
-      }
-      //std::cout << packet->ToString() << std::endl;
-
+      m_txTrace (packet);
       int actual = m_socket->Send (packet);
       if (actual > 0)
         {
           m_totBytes += actual;
-          m_txTrace (packet);
         }
       // We exit this loop when actual < toSend as the send side
       // buffer is full. The "DataSent" callback will pop when
@@ -261,9 +192,8 @@ void BulkSendApplication::SendData (void)
         }
     }
   // Check if time to close (all sent)
-  if (m_totBytes == m_maxBytes && m_connected && end_conn)
+  if (m_totBytes == m_maxBytes && m_connected)
     {
-      printf(" *************** CLosing conn\n");
       m_socket->Close ();
       m_connected = false;
     }
@@ -302,7 +232,7 @@ void BulkSendApplication::DataSend (Ptr<Socket>, uint32_t)
 
   if (m_connected)
     { // Only send new data if the connection has completed
-      SendData ();
+      Simulator::ScheduleNow (&BulkSendApplication::SendData, this);
     }
 }
 

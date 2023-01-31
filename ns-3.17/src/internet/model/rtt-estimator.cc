@@ -40,22 +40,22 @@ namespace ns3 {
 
 NS_OBJECT_ENSURE_REGISTERED (RttEstimator);
 
-TypeId 
+TypeId
 RttEstimator::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::RttEstimator")
     .SetParent<Object> ()
-    .AddAttribute ("MaxMultiplier", 
+    .AddAttribute ("MaxMultiplier",
                    "Maximum RTO Multiplier",
                    UintegerValue (64),
                    MakeUintegerAccessor (&RttEstimator::m_maxMultiplier),
                    MakeUintegerChecker<uint16_t> ())
-    .AddAttribute ("InitialEstimation", 
+    .AddAttribute ("InitialEstimation",
                    "Initial RTT estimation",
                    TimeValue (Seconds (1.0)),
                    MakeTimeAccessor (&RttEstimator::m_initialEstimatedRtt),
                    MakeTimeChecker ())
-    .AddAttribute ("MinRTO", 
+    .AddAttribute ("MinRTO",
                    "Minimum retransmit timeout value",
                    TimeValue (Seconds (0.2)), // RFC2988 says min RTO=1 sec, but Linux uses 200ms. See http://www.postel.org/pipermail/end2end-interest/2004-November/004402.html
                    MakeTimeAccessor (&RttEstimator::SetMinRto,
@@ -65,39 +65,74 @@ RttEstimator::GetTypeId (void)
   return tid;
 }
 
-void 
+void
 RttEstimator::SetMinRto (Time minRto)
 {
   NS_LOG_FUNCTION (this << minRto);
   m_minRto = minRto;
 }
-Time 
+Time
 RttEstimator::GetMinRto (void) const
 {
   return m_minRto;
 }
-void 
+void
 RttEstimator::SetCurrentEstimate (Time estimate)
 {
   NS_LOG_FUNCTION (this << estimate);
   m_currentEstimatedRtt = estimate;
 }
-Time 
+Time
 RttEstimator::GetCurrentEstimate (void) const
 {
   return m_currentEstimatedRtt;
 }
 
+double
+RttEstimator::GetAlpha (void) const
+{
+	std::cout << "Error: deprecated GetAlpha function!\n";
+	exit(1);
+  return m_alpha;
+}
+
+double
+RttEstimator::GetG (void) const
+{
+  return m_g;
+}
+
+void
+RttEstimator::SetG (double g)
+{
+  m_g = g;
+}
+
+uint64_t
+RttEstimator::GetBytesSent (void) const
+{
+  return m_sentBytes;
+}
 
 //RttHistory methods
-RttHistory::RttHistory (SequenceNumber32 s, uint32_t c, Time t)
-  : seq (s), count (c), time (t), retx (false)
+RttHistory::RttHistory (SequenceNumber32 s, uint64_t c, Time t, uint64_t marked, uint64_t unmarked)
+  : seq (s),
+    count (c),
+    time (t),
+    nonMarked (unmarked),
+    marked (marked),
+    retx (false)
 {
   NS_LOG_FUNCTION (this);
 }
 
 RttHistory::RttHistory (const RttHistory& h)
-  : seq (h.seq), count (h.count), time (h.time), retx (h.retx)
+  : seq (h.seq),
+    count (h.count),
+    time (h.time),
+    nonMarked (h.nonMarked),
+    marked (h.marked),
+    retx (h.retx)
 {
   NS_LOG_FUNCTION (this);
 }
@@ -105,14 +140,20 @@ RttHistory::RttHistory (const RttHistory& h)
 // Base class methods
 
 RttEstimator::RttEstimator ()
-  : m_next (1), m_history (),
+  : m_next (1),
+    m_history (),
     m_nSamples (0),
-    m_multiplier (1)
-{ 
+    m_multiplier (1),
+    m_sentBytes (0),
+    m_g(0),
+    m_marked(0),
+    m_nonMarked(0),
+    m_alpha(0)
+{
   NS_LOG_FUNCTION (this);
   //note next=1 everywhere since first segment will have sequence 1
-  
-  // We need attributes initialized here, not later, so use the 
+
+  // We need attributes initialized here, not later, so use the
   // ConstructSelf() technique documented in the manual
   ObjectBase::ConstructSelf (AttributeConstructionList ());
   m_currentEstimatedRtt = m_initialEstimatedRtt;
@@ -120,11 +161,12 @@ RttEstimator::RttEstimator ()
 }
 
 RttEstimator::RttEstimator (const RttEstimator& c)
-  : Object (c), m_next (c.m_next), m_history (c.m_history), 
-    m_maxMultiplier (c.m_maxMultiplier), 
+  : Object (c), m_next (c.m_next), m_history (c.m_history),
+    m_maxMultiplier (c.m_maxMultiplier),
     m_initialEstimatedRtt (c.m_initialEstimatedRtt),
     m_currentEstimatedRtt (c.m_currentEstimatedRtt), m_minRto (c.m_minRto),
-    m_nSamples (c.m_nSamples), m_multiplier (c.m_multiplier)
+    m_nSamples (c.m_nSamples), m_multiplier (c.m_multiplier), m_sentBytes (c.m_sentBytes),
+    m_g (c.m_g), m_marked (c.m_marked), m_nonMarked (c.m_nonMarked), m_alpha (c.m_alpha)
 {
   NS_LOG_FUNCTION (this);
 }
@@ -134,20 +176,15 @@ RttEstimator::~RttEstimator ()
   NS_LOG_FUNCTION (this);
 }
 
-TypeId
-RttEstimator::GetInstanceTypeId (void) const
-{
-  return GetTypeId ();
-}
-
 void RttEstimator::SentSeq (SequenceNumber32 seq, uint32_t size)
-{ 
+{
   NS_LOG_FUNCTION (this << seq << size);
   // Note that a particular sequence has been sent
   if (seq == m_next)
     { // This is the next expected one, just log at end
-      m_history.push_back (RttHistory (seq, size, Simulator::Now () ));
+      m_history.push_back (RttHistory (seq, size, Simulator::Now (), m_marked, m_nonMarked));
       m_next = seq + SequenceNumber32 (size); // Update next expected
+      m_sentBytes += size; // Update number of sent bytes
     }
   else
     { // This is a retransmit, find in list and mark as re-tx
@@ -156,11 +193,16 @@ void RttEstimator::SentSeq (SequenceNumber32 seq, uint32_t size)
           if ((seq >= i->seq) && (seq < (i->seq + SequenceNumber32 (i->count))))
             { // Found it
               i->retx = true;
+              i->marked = m_marked;
+              i->nonMarked = m_nonMarked;
               // One final test..be sure this re-tx does not extend "next"
               if ((seq + SequenceNumber32 (size)) > m_next)
                 {
                   m_next = seq + SequenceNumber32 (size);
+                  m_sentBytes -= i->count;
+
                   i->count = ((seq + SequenceNumber32 (size)) - i->seq); // And update count in hist
+                  m_sentBytes += i->count;
                 }
               break;
             }
@@ -168,33 +210,65 @@ void RttEstimator::SentSeq (SequenceNumber32 seq, uint32_t size)
     }
 }
 
-Time RttEstimator::AckSeq (SequenceNumber32 ackSeq)
-{ 
+Time RttEstimator::AckSeq (SequenceNumber32 ackSeq, bool markedFlag)
+{
   NS_LOG_FUNCTION (this << ackSeq);
   // An ack has been received, calculate rtt and log this measurement
   // Note we use a linear search (O(n)) for this since for the common
   // case the ack'ed packet will be at the head of the list
   Time m = Seconds (0.0);
-  if (m_history.size () == 0) return (m);    // No pending history, just exit
-  RttHistory& h = m_history.front ();
-  if (!h.retx && ackSeq >= (h.seq + SequenceNumber32 (h.count)))
-    { // Ok to use this sample
-      m = Simulator::Now () - h.time; // Elapsed time
-      Measurement (m);                // Log the measurement
-      ResetMultiplier ();             // Reset multiplier on valid measurement
+  if (m_history.size () == 0)
+    {
+      return (m);    // No pending history, just exit
     }
+
+  bool updatedRtt = false;
+  /*
+  double delta_marked;
+  double delta_unmarked;
+  double f;
+  */
   // Now delete all ack history with seq <= ack
   while(m_history.size () > 0)
     {
       RttHistory& h = m_history.front ();
-      if ((h.seq + SequenceNumber32 (h.count)) > ackSeq) break;               // Done removing
-      m_history.pop_front (); // Remove
+      if ((h.seq + SequenceNumber32 (h.count)) > ackSeq)
+        {
+          break; // Done removing
+        }
+
+      if (markedFlag)
+        {
+          m_marked++;
+        }
+      else
+        {
+          m_nonMarked++;
+        }
+
+      if (!updatedRtt)
+        { // Ok to use this sample
+          updatedRtt = true;
+          if (!h.retx)
+            {
+              m = Simulator::Now () - h.time; // Elapsed time
+              Measurement (m);                // Log the measurement
+              ResetMultiplier ();             // Reset multiplier on valid measurement
+            }
+        }
+	  /*
+      delta_marked = m_marked - h.marked;
+      delta_unmarked = m_nonMarked - h.nonMarked;
+      f = delta_marked ? delta_marked / (delta_unmarked + delta_marked) : 0;
+      m_alpha = (1 - m_g) * m_alpha + m_g * f;
+      */
+	  m_history.pop_front (); // Remove
     }
   return m;
 }
 
 void RttEstimator::ClearSent ()
-{ 
+{
   NS_LOG_FUNCTION (this);
   // Clear all history entries
   m_next = 1;
@@ -214,11 +288,11 @@ void RttEstimator::ResetMultiplier ()
   m_multiplier = 1;
 }
 
-void RttEstimator::Reset ()
-{ 
+void RttEstimator::Reset (SequenceNumber32 seq)
+{
   NS_LOG_FUNCTION (this);
   // Reset to initial state
-  m_next = 1;
+  m_next = seq;
   m_currentEstimatedRtt = m_initialEstimatedRtt;
   m_history.clear ();         // Remove all info from the history
   m_nSamples = 0;
@@ -233,7 +307,7 @@ void RttEstimator::Reset ()
 
 NS_OBJECT_ENSURE_REGISTERED (RttMeanDeviation);
 
-TypeId 
+TypeId
 RttMeanDeviation::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::RttMeanDeviation")
@@ -249,8 +323,8 @@ RttMeanDeviation::GetTypeId (void)
 }
 
 RttMeanDeviation::RttMeanDeviation() :
-  m_variance (0) 
-{ 
+  m_variance (0)
+{
   NS_LOG_FUNCTION (this);
 }
 
@@ -258,12 +332,6 @@ RttMeanDeviation::RttMeanDeviation (const RttMeanDeviation& c)
   : RttEstimator (c), m_gain (c.m_gain), m_variance (c.m_variance)
 {
   NS_LOG_FUNCTION (this);
-}
-
-TypeId
-RttMeanDeviation::GetInstanceTypeId (void) const
-{
-  return GetTypeId ();
 }
 
 void RttMeanDeviation::Measurement (Time m)
@@ -297,11 +365,11 @@ Time RttMeanDeviation::RetransmitTimeout ()
   if (temp < m_minRto.ToInteger (Time::MS))
     {
       temp = m_minRto.ToInteger (Time::MS);
-    } 
+    }
   temp = temp * m_multiplier; // Apply backoff
   Time retval = Time::FromInteger (temp, Time::MS);
   NS_LOG_DEBUG ("RetransmitTimeout:  return " << retval.GetSeconds ());
-  return (retval);  
+  return (retval);
 }
 
 Ptr<RttEstimator> RttMeanDeviation::Copy () const
@@ -310,12 +378,12 @@ Ptr<RttEstimator> RttMeanDeviation::Copy () const
   return CopyObject<RttMeanDeviation> (this);
 }
 
-void RttMeanDeviation::Reset ()
-{ 
+void RttMeanDeviation::Reset (SequenceNumber32 seq)
+{
   NS_LOG_FUNCTION (this);
   // Reset to initial state
   m_variance = Seconds (0);
-  RttEstimator::Reset ();
+  RttEstimator::Reset (seq);
 }
 void RttMeanDeviation::Gain (double g)
 {

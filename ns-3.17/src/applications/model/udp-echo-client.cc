@@ -20,6 +20,7 @@
 #include "ns3/ipv6-address.h"
 #include "ns3/nstime.h"
 #include "ns3/inet-socket-address.h"
+#include "ns3/custom_tag.h"
 #include "ns3/inet6-socket-address.h"
 #include "ns3/socket.h"
 #include "ns3/simulator.h"
@@ -48,6 +49,11 @@ namespace ns3 {
 				"The maximum number of packets the application will send",
 				UintegerValue(100),
 				MakeUintegerAccessor(&UdpEchoClient::m_count),
+				MakeUintegerChecker<uint32_t>())
+			.AddAttribute("Tag",
+				"Tag",
+				UintegerValue(0),
+				MakeUintegerAccessor(&UdpEchoClient::m_tag),
 				MakeUintegerChecker<uint32_t>())
 			.AddAttribute("ChunkSize",
 				"The chunk size can be sent before getting an ack",
@@ -110,6 +116,10 @@ namespace ns3 {
 	{
 		m_peerAddress = ip;
 		m_peerPort = port;
+	}
+
+	void UdpEchoClient::SetPairs (std::vector <std::pair<Ipv4Address, int>> my) {
+		address_pair = my;
 	}
 
 	void
@@ -323,6 +333,18 @@ namespace ns3 {
 			seqTs.SetPG(m_pg);
 			Ptr<Packet> p = Create<Packet>(m_size - 14); // 14 : the size of the seqTs header
 			p->AddHeader(seqTs);
+
+			CustomDataTag tag;
+			tag.SetReceivingNode (Ipv4Address::ConvertFrom(m_peerAddress).Get());
+			tag.SetPersonalTag (m_tag);
+			Ptr<Ipv4> ipv4 = node->GetObject<Ipv4> (); // Get Ipv4 instance of the node
+			//Ipv4Address addr = ipv4->GetAddress (0, 0).GetLocal().Get() // Get Ipv4InterfaceAddress of xth interface.
+			tag.SetNodeId (ipv4->GetAddress (1, 0).GetLocal().Get());
+			//timestamp is set in the default constructor of the CustomDataTag class as Simulator::Now()
+			//printf("Two innnnnnnterfaces are %d and %d  --- %d %d %d\n",ipv4->GetAddress (1, 0).GetLocal().Get(), Ipv4Address::ConvertFrom(m_peerAddress).Get(), m_count, m_size, 0);
+			//attach the tag to the packet
+			p->AddByteTag (tag);
+
 
 			std::stringstream peerAddressStringStream;
 			if (Ipv4Address::IsMatchingType(m_peerAddress))

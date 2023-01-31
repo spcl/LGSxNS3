@@ -60,7 +60,7 @@ private:
                            Icmpv4Header icmp,
                            Ipv4Address source,
                            Ipv4Address destination);
-  void SendDestUnreach (Ipv4Header header, Ptr<const Packet> orgData, 
+  void SendDestUnreach (Ipv4Header header, Ptr<const Packet> orgData,
                         uint8_t code, uint16_t nextHopMtu);
   void SendMessage (Ptr<Packet> packet, Ipv4Address dest, uint8_t type, uint8_t code);
   void SendMessage (Ptr<Packet> packet, Ipv4Address source, Ipv4Address dest, uint8_t type, uint8_t code, Ptr<Ipv4Route> route);

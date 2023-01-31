@@ -20,7 +20,7 @@
 #include "ns3/drop-tail-queue.h"
 #include "ns3/uinteger.h"
 
-using namespace ns3;
+namespace ns3 {
 
 class DropTailQueueTestCase : public TestCase
 {
@@ -83,6 +83,8 @@ public:
   DropTailQueueTestSuite ()
     : TestSuite ("drop-tail-queue", UNIT)
   {
-    AddTestCase (new DropTailQueueTestCase (), TestCase::QUICK);
+    AddTestCase (new DropTailQueueTestCase ());
   }
 } g_dropTailQueueTestSuite;
+
+} // namespace ns3

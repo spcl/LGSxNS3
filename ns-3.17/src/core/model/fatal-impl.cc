@@ -112,6 +112,7 @@ void sigHandler (int sig)
 }
 }
 
+#ifndef WIN32
 void 
 FlushStreams (void)
 {
@@ -156,6 +157,49 @@ FlushStreams (void)
   delete l;
   *pl = 0;
 }
+#else
+void 
+FlushStreams (void)
+{
+  std::list<std::ostream*> **pl = PeekStreamList ();
+  if (pl == 0)
+    {
+      return;
+    }
+
+
+  /* Override default SIGSEGV handler - will flush subsequent
+   * streams even if one of the stream pointers is bad.
+   * The SIGSEGV override should only be active for the
+   * duration of this function. */
+  typedef void (*SignalHandlerPointer) (int);
+  SignalHandlerPointer previousHandler;
+  previousHandler = signal(SIGSEGV, sigHandler);
+  std::list<std::ostream*> *l = *pl;
+
+  /* Need to do it this way in case any of the ostream* causes SIGSEGV */
+  while (!l->empty ())
+    {
+      std::ostream* s (l->front ());
+      l->pop_front ();
+      s->flush ();
+    }
+
+  /* Restore default SIGSEGV handler (Not that it matters anyway) */
+  signal(SIGSEGV, previousHandler);
+
+  /* Flush all opened FILE* */
+  std::fflush (0);
+
+  /* Flush stdandard streams - shouldn't be required (except for clog) */
+  std::cout.flush ();
+  std::cerr.flush ();
+  std::clog.flush ();
+
+  delete l;
+  *pl = 0;
+}
+#endif
 
 } //FatalImpl
 } //ns3

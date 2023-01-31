@@ -22,6 +22,7 @@
 #include "ns3/log.h"
 #include "ns3/uinteger.h"
 #include "net-device.h"
+#include <iostream>
 
 NS_LOG_COMPONENT_DEFINE ("NetDevice");
 
@@ -39,7 +40,7 @@ TypeId NetDevice::GetTypeId (void)
 
 NetDevice::~NetDevice ()
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
 }
 
 uint32_t NetDevice::GetUsedBuffer(uint32_t port, uint32_t qIndex)

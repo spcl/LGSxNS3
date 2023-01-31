@@ -1,7 +1,11 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
+#ifndef WIN32
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#else
+#include "Winsock2.h"
+#endif
 #include "ipv4-raw-socket-impl.h"
 #include "ipv4-l3-protocol.h"
 #include "icmpv4.h"
@@ -19,7 +23,7 @@ namespace ns3 {
 
 NS_OBJECT_ENSURE_REGISTERED (Ipv4RawSocketImpl);
 
-TypeId 
+TypeId
 Ipv4RawSocketImpl::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::Ipv4RawSocketImpl")
@@ -28,20 +32,20 @@ Ipv4RawSocketImpl::GetTypeId (void)
                    UintegerValue (0),
                    MakeUintegerAccessor (&Ipv4RawSocketImpl::m_protocol),
                    MakeUintegerChecker<uint16_t> ())
-    .AddAttribute ("IcmpFilter", 
+    .AddAttribute ("IcmpFilter",
                    "Any icmp header whose type field matches a bit in this filter is dropped. Type must be less than 32.",
                    UintegerValue (0),
                    MakeUintegerAccessor (&Ipv4RawSocketImpl::m_icmpFilter),
                    MakeUintegerChecker<uint32_t> ())
-    // 
+    //
     //  from raw (7), linux, returned length of Send/Recv should be
-    // 
+    //
     //            | IP_HDRINC on  |      off    |
     //  ----------+---------------+-------------+-
     //  Send(Ipv4)| hdr + payload | payload     |
     //  Recv(Ipv4)| hdr + payload | hdr+payload |
     //  ----------+---------------+-------------+-
-    .AddAttribute ("IpHeaderInclude", 
+    .AddAttribute ("IpHeaderInclude",
                    "Include IP Header information (a.k.a setsockopt (IP_HDRINCL)).",
                    BooleanValue (false),
                    MakeBooleanAccessor (&Ipv4RawSocketImpl::m_iphdrincl),
@@ -62,10 +66,9 @@ Ipv4RawSocketImpl::Ipv4RawSocketImpl ()
   m_shutdownRecv = false;
 }
 
-void 
+void
 Ipv4RawSocketImpl::SetNode (Ptr<Node> node)
 {
-  NS_LOG_FUNCTION (this << node);
   m_node = node;
 }
 
@@ -77,7 +80,7 @@ Ipv4RawSocketImpl::DoDispose (void)
   Socket::DoDispose ();
 }
 
-enum Socket::SocketErrno 
+enum Socket::SocketErrno
 Ipv4RawSocketImpl::GetErrno (void) const
 {
   NS_LOG_FUNCTION (this);
@@ -87,17 +90,16 @@ Ipv4RawSocketImpl::GetErrno (void) const
 enum Socket::SocketType
 Ipv4RawSocketImpl::GetSocketType (void) const
 {
-  NS_LOG_FUNCTION (this);
   return NS3_SOCK_RAW;
 }
 
-Ptr<Node> 
+Ptr<Node>
 Ipv4RawSocketImpl::GetNode (void) const
 {
   NS_LOG_FUNCTION (this);
   return m_node;
 }
-int 
+int
 Ipv4RawSocketImpl::Bind (const Address &address)
 {
   NS_LOG_FUNCTION (this << address);
@@ -110,27 +112,25 @@ Ipv4RawSocketImpl::Bind (const Address &address)
   m_src = ad.GetIpv4 ();
   return 0;
 }
-int 
+int
 Ipv4RawSocketImpl::Bind (void)
 {
   NS_LOG_FUNCTION (this);
   m_src = Ipv4Address::GetAny ();
   return 0;
 }
-int 
+int
 Ipv4RawSocketImpl::Bind6 (void)
 {
-  NS_LOG_FUNCTION (this);
   return (-1);
 }
-int 
+int
 Ipv4RawSocketImpl::GetSockName (Address &address) const
 {
-  NS_LOG_FUNCTION (this << address);
   address = InetSocketAddress (m_src, 0);
   return 0;
 }
-int 
+int
 Ipv4RawSocketImpl::Close (void)
 {
   NS_LOG_FUNCTION (this);
@@ -141,21 +141,21 @@ Ipv4RawSocketImpl::Close (void)
     }
   return 0;
 }
-int 
+int
 Ipv4RawSocketImpl::ShutdownSend (void)
 {
   NS_LOG_FUNCTION (this);
   m_shutdownSend = true;
   return 0;
 }
-int 
+int
 Ipv4RawSocketImpl::ShutdownRecv (void)
 {
   NS_LOG_FUNCTION (this);
   m_shutdownRecv = true;
   return 0;
 }
-int 
+int
 Ipv4RawSocketImpl::Connect (const Address &address)
 {
   NS_LOG_FUNCTION (this << address);
@@ -168,28 +168,45 @@ Ipv4RawSocketImpl::Connect (const Address &address)
   m_dst = ad.GetIpv4 ();
   return 0;
 }
-int 
+int
 Ipv4RawSocketImpl::Listen (void)
 {
   NS_LOG_FUNCTION (this);
   m_err = Socket::ERROR_OPNOTSUPP;
   return -1;
 }
-uint32_t 
+uint32_t
 Ipv4RawSocketImpl::GetTxAvailable (void) const
 {
   NS_LOG_FUNCTION (this);
   return 0xffffffff;
 }
-int 
+int
 Ipv4RawSocketImpl::Send (Ptr<Packet> p, uint32_t flags)
 {
   NS_LOG_FUNCTION (this << p << flags);
   InetSocketAddress to = InetSocketAddress (m_dst, m_protocol);
+  /*
+   * Add tags for each socket option.
+   */
+  if (IsManualIpTos ())
+    {
+      SocketIpTosTag ipTosTag;
+      ipTosTag.SetTos (GetIpTos ());
+      p->AddPacketTag (ipTosTag);
+    }
+
+  if (IsManualIpTtl ())
+    {
+      SocketIpTtlTag ipTtlTag;
+      ipTtlTag.SetTtl (GetIpTtl ());
+      p->AddPacketTag (ipTtlTag);
+    }
+
   return SendTo (p, flags, to);
 }
-int 
-Ipv4RawSocketImpl::SendTo (Ptr<Packet> p, uint32_t flags, 
+int
+Ipv4RawSocketImpl::SendTo (Ptr<Packet> p, uint32_t flags,
                            const Address &toAddress)
 {
   NS_LOG_FUNCTION (this << p << flags << toAddress);
@@ -238,7 +255,7 @@ Ipv4RawSocketImpl::SendTo (Ptr<Packet> p, uint32_t flags,
           NS_LOG_LOGIC ("Route exists");
           if (!m_iphdrincl)
             {
-              ipv4->Send (p, route->GetSource (), dst, m_protocol, route);
+              ipv4->Send (p, route->GetSource (), dst, 0, m_protocol, route);
             }
           else
             {
@@ -256,7 +273,7 @@ Ipv4RawSocketImpl::SendTo (Ptr<Packet> p, uint32_t flags,
     }
   return 0;
 }
-uint32_t 
+uint32_t
 Ipv4RawSocketImpl::GetRxAvailable (void) const
 {
   NS_LOG_FUNCTION (this);
@@ -267,14 +284,14 @@ Ipv4RawSocketImpl::GetRxAvailable (void) const
     }
   return rx;
 }
-Ptr<Packet> 
+Ptr<Packet>
 Ipv4RawSocketImpl::Recv (uint32_t maxSize, uint32_t flags)
 {
   NS_LOG_FUNCTION (this << maxSize << flags);
   Address tmp;
   return RecvFrom (maxSize, flags, tmp);
 }
-Ptr<Packet> 
+Ptr<Packet>
 Ipv4RawSocketImpl::RecvFrom (uint32_t maxSize, uint32_t flags,
                              Address &fromAddress)
 {
@@ -300,14 +317,14 @@ Ipv4RawSocketImpl::RecvFrom (uint32_t maxSize, uint32_t flags,
   return data.packet;
 }
 
-void 
+void
 Ipv4RawSocketImpl::SetProtocol (uint16_t protocol)
 {
   NS_LOG_FUNCTION (this << protocol);
   m_protocol = protocol;
 }
 
-bool 
+bool
 Ipv4RawSocketImpl::ForwardUp (Ptr<const Packet> p, Ipv4Header ipHeader, Ptr<Ipv4Interface> incomingInterface)
 {
   NS_LOG_FUNCTION (this << *p << ipHeader << incomingInterface);
@@ -366,7 +383,6 @@ Ipv4RawSocketImpl::ForwardUp (Ptr<const Packet> p, Ipv4Header ipHeader, Ptr<Ipv4
 bool
 Ipv4RawSocketImpl::SetAllowBroadcast (bool allowBroadcast)
 {
-  NS_LOG_FUNCTION (this << allowBroadcast);
   if (!allowBroadcast)
     {
       return false;
@@ -377,7 +393,6 @@ Ipv4RawSocketImpl::SetAllowBroadcast (bool allowBroadcast)
 bool
 Ipv4RawSocketImpl::GetAllowBroadcast () const
 {
-  NS_LOG_FUNCTION (this);
   return true;
 }
 

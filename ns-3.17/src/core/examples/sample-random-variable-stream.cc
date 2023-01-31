@@ -22,6 +22,7 @@
 #include <iostream>
 
 using namespace ns3;
+using namespace std;
 
 /*
  * This program can be run from waf such as "./waf --run sample-random-variable-stream"
@@ -59,6 +60,6 @@ int main (int argc, char *argv[])
 
   Ptr<UniformRandomVariable> uv = CreateObject<UniformRandomVariable> ();
 
-  std::cout << uv->GetValue () << std::endl;
+  cout << uv->GetValue () << endl;
 
 }

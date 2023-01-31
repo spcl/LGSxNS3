@@ -19,7 +19,7 @@
  */
 
 #include <iomanip>
-#include <cmath>
+#include <math.h>
 #include "ns3/log.h"
 #include "radiotap-header.h"
 
@@ -55,6 +55,7 @@ TypeId RadiotapHeader::GetTypeId (void)
 TypeId 
 RadiotapHeader::GetInstanceTypeId (void) const
 {
+  NS_LOG_FUNCTION (this);
   return GetTypeId ();
 }
 
@@ -68,7 +69,7 @@ RadiotapHeader::GetSerializedSize (void) const
 void
 RadiotapHeader::Serialize (Buffer::Iterator start) const
 {
-  NS_LOG_FUNCTION (this << &start);
+  NS_LOG_FUNCTION (this);
 
   start.WriteU8 (0); // major version of radiotap header
   start.WriteU8 (0); // pad field
@@ -131,7 +132,7 @@ RadiotapHeader::Serialize (Buffer::Iterator start) const
 uint32_t
 RadiotapHeader::Deserialize (Buffer::Iterator start)
 {
-  NS_LOG_FUNCTION (this << &start);
+  NS_LOG_FUNCTION (this);
 
   uint8_t tmp = start.ReadU8 (); // major version of radiotap header
   NS_ASSERT_MSG (tmp == 0x00, "RadiotapHeader::Deserialize(): Unexpected major version");
@@ -216,7 +217,7 @@ RadiotapHeader::Deserialize (Buffer::Iterator start)
 void
 RadiotapHeader::Print (std::ostream &os) const
 {
-  NS_LOG_FUNCTION (this << &os);
+  NS_LOG_FUNCTION (this);
   os << " tsft=" << m_tsft
      << " flags=" << std::hex << m_flags << std::dec
      << " rate=" << (uint16_t) m_rate
@@ -251,7 +252,7 @@ RadiotapHeader::GetTsft () const
 void 
 RadiotapHeader::SetFrameFlags (uint8_t flags)
 {
-  NS_LOG_FUNCTION (this << static_cast<uint32_t> (flags));
+  NS_LOG_FUNCTION (this << flags);
   m_flags = flags;
 
   if (!(m_present & RADIOTAP_FLAGS))
@@ -273,7 +274,7 @@ RadiotapHeader::GetFrameFlags (void) const
 void 
 RadiotapHeader::SetRate (uint8_t rate)
 {
-  NS_LOG_FUNCTION (this << static_cast<uint32_t> (rate));
+  NS_LOG_FUNCTION (this << rate);
   m_rate = rate;
 
   if (!(m_present & RADIOTAP_RATE))

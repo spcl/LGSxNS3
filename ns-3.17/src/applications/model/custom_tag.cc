@@ -45,7 +45,7 @@ TypeId CustomDataTag::GetInstanceTypeId (void) const
  */
 uint32_t CustomDataTag::GetSerializedSize (void) const
 {
-	return sizeof (ns3::Time) + sizeof(uint32_t) + sizeof(uint32_t) + sizeof(uint32_t) + sizeof(uint32_t);
+	return sizeof (ns3::Time) + sizeof(uint32_t) + sizeof(uint32_t) + sizeof(uint32_t) + sizeof(uint32_t) + sizeof(uint32_t) ;
 }
 /**
  * The order of how you do Serialize() should match the order of Deserialize()
@@ -60,7 +60,7 @@ void CustomDataTag::Serialize (TagBuffer i) const
 	i.WriteU32(receiving_node);
 	i.WriteU32(personal_tag);
 	i.WriteU32(offset);
-	
+	i.WriteU32(current_hop);	
 }
 /** This function reads data from a buffer and store it in class's instance variables.
  */
@@ -74,6 +74,7 @@ void CustomDataTag::Deserialize (TagBuffer i)
 	receiving_node = i.ReadU32();
 	personal_tag = i.ReadU32();
 	offset = i.ReadU32();
+	current_hop = i.ReadU32();
 
 }
 /**
@@ -127,5 +128,20 @@ void CustomDataTag::SetTimestamp(Time t) {
 	m_timestamp = t;
 }
 
+uint32_t CustomDataTag::GetCurrentHop() {
+	return current_hop;
+}
+
+uint32_t* CustomDataTag::GetHops() {
+	return hop;
+}
+
+void CustomDataTag::SetCurrentHop(uint32_t my_hop) {
+	current_hop = my_hop;
+}
+
+void CustomDataTag::SetHops(uint32_t value) {
+	hop[current_hop] = value;
+}
 } /* namespace ns3 */
 

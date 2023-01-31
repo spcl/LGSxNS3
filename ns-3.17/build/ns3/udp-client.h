@@ -59,6 +59,7 @@ public:
   void SetRemote (Ipv6Address ip, uint16_t port);
   void SetRemote (Address ip, uint16_t port);
   void SetPG (uint16_t pg);
+  void SetPairs (std::vector <std::pair<Ipv4Address, int>>);
 
 protected:
   virtual void DoDispose (void);
@@ -84,6 +85,7 @@ private:
   EventId m_sendEvent;
 
   uint16_t m_pg;
+  std::vector <std::pair<Ipv4Address, int>> address_pair;
 
 };
 

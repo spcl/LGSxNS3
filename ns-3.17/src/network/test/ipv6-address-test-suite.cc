@@ -100,7 +100,7 @@ public:
 Ipv6AddressTestSuite::Ipv6AddressTestSuite ()
   : TestSuite ("ipv6-address", UNIT)
 {
-  AddTestCase (new Ipv6AddressTestCase1, TestCase::QUICK);
+  AddTestCase (new Ipv6AddressTestCase1);
 }
 
 static Ipv6AddressTestSuite ipv6AddressTestSuite;

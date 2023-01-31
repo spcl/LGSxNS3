@@ -526,7 +526,7 @@ def configure(conf):
     env.append_value('CFLAGS',  ['-std=c++11'])
     env.append_value('LINKFLAGS',  ['-std=c++11'])
 
-    env['CXXFLAGS'].remove('-Werror')
+    #env['CXXFLAGS'].remove('-Werror')
     #env['CFLAGS'].remove('-Werror')
 
     

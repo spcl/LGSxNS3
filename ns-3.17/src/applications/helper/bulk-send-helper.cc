@@ -25,6 +25,7 @@
 #include "ns3/packet-socket-address.h"
 #include "ns3/string.h"
 #include "ns3/names.h"
+#include "ns3/bulk-send-application.h"
 
 namespace ns3 {
 
@@ -40,6 +41,14 @@ BulkSendHelper::SetAttribute (std::string name, const AttributeValue &value)
 {
   m_factory.Set (name, value);
 }
+
+void
+BulkSendHelper::SetPairs (Ptr<Application> app, std::vector <std::pair<Ipv4Address, int>> my_pairs)
+{
+  app->GetObject<BulkSendApplication>()->SetPairs (my_pairs);
+  printf("Pairs size %d\n", my_pairs.size());
+}
+
 
 ApplicationContainer
 BulkSendHelper::Install (Ptr<Node> node) const

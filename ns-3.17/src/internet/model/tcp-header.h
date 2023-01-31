@@ -23,6 +23,7 @@
 
 #include <stdint.h>
 #include "ns3/header.h"
+#include "ns3/tcp-option.h"
 #include "ns3/buffer.h"
 #include "ns3/tcp-socket-factory.h"
 #include "ns3/ipv4-address.h"
@@ -40,7 +41,7 @@ namespace ns3 {
  * as methods for serialization to and deserialization from a byte buffer.
  */
 
-class TcpHeader : public Header 
+class TcpHeader : public Header
 {
 public:
   TcpHeader ();
@@ -74,7 +75,7 @@ public:
   /**
    * \param flags the flags for this TcpHeader
    */
-  void SetFlags (uint8_t flags);
+  void SetFlags (uint16_t flags);
   /**
    * \param windowSize the window size for this TcpHeader
    */
@@ -109,7 +110,7 @@ public:
   /**
    * \return the flags for this TcpHeader
    */
-  uint8_t  GetFlags () const;
+  uint16_t  GetFlags () const;
   /**
    * \return the window size for this TcpHeader
    */
@@ -118,6 +119,14 @@ public:
    * \return the urgent pointer for this TcpHeader
    */
   uint16_t GetUrgentPointer () const;
+  /**
+   * \return Whether the header contains a specific kind of option
+   */
+  Ptr<TcpOption> GetOption (TcpOption::Kind kind) const;
+  /**
+   * \brief Add an option to the TCP header
+   */
+  void AppendOption (Ptr<TcpOption> option);
 
   /**
    * \param source the ip source to use in the underlying
@@ -130,18 +139,18 @@ public:
    * If you want to use tcp checksums, you should call this
    * method prior to adding the header to a packet.
    */
-  void InitializeChecksum (Ipv4Address source, 
+  void InitializeChecksum (Ipv4Address source,
                            Ipv4Address destination,
                            uint8_t protocol);
-  void InitializeChecksum (Ipv6Address source, 
+  void InitializeChecksum (Ipv6Address source,
                            Ipv6Address destination,
                            uint8_t protocol);
-  void InitializeChecksum (Address source, 
+  void InitializeChecksum (Address source,
                            Address destination,
                            uint8_t protocol);
 
-  typedef enum { NONE = 0, FIN = 1, SYN = 2, RST = 4, PSH = 8, ACK = 16, 
-                 URG = 32, ECE = 64, CWR = 128} Flags_t;
+  typedef enum { NONE = 0, FIN = 1, SYN = 2, RST = 4, PSH = 8, ACK = 16,
+                 URG = 32, ECE = 64, CWR = 128, NS = 256} Flags_t;
 
   static TypeId GetTypeId (void);
   virtual TypeId GetInstanceTypeId (void) const;
@@ -163,7 +172,7 @@ private:
   SequenceNumber32 m_sequenceNumber;
   SequenceNumber32 m_ackNumber;
   uint8_t m_length; // really a uint4_t
-  uint8_t m_flags;      // really a uint6_t
+  uint16_t m_flags;      // really a uint9_t
   uint16_t m_windowSize;
   uint16_t m_urgentPointer;
 
@@ -174,6 +183,8 @@ private:
   uint16_t m_initialChecksum;
   bool m_calcChecksum;
   bool m_goodChecksum;
+
+  std::list<Ptr<TcpOption> > m_options;
 };
 
 } // namespace ns3

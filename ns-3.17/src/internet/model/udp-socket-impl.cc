@@ -36,6 +36,7 @@
 #include "udp-l4-protocol.h"
 #include "ipv4-end-point.h"
 #include "ipv6-end-point.h"
+#include "ns3/seq-ts-header.h"
 #include <limits>
 
 NS_LOG_COMPONENT_DEFINE ("UdpSocketImpl");
@@ -189,7 +190,8 @@ UdpSocketImpl::FinishBind (void)
     }
   if (m_endPoint6 != 0)
     {
-      m_endPoint6->SetRxCallback (MakeCallback (&UdpSocketImpl::ForwardUp6, Ptr<UdpSocketImpl> (this)));
+        //not supporting 6
+      //m_endPoint6->SetRxCallback (MakeCallback (&UdpSocketImpl::ForwardUp6, Ptr<UdpSocketImpl> (this)));
       m_endPoint6->SetIcmpCallback (MakeCallback (&UdpSocketImpl::ForwardIcmp6, Ptr<UdpSocketImpl> (this)));
       m_endPoint6->SetDestroyCallback (MakeCallback (&UdpSocketImpl::Destroy6, Ptr<UdpSocketImpl> (this)));
       done = true;
@@ -351,7 +353,6 @@ UdpSocketImpl::Send (Ptr<Packet> p, uint32_t flags)
       m_errno = ERROR_NOTCONN;
       return -1;
     }
-
   return DoSend (p);
 }
 
@@ -382,7 +383,6 @@ UdpSocketImpl::DoSend (Ptr<Packet> p)
       m_errno = ERROR_SHUTDOWN;
       return -1;
     } 
-
   return DoSendTo (p, (const Address)m_defaultAddress);
 }
 
@@ -459,13 +459,6 @@ UdpSocketImpl::DoSendTo (Ptr<Packet> p, Ipv4Address dest, uint16_t port)
       return -1;
     }
 
-  if (IsManualIpTos ())
-    {
-      SocketIpTosTag ipTosTag;
-      ipTosTag.SetTos (GetIpTos ());
-      p->AddPacketTag (ipTosTag);
-    }
-
   Ptr<Ipv4> ipv4 = m_node->GetObject<Ipv4> ();
 
   // Locally override the IP TTL for this socket
@@ -482,10 +475,10 @@ UdpSocketImpl::DoSendTo (Ptr<Packet> p, Ipv4Address dest, uint16_t port)
       tag.SetTtl (m_ipMulticastTtl);
       p->AddPacketTag (tag);
     }
-  else if (IsManualIpTtl () && GetIpTtl () != 0 && !dest.IsMulticast () && !dest.IsBroadcast ())
+  else if (m_ipTtl != 0 && !dest.IsMulticast () && !dest.IsBroadcast ())
     {
       SocketIpTtlTag tag;
-      tag.SetTtl (GetIpTtl ());
+      tag.SetTtl (m_ipTtl);
       p->AddPacketTag (tag);
     }
   {
@@ -654,13 +647,6 @@ UdpSocketImpl::DoSendTo (Ptr<Packet> p, Ipv6Address dest, uint16_t port)
       return -1;
     }
 
-    if (IsManualIpv6Tclass ())
-    {
-      SocketIpv6TclassTag ipTclassTag;
-      ipTclassTag.SetTclass (GetIpv6Tclass ());
-      p->AddPacketTag (ipTclassTag);
-    }
-
   Ptr<Ipv6> ipv6 = m_node->GetObject<Ipv6> ();
 
   // Locally override the IP TTL for this socket
@@ -673,14 +659,14 @@ UdpSocketImpl::DoSendTo (Ptr<Packet> p, Ipv6Address dest, uint16_t port)
   // the same as a unicast, but it will be fixed further down the stack
   if (m_ipMulticastTtl != 0 && dest.IsMulticast ())
     {
-      SocketIpv6HopLimitTag tag;
-      tag.SetHopLimit (m_ipMulticastTtl);
+      SocketIpTtlTag tag;
+      tag.SetTtl (m_ipMulticastTtl);
       p->AddPacketTag (tag);
     }
-  else if (IsManualIpv6HopLimit () && GetIpv6HopLimit () != 0 && !dest.IsMulticast ())
+  else if (m_ipTtl != 0 && !dest.IsMulticast ())
     {
-      SocketIpv6HopLimitTag tag;
-      tag.SetHopLimit (GetIpv6HopLimit ());
+      SocketIpTtlTag tag;
+      tag.SetTtl (m_ipTtl);
       p->AddPacketTag (tag);
     }
   // There is no analgous to an IPv4 broadcast address in IPv6.
@@ -751,13 +737,6 @@ UdpSocketImpl::SendTo (Ptr<Packet> p, uint32_t flags, const Address &address)
   NS_LOG_FUNCTION (this << p << flags << address);
   if (InetSocketAddress::IsMatchingType (address))
     {
-      if (IsManualIpTos ())
-        {
-          SocketIpTosTag ipTosTag;
-          ipTosTag.SetTos (GetIpTos ());
-          p->AddPacketTag (ipTosTag);
-        }
-
       InetSocketAddress transport = InetSocketAddress::ConvertFrom (address);
       Ipv4Address ipv4 = transport.GetIpv4 ();
       uint16_t port = transport.GetPort ();
@@ -765,13 +744,6 @@ UdpSocketImpl::SendTo (Ptr<Packet> p, uint32_t flags, const Address &address)
     }
   else if (Inet6SocketAddress::IsMatchingType (address))
     {
-      if (IsManualIpv6Tclass ())
-        {
-          SocketIpv6TclassTag ipTclassTag;
-          ipTclassTag.SetTclass (GetIpv6Tclass ());
-          p->AddPacketTag (ipTclassTag);
-        }
-
       Inet6SocketAddress transport = Inet6SocketAddress::ConvertFrom (address);
       Ipv6Address ipv6 = transport.GetIpv6 ();
       uint16_t port = transport.GetPort ();
@@ -911,21 +883,6 @@ UdpSocketImpl::ForwardUp (Ptr<Packet> packet, Ipv4Header header, uint16_t port,
       packet->AddPacketTag (tag);
     }
 
-  //Check only version 4 options
-  if (IsIpRecvTos ())
-    {
-      SocketIpTosTag ipTosTag;
-      ipTosTag.SetTos (header.GetTos ());
-      packet->AddPacketTag (ipTosTag);
-    }
-
-  if (IsIpRecvTtl ())
-    {
-      SocketIpTtlTag ipTtlTag;
-      ipTtlTag.SetTtl (header.GetTtl ());
-      packet->AddPacketTag (ipTtlTag);
-    }
-
   if ((m_rxAvailable + packet->GetSize ()) <= m_rcvBufSize)
     {
       Address address = InetSocketAddress (header.GetSource (), port);
@@ -949,34 +906,18 @@ UdpSocketImpl::ForwardUp (Ptr<Packet> packet, Ipv4Header header, uint16_t port,
 }
 
 void 
-UdpSocketImpl::ForwardUp6 (Ptr<Packet> packet, Ipv6Header header, uint16_t port)
+UdpSocketImpl::ForwardUp6 (Ptr<Packet> packet, Ipv6Address saddr, Ipv6Address daddr, uint16_t port)
 {
-  NS_LOG_FUNCTION (this << packet << header.GetSourceAddress () << port);
+  NS_LOG_FUNCTION (this << packet << saddr << port);
 
   if (m_shutdownRecv)
     {
       return;
     }
 
-
-  //Check only version 6 options
-  if (IsIpv6RecvTclass ())
-    {
-      SocketIpv6TclassTag ipTclassTag;
-      ipTclassTag.SetTclass (header.GetTrafficClass ());
-      packet->AddPacketTag (ipTclassTag);
-    }
-
-  if (IsIpv6RecvHopLimit ())
-    {
-      SocketIpv6HopLimitTag ipHopLimitTag;
-      ipHopLimitTag.SetHopLimit (header.GetHopLimit ());
-      packet->AddPacketTag (ipHopLimitTag);
-    }
-
   if ((m_rxAvailable + packet->GetSize ()) <= m_rcvBufSize)
     {
-      Address address = Inet6SocketAddress (header.GetSourceAddress (), port);
+      Address address = Inet6SocketAddress (saddr, port);
       SocketAddressTag tag;
       tag.SetAddress (address);
       packet->AddPacketTag (tag);
@@ -1022,6 +963,7 @@ UdpSocketImpl::ForwardIcmp6 (Ipv6Address icmpSource, uint8_t icmpTtl,
     }
 }
 
+
 void 
 UdpSocketImpl::SetRcvBufSize (uint32_t size)
 {
@@ -1032,6 +974,18 @@ uint32_t
 UdpSocketImpl::GetRcvBufSize (void) const
 {
   return m_rcvBufSize;
+}
+
+void 
+UdpSocketImpl::SetIpTtl (uint8_t ipTtl)
+{
+  m_ipTtl = ipTtl;
+}
+
+uint8_t 
+UdpSocketImpl::GetIpTtl (void) const
+{
+  return m_ipTtl;
 }
 
 void 

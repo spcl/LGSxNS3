@@ -17,7 +17,7 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
-#include <cstdarg>
+#include <stdarg.h>
 #include <iostream>
 #include <sstream>
 #include "ns3/test.h"
@@ -249,6 +249,8 @@ HistoryTrailer<N>::Deserialize (Buffer::Iterator start)
 }
 
 }
+
+namespace ns3 {
 
 class PacketMetadataTest : public TestCase {
 public:
@@ -829,7 +831,8 @@ public:
 PacketMetadataTestSuite::PacketMetadataTestSuite ()
   : TestSuite ("packet-metadata", UNIT)
 {
-  AddTestCase (new PacketMetadataTest, TestCase::QUICK);
+  AddTestCase (new PacketMetadataTest);
 }
 
 PacketMetadataTestSuite g_packetMetadataTest;
+} // namespace ns3

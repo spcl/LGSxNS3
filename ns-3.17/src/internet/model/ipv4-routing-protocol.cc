@@ -19,9 +19,6 @@
 #include "ns3/assert.h"
 #include "ipv4-route.h"
 #include "ipv4-routing-protocol.h"
-#include "ns3/log.h"
-
-NS_LOG_COMPONENT_DEFINE ("Ipv4RoutingProtocol");
 
 namespace ns3 {
 

@@ -155,10 +155,14 @@ UdpHeader::GetInstanceTypeId (void) const
 void 
 UdpHeader::Print (std::ostream &os) const
 {
+	/*
   os << "length: " << m_payloadSize + GetSerializedSize ()
      << " " 
      << m_sourcePort << " > " << m_destinationPort
   ;
+  */
+	//os << "u " << m_sourcePort << ">" << m_destinationPort;
+	os << "u " << m_destinationPort;
 }
 
 uint32_t 

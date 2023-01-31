@@ -117,7 +117,7 @@ public:
 TracedCallbackTestSuite::TracedCallbackTestSuite ()
   : TestSuite ("traced-callback", UNIT)
 {
-  AddTestCase (new BasicTracedCallbackTestCase, TestCase::QUICK);
+  AddTestCase (new BasicTracedCallbackTestCase);
 }
 
 static TracedCallbackTestSuite tracedCallbackTestSuite;

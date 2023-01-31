@@ -43,6 +43,20 @@ Ipv6Header::Ipv6Header ()
   SetDestinationAddress (Ipv6Address ("::"));
 }
 
+void
+Ipv6Header::SetEcn (EcnType ecn)
+{
+  m_trafficClass &= 0xFC; // Clear out the ECN part, retain 6 bits of DSCP
+  m_trafficClass |= ecn;
+}
+
+Ipv6Header::EcnType
+Ipv6Header::GetEcn (void) const
+{
+  // Extract only last 2 bits of TC byte, i.e 0x3
+  return EcnType (m_trafficClass & 0x3);
+}
+
 void Ipv6Header::SetTrafficClass (uint8_t traffic)
 {
   m_trafficClass = traffic;
@@ -181,6 +195,18 @@ uint32_t Ipv6Header::Deserialize (Buffer::Iterator start)
   ReadFrom (i, m_destinationAddress);
 
   return GetSerializedSize ();
+}
+
+bool
+Ipv6Header::IsCongestionAware(void) const
+{
+  return (GetEcn() != NotECT);
+}
+
+void
+Ipv6Header::SetCongested (void)
+{
+  SetEcn (CE);
 }
 
 } /* namespace ns3 */

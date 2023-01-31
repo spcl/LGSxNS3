@@ -21,6 +21,7 @@
 #include <stdint.h>
 #include <iostream>
 #include "tcp-header.h"
+#include "tcp-option-no-op.h"
 #include "ns3/buffer.h"
 #include "ns3/address-utils.h"
 
@@ -72,7 +73,7 @@ void TcpHeader::SetLength (uint8_t length)
 {
   m_length = length;
 }
-void TcpHeader::SetFlags (uint8_t flags)
+void TcpHeader::SetFlags (uint16_t flags)
 {
   m_flags = flags;
 }
@@ -105,7 +106,7 @@ uint8_t  TcpHeader::GetLength () const
 {
   return m_length;
 }
-uint8_t  TcpHeader::GetFlags () const
+uint16_t  TcpHeader::GetFlags () const
 {
   return m_flags;
 }
@@ -118,8 +119,8 @@ uint16_t TcpHeader::GetUrgentPointer () const
   return m_urgentPointer;
 }
 
-void 
-TcpHeader::InitializeChecksum (Ipv4Address source, 
+void
+TcpHeader::InitializeChecksum (Ipv4Address source,
                                Ipv4Address destination,
                                uint8_t protocol)
 {
@@ -128,8 +129,8 @@ TcpHeader::InitializeChecksum (Ipv4Address source,
   m_protocol = protocol;
 }
 
-void 
-TcpHeader::InitializeChecksum (Ipv6Address source, 
+void
+TcpHeader::InitializeChecksum (Ipv6Address source,
                                Ipv6Address destination,
                                uint8_t protocol)
 {
@@ -138,8 +139,8 @@ TcpHeader::InitializeChecksum (Ipv6Address source,
   m_protocol = protocol;
 }
 
-void 
-TcpHeader::InitializeChecksum (Address source, 
+void
+TcpHeader::InitializeChecksum (Address source,
                                Address destination,
                                uint8_t protocol)
 {
@@ -197,7 +198,7 @@ TcpHeader::IsChecksumOk (void) const
   return m_goodChecksum;
 }
 
-TypeId 
+TypeId
 TcpHeader::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::TcpHeader")
@@ -206,13 +207,14 @@ TcpHeader::GetTypeId (void)
   ;
   return tid;
 }
-TypeId 
+TypeId
 TcpHeader::GetInstanceTypeId (void) const
 {
   return GetTypeId ();
 }
 void TcpHeader::Print (std::ostream &os)  const
 {
+	/*
   os << m_sourcePort << " > " << m_destinationPort;
   if(m_flags!=0)
     {
@@ -249,13 +251,27 @@ void TcpHeader::Print (std::ostream &os)  const
         {
           os<<" CWR ";
         }
+      if((m_flags & NS) != 0)
+        {
+          os<<" NS ";
+        }
       os<<"]";
     }
   os<<" Seq="<<m_sequenceNumber<<" Ack="<<m_ackNumber<<" Win="<<m_windowSize;
+  if (!m_options.empty ())
+    {
+      os << "Options:" << std::endl;
+    }
+  for (std::list<Ptr<TcpOption> >::const_iterator op = m_options.begin (); op != m_options.end (); ++op)
+    {
+      os<<" - "<< (*op)->Str () <<" - ";
+    }
+	*/
+	os << "t " << m_destinationPort << ' ' << m_sequenceNumber  << " 1";
 }
 uint32_t TcpHeader::GetSerializedSize (void)  const
 {
-  return 4*m_length;
+  return 4*GetLength ();
 }
 void TcpHeader::Serialize (Buffer::Iterator start)  const
 {
@@ -264,11 +280,26 @@ void TcpHeader::Serialize (Buffer::Iterator start)  const
   i.WriteHtonU16 (m_destinationPort);
   i.WriteHtonU32 (m_sequenceNumber.GetValue ());
   i.WriteHtonU32 (m_ackNumber.GetValue ());
-  i.WriteHtonU16 (m_length << 12 | m_flags); //reserved bits are all zero
+  i.WriteHtonU16 (GetLength () << 12 | m_flags); //reserved bits are all zero
   i.WriteHtonU16 (m_windowSize);
   i.WriteHtonU16 (0);
   i.WriteHtonU16 (m_urgentPointer);
 
+  // Serialize options if they exists
+  unsigned optionLen = 0;
+  for (std::list<Ptr<TcpOption> >::const_iterator op = m_options.begin (); op != m_options.end (); ++op)
+    {
+      optionLen += (*op)->GetSerializedSize ();
+      (*op)->Serialize(i);
+    };
+  while (optionLen % 4)
+    {
+      TcpOptionNoOp noOp;
+      optionLen += noOp.GetSerializedSize ();
+      noOp.Serialize(i);
+    };
+
+  // Make checksum
   if(m_calcChecksum)
     {
       uint16_t headerChecksum = CalculateHeaderChecksum (start.GetSize ());
@@ -288,12 +319,26 @@ uint32_t TcpHeader::Deserialize (Buffer::Iterator start)
   m_sequenceNumber = i.ReadNtohU32 ();
   m_ackNumber = i.ReadNtohU32 ();
   uint16_t field = i.ReadNtohU16 ();
-  m_flags = field & 0x3F;
+  m_flags = field & 0x1FF;
   m_length = field>>12;
   m_windowSize = i.ReadNtohU16 ();
   i.Next (2);
   m_urgentPointer = i.ReadNtohU16 ();
 
+  // Deserialize options if they exist
+  m_options.clear ();
+  uint32_t optionLen = (m_length - 5) * 4;
+  while (optionLen)
+    {
+      Ptr<TcpOption> op = TcpOption::Deserialize (i, optionLen);
+      if (!!op && op->GetKind () != TcpOption::NO_OP &&
+            op->GetKind () != TcpOption::END_OF_OPTION_LIST)
+        {
+          m_options.push_back (op);
+        }
+    };
+
+  // Do checksum
   if(m_calcChecksum)
     {
       uint16_t headerChecksum = CalculateHeaderChecksum (start.GetSize ());
@@ -305,5 +350,37 @@ uint32_t TcpHeader::Deserialize (Buffer::Iterator start)
   return GetSerializedSize ();
 }
 
+void TcpHeader::AppendOption (Ptr<TcpOption> option)
+{
+  if (option->GetKind () != 0)
+    {
+      m_options.push_back (option);
+    }
+  // Update length
+  unsigned totalLen = 0;
+  for (std::list<Ptr<TcpOption> >::iterator i = m_options.begin (); i != m_options.end (); ++i)
+  {
+    totalLen += (*i)->GetSerializedSize ();
+  };
+  NS_ASSERT(totalLen <= 40);
+
+  if (totalLen % 4 != 0)
+    totalLen += (4 - (totalLen % 4));
+
+  totalLen += 20;
+  m_length = totalLen / 4;
+}
+
+Ptr<TcpOption> TcpHeader::GetOption (TcpOption::Kind kind) const
+{
+  for (std::list<Ptr<TcpOption> >::const_iterator i = m_options.begin (); i != m_options.end () ; ++i)
+    {
+      if ((*i)->GetKind () == kind)
+        {
+          return (*i);
+        }
+    }
+  return NULL;
+}
 
 } // namespace ns3

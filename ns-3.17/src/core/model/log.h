@@ -25,6 +25,7 @@
 #include <iostream>
 #include <stdint.h>
 #include <map>
+#include <algorithm>
 
 namespace ns3 {
 

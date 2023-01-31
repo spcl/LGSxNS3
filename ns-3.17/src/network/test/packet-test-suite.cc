@@ -20,9 +20,9 @@
 #include "ns3/packet.h"
 #include "ns3/test.h"
 #include <string>
-#include <cstdarg>
+#include <stdarg.h>
 
-using namespace ns3;
+namespace ns3 {
 
 //-----------------------------------------------------------------------------
 // Unit tests
@@ -445,7 +445,10 @@ public:
 PacketTestSuite::PacketTestSuite ()
   : TestSuite ("packet", UNIT)
 {
-  AddTestCase (new PacketTest, TestCase::QUICK);
+  AddTestCase (new PacketTest);
 }
 
 static PacketTestSuite g_packetTestSuite;
+
+
+} // namespace ns3

@@ -113,7 +113,12 @@ uint32_t Ipv6OptionHeader::Deserialize (Buffer::Iterator start)
 
 Ipv6OptionHeader::Alignment Ipv6OptionHeader::GetAlignment () const
 {
-  return (Alignment){ 1,0};
+#ifndef WIN32
+	return (Alignment){ 1, 0 };
+#else
+	Alignment a = { 1, 0 };
+	return a;
+#endif
 }
 
 NS_OBJECT_ENSURE_REGISTERED (Ipv6OptionPad1Header);
@@ -295,7 +300,12 @@ uint32_t Ipv6OptionJumbogramHeader::Deserialize (Buffer::Iterator start)
 
 Ipv6OptionHeader::Alignment Ipv6OptionJumbogramHeader::GetAlignment () const
 {
-  return (Alignment){ 4,2}; //4n+2
+#ifndef WIN32
+	return (Alignment){ 4, 2 }; //4n+2
+#else
+	Alignment a = { 4, 2 };
+	return a;
+#endif
 }
 
 NS_OBJECT_ENSURE_REGISTERED (Ipv6OptionRouterAlertHeader);
@@ -366,7 +376,12 @@ uint32_t Ipv6OptionRouterAlertHeader::Deserialize (Buffer::Iterator start)
 
 Ipv6OptionHeader::Alignment Ipv6OptionRouterAlertHeader::GetAlignment () const
 {
-  return (Alignment){ 2,0}; //2n+0
+#ifndef WIN32
+	return (Alignment){ 2, 0 }; //2n+0
+#else
+	Alignment a = { 2, 0 };
+	return a;
+#endif
 }
 
 } /* namespace ns3 */

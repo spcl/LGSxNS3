@@ -26,9 +26,9 @@
 #include "ns3/global-route-manager-impl.h"
 #include "ns3/candidate-queue.h"
 #include "ns3/simulator.h"
-#include <cstdlib> // for rand()
+#include <stdlib.h> // for rand()
 
-using namespace ns3;
+namespace ns3 {
 
 class GlobalRouteManagerImplTestCase : public TestCase
 {
@@ -49,7 +49,7 @@ GlobalRouteManagerImplTestCase::DoRun (void)
   for (int i = 0; i < 100; ++i)
     {
       SPFVertex *v = new SPFVertex;
-      v->SetDistanceFromRoot (std::rand () % 100);
+      v->SetDistanceFromRoot (rand () % 100);
       candidate.Push (v);
     }
 
@@ -220,6 +220,8 @@ public:
   GlobalRouteManagerImplTestSuite()
     : TestSuite ("global-route-manager-impl", UNIT)
   {
-    AddTestCase (new GlobalRouteManagerImplTestCase (), TestCase::QUICK);
+    AddTestCase (new GlobalRouteManagerImplTestCase ());
   }
 } g_globalRoutingManagerImplTestSuite;
+
+} // namespace ns3

@@ -1,0 +1,37 @@
+num_ranks 4
+
+rank 0 {
+l1: send 1b to 1 tag 0
+l2: recv 1b from 3 tag 0
+l3: send 1b to 2 tag 0
+l4: recv 1b from 2 tag 0
+l5: send 1b to 3 tag 0
+l6: recv 1b from 1 tag 0
+}
+
+rank 1 {
+l1: send 1b to 2 tag 0
+l2: recv 1b from 0 tag 0
+l3: send 1b to 3 tag 0
+l4: recv 1b from 3 tag 0
+l5: send 1b to 0 tag 0
+l6: recv 1b from 2 tag 0
+}
+
+rank 2 {
+l1: send 1b to 3 tag 0
+l2: recv 1b from 1 tag 0
+l3: send 1b to 0 tag 0
+l4: recv 1b from 0 tag 0
+l5: send 1b to 1 tag 0
+l6: recv 1b from 3 tag 0
+}
+
+rank 3 {
+l1: send 1b to 0 tag 0
+l2: recv 1b from 2 tag 0
+l3: send 1b to 1 tag 0
+l4: recv 1b from 1 tag 0
+l5: send 1b to 2 tag 0
+l6: recv 1b from 0 tag 0
+}

@@ -628,7 +628,7 @@ private:
 } // namespace ns3
 
 #include "ns3/assert.h"
-#include <cstring>
+#include <string.h>
 
 namespace ns3 {
 
@@ -711,13 +711,13 @@ Buffer::Iterator::WriteU8 (uint8_t  data, uint32_t len)
                  GetWriteErrorMessage ());
   if (m_current <= m_zeroStart)
     {
-      std::memset (&(m_data[m_current]), data, len);
+      memset (&(m_data[m_current]), data, len);
       m_current += len;
     }
   else
     {
       uint8_t *buffer = &m_data[m_current - (m_zeroEnd-m_zeroStart)];
-      std::memset (buffer, data, len);
+      memset (buffer, data, len);
       m_current += len;
     }
 }

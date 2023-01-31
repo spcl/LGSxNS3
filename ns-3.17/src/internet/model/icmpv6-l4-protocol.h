@@ -29,6 +29,12 @@
 #include "icmpv6-header.h"
 #include "ip-l4-protocol.h"
 
+#ifdef WIN32
+#ifdef interface
+#undef interface
+#endif
+#endif
+
 namespace ns3 {
 
 class NetDevice;

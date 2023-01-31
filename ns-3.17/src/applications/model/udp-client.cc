@@ -119,6 +119,11 @@ UdpClient::DoDispose (void)
   Application::DoDispose ();
 }
 
+void UdpClient::SetPairs (std::vector <std::pair<Ipv4Address, int>> my) {
+  address_pair = my;
+}
+
+
 void
 UdpClient::StartApplication (void)
 {

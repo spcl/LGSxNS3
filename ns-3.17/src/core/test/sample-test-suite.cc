@@ -56,7 +56,7 @@ public:
 SampleTestSuite::SampleTestSuite ()
   : TestSuite ("sample", UNIT)
 {
-  AddTestCase (new SampleTestCase1, TestCase::QUICK);
+  AddTestCase (new SampleTestCase1);
 }
 
 // Do not forget to allocate an instance of this TestSuite

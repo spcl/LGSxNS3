@@ -40,9 +40,12 @@
 //#include "TimelineVisualization.hpp"
 #include "Noise.hpp"
 #include "Parser.hpp"
+#include <chrono>
 #include "logsim.h"
 #include "cmdline.h"
 #include "ns3/logsim-helper.h"
+
+#define DEBUG_PRINT 0
 
 namespace ns3 {
 
@@ -73,10 +76,11 @@ namespace ns3 {
     
     //std::cout << "UQ size " << q->size() << "\n";
 
-    if(1) printf("++ size is %d,  [%i] searching matching queue for src %i tag %i\n", q->size(), elem.host, elem.target, elem.tag);
+    if(0) printf("++ size is %d,  [%i] searching matching queue for src %i tag %i\n", q->size(), elem.host, elem.target, elem.tag);
     for(ruq_t::iterator iter=q->begin(); iter!=q->end(); ++iter) {
         match_attempts++;
-        printf("^^^^^ Compared element is -> %d %d vs %d %d\n", iter->src, iter->tag, elem.target, elem.tag); fflush(stdout);
+        if (DEBUG_PRINT)
+            printf("Compared element is -> %d %d vs %d %d\n", iter->src, iter->tag, elem.target, elem.tag); fflush(stdout);
         if(elem.target == ANY_SOURCE || iter->src == ANY_SOURCE || iter->src == elem.target) {
         if(elem.tag == ANY_TAG || iter->tag == ANY_TAG || iter->tag == elem.tag) {
             if(retelem) *retelem=*iter;
@@ -127,6 +131,15 @@ namespace ns3 {
 
 
     int start_lgs(std::string filename_goal) {
+
+        // Time Inside LGS
+        using std::chrono::high_resolution_clock;
+        using std::chrono::duration_cast;
+        using std::chrono::duration;
+        using std::chrono::milliseconds;
+        auto start = high_resolution_clock::now();
+        using std::chrono::high_resolution_clock;
+        std::chrono::milliseconds global_time = std::chrono::milliseconds::zero();
 
         // Temp Only
         filename_goal = "src/logsim/model/" + filename_goal;
@@ -250,13 +263,13 @@ namespace ns3 {
 
             switch(freeop->type) {
                 case OP_LOCOP:
-                if(1) printf("init %i (%i,%i) loclop: %lu\n", host, freeop->proc, freeop->nic, (long unsigned int) freeop->size);
+                if(0) printf("init %i (%i,%i) loclop: %lu\n", host, freeop->proc, freeop->nic, (long unsigned int) freeop->size);
                 break;
                 case OP_SEND:
-                if(1) printf("init %i (%i,%i) send to: %i, tag: %i, size: %lu\n", host, freeop->proc, freeop->nic, freeop->target, freeop->tag, (long unsigned int) freeop->size);
+                if(0) printf("init %i (%i,%i) send to: %i, tag: %i, size: %lu\n", host, freeop->proc, freeop->nic, freeop->target, freeop->tag, (long unsigned int) freeop->size);
                 break;
                 case OP_RECV:
-                if(1) printf("init %i (%i,%i) recvs from: %i, tag: %i, size: %lu\n", host, freeop->proc, freeop->nic, freeop->target, freeop->tag, (long unsigned int) freeop->size);
+                if(0) printf("init %i (%i,%i) recvs from: %i, tag: %i, size: %lu\n", host, freeop->proc, freeop->nic, freeop->target, freeop->tag, (long unsigned int) freeop->size);
                 break;
                 default:
                 printf("not implemented!\n");
@@ -267,6 +280,8 @@ namespace ns3 {
             }
         }
 
+        //printf("Initial AQ Size is %d\n\n", aq.size());
+
         bool new_events=true;
         bool first_cycle = true;
         uint lastperc=0;
@@ -276,16 +291,16 @@ namespace ns3 {
 
 
         while (!aq.empty() || (size_queue(rq, p) > 0) || (size_queue(uq, p) > 0) /*|| (all_sends_delivered() == false || first_cycle)*/) {
-            if (cycles > 15) {
-                printf("\nERROR: We are in some sort of loop in the main WHILE. Breaking after 100k cycles\n\n");
+            if (cycles > 2000) {
+                //printf("\nERROR: We are in some sort of loop in the main WHILE. Breaking after 100k cycles\n\n");
                 break;
             }
-            printf("----------------------------    ENTERING WHILE ---------------------------- | %ld %ld -  %d %d - %d %d %d\n", aq.top().time, ns3_time, all_sends_delivered(), first_cycle, size_queue(rq, p), size_queue(uq, p), aq.size() );
+            //printf("----------------------------    ENTERING WHILE ---------------------------- | %ld %ld -  %d %d - %d %d %d\n", aq.top().time, ns3_time, all_sends_delivered(), first_cycle, size_queue(rq, p), size_queue(uq, p), aq.size() );
 
 
             graph_node_properties temp_elem = aq.top();
             while(!aq.empty() && aq.top().time <= ns3_time) {
-                if (cycles > 1000) {
+                if (cycles > 2000) {
                     printf("\nERROR: We are in some sort of loop in the main WHILE. Breaking after 100k cycles\n\n");
                     exit(0);
                 }
@@ -293,7 +308,7 @@ namespace ns3 {
                 
 
                 graph_node_properties elem = aq.top();
-                printf("Entered while loop - Elem is %d to %d, size %d - Type %d - Time %lu - Size AQ is %d\n", elem.host, elem.target, elem.size, elem.type, (ulint)elem.time, aq.size());
+                //printf("Entered while loop - Elem is %d to %d, size %d - Type %d - Time %lu - Size AQ is %d - Proc %d\n", elem.host, elem.target, elem.size, elem.type, (ulint)elem.time, aq.size(), elem.proc);
                 aq.pop();
                 //std::cout << "AQ size after pop: " << aq.size() << "\n";
                 
@@ -312,7 +327,7 @@ namespace ns3 {
                     // check if OS Noise occurred
                     btime_t noise = osnoise.get_noise(elem.host, elem.time, elem.time+elem.size);
                     nexto[elem.host][elem.proc] = elem.size + ns3_time;
-                    printf("====================== Updated time is %ld ===============================1\n",  nexto[elem.host][elem.proc]);
+                    //printf("====================== Updated time is %ld ===============================1\n",  nexto[elem.host][elem.proc]);
                     // satisfy irequires
                     //parser.schedules[elem.host].issue_node(elem.node);
                     // satisfy requires+irequires
@@ -337,8 +352,8 @@ namespace ns3 {
 
                 case OP_SEND: { // a send op
                                                     
-                    if(1) printf("[%i] found send to %i - t: %lu (CPU: %i)\n", elem.host, elem.target, (ulint)elem.time, elem.proc);
-                    printf("Avail is %ld %ld\n", nexto[elem.host][elem.proc], nextgs[elem.host][elem.nic]);
+                    if(0) printf("[%i] found send to %i - t: %lu (CPU: %i)\n", elem.host, elem.target, (ulint)elem.time, elem.proc);
+                    //printf("Avail is %ld %ld\n", nexto[elem.host][elem.proc], nextgs[elem.host][elem.nic]);
                     if(std::max(nexto[elem.host][elem.proc],nextgs[elem.host][elem.nic]) <= elem.time) { // local o,g available!
                     if(print) printf("-- satisfy local irequires\n");
                     parser.schedules[elem.host].MarkNodeAsStarted(elem.offset);
@@ -354,7 +369,7 @@ namespace ns3 {
                     // insert packet into network layer
                             //net.insert(elem.time, elem.host, elem.target, elem.size, &elem.handle);
                     //printf("==================== NIC1 is %d %d %d\n", elem.nic, elem.proc, elem.offset); fflush(stdout);
-                    ns3_schedule(elem.host, elem.target, elem.size, elem.starttime, elem.offset);
+                    ns3_schedule(elem.host, elem.target, elem.size, elem.tag, elem.starttime, elem.offset);
                     //printf("==================== NIC is %d %d %d\n", elem.nic, elem.proc, elem.offset);
                     parser.schedules[elem.host].MarkNodeAsDone(elem.offset);
                             //elem.type = OP_MSG;
@@ -387,7 +402,7 @@ namespace ns3 {
                                                     
                     } break;
                 case OP_RECV: {
-                    if(1) printf("[%i] found recv from %i - t: %lu (CPU: %i)\n", elem.host, elem.target, (ulint)elem.time, elem.proc);
+                    if(0) printf("[%i] found recv from %i - t: %lu (CPU: %i)\n", elem.host, elem.target, (ulint)elem.time, elem.proc);
 
                     parser.schedules[elem.host].MarkNodeAsStarted(elem.offset);
                     check_hosts.push_back(elem.host);
@@ -412,7 +427,7 @@ namespace ns3 {
                     nelem.tag = elem.tag;
                     nelem.offset = elem.offset;
             #ifdef LIST_MATCH
-                    printf("############ Host added is %d\n\n", elem.host);
+                    //printf("############ Host added is %d\n\n", elem.host);
                     rq[elem.host].push_back(nelem);
             #else
                     rq[elem.host][std::make_pair(nelem.tag,nelem.src)].push(nelem);
@@ -421,20 +436,20 @@ namespace ns3 {
                     } break;
 
                 case OP_MSG: {
-                    if(1) printf("[%i] found msg from %i, t: %lu (CPU: %i) - %d %d %d\n", elem.host, elem.target, (ulint)elem.time, elem.proc, elem.nic, elem.proc, elem.offset);
+                    if(0) printf("[%i] found msg from %i, t: %lu (CPU: %i) - %d %d %d\n", elem.host, elem.target, (ulint)elem.time, elem.proc, elem.nic, elem.proc, elem.offset);
                     uint64_t earliestfinish;
                     // NUMBER of elements that were searched during message matching
                     int32_t match_attempts;
-                    printf("nexto[elem.host][elem.proc] (%d %d) %ld - nextgr[elem.host][elem.nic] %ld - time %ld\n",nexto[elem.host][elem.proc], elem.host, elem.proc, nextgr[elem.host][elem.nic],elem.time);
+                    //printf("nexto[elem.host][elem.proc] %ld (%d %d) - nextgr[elem.host][elem.nic] %ld (%d %d) - time %ld\n",nexto[elem.host][elem.proc], elem.host, elem.proc, nextgr[elem.host][elem.nic],elem.host, elem.nic,elem.time);
                     if(std::max(nexto[elem.host][elem.proc],nextgr[elem.host][elem.nic]) <= elem.time /* local o,g available! */) { 
                     //if (1) {
-                        printf("Reaching here %d %d - %d %d\n", nexto.size(), nextgr.size(), nexto[0].size(), nextgr[0].size()); fflush(stdout);
-                        //if(1) printf("-- msg o,g available (nexto: %lu, nextgr: %lu)\n", (long unsigned int) nexto[elem.host][elem.proc], (long unsigned int) nextgr[elem.host][elem.nic]);
+                        //printf("Reaching here %d %d - %d %d\n", nexto.size(), nextgr.size(), nexto[0].size(), nextgr[0].size()); fflush(stdout);
+                        //if(0) printf("-- msg o,g available (nexto: %lu, nextgr: %lu)\n", (long unsigned int) nexto[elem.host][elem.proc], (long unsigned int) nextgr[elem.host][elem.nic]);
                         // check if OS Noise occurred
                         //btime_t noise = osnoise.get_noise(elem.host, elem.time, elem.time+o);
                         nexto[elem.host][elem.proc] = elem.time+0; /* message is only received after G is charged !! TODO: consuming o seems a bit odd in the LogGP model but well in practice */;
                         nextgr[elem.host][elem.nic] = elem.time+0;
-                        printf("====================== Updated time is %ld ===============================2\n",  nexto[elem.host][elem.proc]);
+                        //printf("====================== Updated time is %ld ===============================2\n",  nexto[elem.host][elem.proc]);
 
                         //nexto[elem.host][elem.proc] = elem.time+o+0+std::max((elem.size-1)*O,(elem.size-1)*G) /* message is only received after G is charged !! TODO: consuming o seems a bit odd in the LogGP model but well in practice */;
                         //nextgr[elem.host][elem.nic] = elem.time+g+(elem.size-1)*G;
@@ -451,7 +466,7 @@ namespace ns3 {
                             rq_times[elem.host].push_back(elem.time - matched_elem.starttime);
                             }
 
-                            if(1) printf("-- AAAAAAAAAAA found in RQ\n");
+                            if(0) printf("-- Found in RQ\n");
                             parser.schedules[elem.host].MarkNodeAsDone(matched_elem.offset);
                             //check_hosts.push_back(elem.host);
                             //printf("Reached after DONE \n"); fflush(stdout);
@@ -459,7 +474,7 @@ namespace ns3 {
 
                         } else { // not in RQ
 
-                            if(1) printf("-- not found in RQ - add to UQ\n");
+                            if(0) printf("-- not found in RQ - add to UQ\n");
                             ruqelem_t nelem;
                             nelem.size = elem.size;
                             nelem.src = elem.target;
@@ -474,7 +489,7 @@ namespace ns3 {
                         }
                     } else {
                     elem.time=std::max(std::max(nexto[elem.host][elem.proc],nextgr[elem.host][elem.nic]), earliestfinish);
-                    if(1) printf("-- msg o,g not available -- reinserting\n");
+                    if(0) printf("-- msg o,g not available -- reinserting\n");
                     aq.push(elem);
                     }
                     
@@ -493,81 +508,94 @@ namespace ns3 {
                 
             }
 
+            // How much ime inside NS3
+            auto start_ns3 = high_resolution_clock::now();
+
             // Need support for RECV
             graph_node_properties recev_msg;
             recev_msg.updated = false;
             // We Run NS-3 if we have a compute message or if we have still some data in the network
-            printf("QUA\n"); fflush(stdout);
-            printf("Currrrrrrrrrrrrent elem time is %ld while NS3 %ld\n", temp_elem.time, ns3_time); fflush(stdout);
+            //printf("Current elem time is %ld while NS3 %ld\n", temp_elem.time, ns3_time); fflush(stdout);
             if (!all_sends_delivered()) {
                 if (temp_elem.time > ns3_time) {
                     ns3_time = ns3_simulate_until(temp_elem.time, &recev_msg);
                 } else {
-                    printf("RUnning until");
+                    //printf("Running until");
                     ns3_time = ns3_simulate_until(std::numeric_limits<int64_t>::max() - Simulator::Now().GetNanoSeconds() - 1, &recev_msg);
                 }
             }
+            // How much time inside NS3
+            auto t2 = high_resolution_clock::now();
+            /* Getting number of milliseconds as an integer. */
+            auto ms_int = duration_cast<milliseconds>(t2 - start_ns3);
+            global_time += ms_int;
+            //std::cout << "\n\nRunTime Run LGS -> " << ms_int.count() << "ms\n";
+            //std::cout << "\n\nRunTime Total Partial LGS -> " << global_time.count() << "ms\n";
+
             // If the OP is NULL then we just continue
             if (recev_msg.updated) {
-                printf("..... Received a MSG -- %d to %d, proc %d\n", recev_msg.host, recev_msg.target, recev_msg.proc);
+                //printf("..... Received a MSG -- %d to %d, proc %d\n", recev_msg.host, recev_msg.target, recev_msg.proc);
                 aq.push(recev_msg);
             } else {
             // If not NULL, we add it to the AQ
-                printf("..... NOT Received a MSG\n");
+                //printf("..... NOT Received a MSG\n");
             }
 
             host = 0;
-                for(Parser::schedules_t::iterator sched=parser.schedules.begin(); sched!=parser.schedules.end(); ++sched, ++host) {
-                //host = *iter;
-                //for(host = 0; host < p; host++) 
-                //SerializedGraph *sched=&parser.schedules[host];
+            for(Parser::schedules_t::iterator sched=parser.schedules.begin(); sched!=parser.schedules.end(); ++sched, ++host) {
+                //printf("Starting to parse new ops %d\n", 1); fflush(stdout);
+            //host = *iter;
+            //for(host = 0; host < p; host++) 
+            //SerializedGraph *sched=&parser.schedules[host];
 
-                // retrieve all free operations
-                SerializedGraph::nodelist_t free_ops;
-                sched->GetExecutableNodes(&free_ops);
-                // ensure that the free ops are ordered by type
-                std::sort(free_ops.begin(), free_ops.end(), gnp_op_comp_func());
-                
-                // walk all new free operations and throw them in the queue 
-                for(SerializedGraph::nodelist_t::iterator freeop=free_ops.begin(); freeop != free_ops.end(); ++freeop) {
-                    //if(print) std::cout << *freeop << " " ;
-                    //new_events = true;
+            // retrieve all free operations
+            SerializedGraph::nodelist_t free_ops;
+            sched->GetExecutableNodes(&free_ops);
+            // ensure that the free ops are ordered by type
+            std::sort(free_ops.begin(), free_ops.end(), gnp_op_comp_func());
 
-                    // assign host that it starts on
-                    freeop->host = host;
+            //printf("Free Op Size %d\n", free_ops.size());
+            
+            // walk all new free operations and throw them in the queue 
+            for(SerializedGraph::nodelist_t::iterator freeop=free_ops.begin(); freeop != free_ops.end(); ++freeop) {
+                //if(print) std::cout << *freeop << " " ;
+                //new_events = true;
 
-            #ifdef STRICT_ORDER
-                    freeop->ts=aqtime++;
-            #endif
-                    printf("We arrive here %d\n", freeop->type); fflush(stdout);
-                    switch(freeop->type) {
-                    case OP_LOCOP:
-                        freeop->time = nexto[host][freeop->proc];
-                        if(print) printf("%i (%i,%i) loclop: %lu, time: %lu, offset: %i\n", host, freeop->proc, freeop->nic, (long unsigned int) freeop->size, (long unsigned int)freeop->time, freeop->offset);
-                        break;
-                    case OP_SEND:
-                        freeop->time = ns3_time;
-                        //freeop->time = std::max(nexto[host][freeop->proc], nextgs[host][freeop->nic]);
-                        if(1) printf("%i (%i,%i) send to: %i, tag: %i, size: %lu, time: %lu, offset: %i\n", host, freeop->proc, freeop->nic, freeop->target, freeop->tag, (long unsigned int) freeop->size, (long unsigned int)freeop->time, freeop->offset);
-                        break;
-                    case OP_RECV:
-                        freeop->time = nexto[host][freeop->proc];
-                        if(print) printf("%i (%i,%i) recvs from: %i, tag: %i, size: %lu, time: %lu, offset: %i\n", host, freeop->proc, freeop->nic, freeop->target, freeop->tag, (long unsigned int) freeop->size, (long unsigned int)freeop->time, freeop->offset);
-                        break;
-                    default:
-                        printf("not implemented!\n");
-                    }
-                    printf("TTTTTTTTTTTTTTTTTTTT Putting something here TTTTTTTTTTTTTTTTTTTTTTT\n"); fflush(stdout);
+                // assign host that it starts on
+                freeop->host = host;
+
+        #ifdef STRICT_ORDER
+                freeop->ts=aqtime++;
+        #endif
+                //printf("We arrive here %d\n", freeop->type); fflush(stdout);
+                switch(freeop->type) {
+                case OP_LOCOP:
+                    freeop->time = nexto[host][freeop->proc];
+                    if(print) printf("%i (%i,%i) loclop: %lu, time: %lu, offset: %i\n", host, freeop->proc, freeop->nic, (long unsigned int) freeop->size, (long unsigned int)freeop->time, freeop->offset);
+                    break;
+                case OP_SEND:
                     freeop->time = ns3_time;
-                    aq.push(*freeop);
+                    //freeop->time = std::max(nexto[host][freeop->proc], nextgs[host][freeop->nic]);
+                    if(0) printf("%i (%i,%i) send to: %i, tag: %i, size: %lu, time: %lu, offset: %i\n", host, freeop->proc, freeop->nic, freeop->target, freeop->tag, (long unsigned int) freeop->size, (long unsigned int)freeop->time, freeop->offset);
+                    break;
+                case OP_RECV:
+                    freeop->time = nexto[host][freeop->proc];
+                    if(print) printf("%i (%i,%i) recvs from: %i, tag: %i, size: %lu, time: %lu, offset: %i\n", host, freeop->proc, freeop->nic, freeop->target, freeop->tag, (long unsigned int) freeop->size, (long unsigned int)freeop->time, freeop->offset);
+                    break;
+                default:
+                    printf("not implemented!\n");
                 }
-                }
+                freeop->time = ns3_time;
+                aq.push(*freeop);
+            }
+            }
 
             first_cycle = false;
             cycles++;
         }
+        std::cout << "\n\nRunTime Total LGS -> " << global_time.count() << "ms\n";
         ns3_terminate(ns3_time);
-        printf("NS3 Terminates at %ld\n", ns3_time);
+        printf("\n\n\nNS3 Terminates at %ld\n\n\n", ns3_time);
             
         gettimeofday(&tend, NULL);
             unsigned long int diff = tend.tv_sec - tstart.tv_sec;

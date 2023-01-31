@@ -147,6 +147,10 @@ def build(bld):
         'model/vector.cc',
         'model/fatal-impl.cc',
         'model/system-path.cc',
+        'model/hash-fnv.cc',
+        'model/hash-function.cc',
+        'model/hash-murmur3.cc',
+        'model/hash.cc',
         ]
 
     core_test = bld.create_ns3_module_test_library('core')
@@ -246,6 +250,10 @@ def build(bld):
         'model/system-path.h',
         'model/unused.h',
         'model/math.h',
+        'model/hash-fnv.h',
+        'model/hash-function.h',
+        'model/hash-murmur3.h',
+        'model/hash.h',
         ]
 
     if sys.platform == 'win32':

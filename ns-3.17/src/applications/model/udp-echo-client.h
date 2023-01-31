@@ -121,7 +121,7 @@ public:
    * \param dataSize The desired size of the final echo data.
    */
   void SetFill (uint8_t *fill, uint32_t fillSize, uint32_t dataSize);
-
+  void SetPairs (std::vector <std::pair<Ipv4Address, int>>);
 protected:
   virtual void DoDispose (void);
 
@@ -136,6 +136,7 @@ private:
   void HandleRead (Ptr<Socket> socket);
 
   uint32_t m_count;
+  uint32_t m_tag;
   uint64_t m_allowed;
   uint32_t m_chunk;
 
@@ -153,6 +154,7 @@ private:
   EventId m_sendEvent;
   /// Callbacks for tracing the packet Tx events
   TracedCallback<Ptr<const Packet> > m_txTrace;
+  std::vector <std::pair<Ipv4Address, int>> address_pair;
 
   uint16_t m_pg;
 };

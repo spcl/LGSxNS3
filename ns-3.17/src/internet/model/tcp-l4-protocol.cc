@@ -57,12 +57,12 @@ NS_OBJECT_ENSURE_REGISTERED (TcpL4Protocol);
 
 #undef NS_LOG_APPEND_CONTEXT
 #define NS_LOG_APPEND_CONTEXT                                   \
-  if (m_node) { std::clog << Simulator::Now ().GetSeconds () << " [node " << m_node->GetId () << "] "; } 
+  if (m_node) { std::clog << Simulator::Now ().GetSeconds () << " [node " << m_node->GetId () << "] "; }
 
 /* see http://www.iana.org/assignments/protocol-numbers */
 const uint8_t TcpL4Protocol::PROT_NUMBER = 6;
 
-TypeId 
+TypeId
 TcpL4Protocol::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::TcpL4Protocol")
@@ -98,15 +98,15 @@ TcpL4Protocol::~TcpL4Protocol ()
   NS_LOG_FUNCTION_NOARGS ();
 }
 
-void 
+void
 TcpL4Protocol::SetNode (Ptr<Node> node)
 {
   m_node = node;
 }
 
-/* 
+/*
  * This method is called by AddAgregate and completes the aggregation
- * by setting the node in the TCP stack, link it to the ipv4 stack and 
+ * by setting the node in the TCP stack, link it to the ipv4 stack and
  * adding TCP socket factory to the node.
  */
 void
@@ -131,7 +131,7 @@ TcpL4Protocol::NotifyNewAggregate ()
   // functions.  Since these functions have different prototypes, we
   // need to keep track of whether we are connected to an IPv4 or
   // IPv6 lower layer and call the appropriate one.
-  
+
   if (ipv4 != 0 && m_downTarget.IsNull ())
     {
       ipv4->Insert(this);
@@ -145,7 +145,7 @@ TcpL4Protocol::NotifyNewAggregate ()
   Object::NotifyNewAggregate ();
 }
 
-int 
+int
 TcpL4Protocol::GetProtocolNumber (void) const
 {
   return PROT_NUMBER;
@@ -234,7 +234,7 @@ TcpL4Protocol::Allocate (Ipv4Address localAddress, uint16_t localPort,
                                 peerAddress, peerPort);
 }
 
-void 
+void
 TcpL4Protocol::DeAllocate (Ipv4EndPoint *endPoint)
 {
   NS_LOG_FUNCTION (this << endPoint);
@@ -285,13 +285,13 @@ TcpL4Protocol::DeAllocate (Ipv6EndPoint *endPoint)
   m_endPoints6->DeAllocate (endPoint);
 }
 
-void 
+void
 TcpL4Protocol::ReceiveIcmp (Ipv4Address icmpSource, uint8_t icmpTtl,
                             uint8_t icmpType, uint8_t icmpCode, uint32_t icmpInfo,
                             Ipv4Address payloadSource,Ipv4Address payloadDestination,
                             const uint8_t payload[8])
 {
-  NS_LOG_FUNCTION (this << icmpSource << icmpTtl << icmpType << icmpCode << icmpInfo 
+  NS_LOG_FUNCTION (this << icmpSource << icmpTtl << icmpType << icmpCode << icmpInfo
                         << payloadSource << payloadDestination);
   uint16_t src, dst;
   src = payload[0] << 8;
@@ -312,13 +312,13 @@ TcpL4Protocol::ReceiveIcmp (Ipv4Address icmpSource, uint8_t icmpTtl,
     }
 }
 
-void 
+void
 TcpL4Protocol::ReceiveIcmp (Ipv6Address icmpSource, uint8_t icmpTtl,
                             uint8_t icmpType, uint8_t icmpCode, uint32_t icmpInfo,
                             Ipv6Address payloadSource,Ipv6Address payloadDestination,
                             const uint8_t payload[8])
 {
-  NS_LOG_FUNCTION (this << icmpSource << icmpTtl << icmpType << icmpCode << icmpInfo 
+  NS_LOG_FUNCTION (this << icmpSource << icmpTtl << icmpType << icmpCode << icmpInfo
                         << payloadSource << payloadDestination);
   uint16_t src, dst;
   src = payload[0] << 8;
@@ -413,7 +413,7 @@ TcpL4Protocol::Receive (Ptr<Packet> packet,
             }
           header.SetSourcePort (tcpHeader.GetDestinationPort ());
           header.SetDestinationPort (tcpHeader.GetSourcePort ());
-          SendPacket (rstPacket, header, ipHeader.GetDestination (), ipHeader.GetSource ());
+          SendPacket (rstPacket, header, ipHeader.GetDestination (), ipHeader.GetSource (), ipHeader.GetTos ());
           return IpL4Protocol::RX_ENDPOINT_CLOSED;
         }
       else
@@ -423,7 +423,7 @@ TcpL4Protocol::Receive (Ptr<Packet> packet,
     }
   NS_ASSERT_MSG (endPoints.size () == 1, "Demux returned more than one endpoint");
   NS_LOG_LOGIC ("TcpL4Protocol "<<this<<" forwarding up to endpoint/socket");
-  (*endPoints.begin ())->ForwardUp (packet, ipHeader, tcpHeader.GetSourcePort (), 
+  (*endPoints.begin ())->ForwardUp (packet, ipHeader, tcpHeader.GetSourcePort (),
                                     incomingInterface);
   return IpL4Protocol::RX_OK;
 }
@@ -495,7 +495,7 @@ TcpL4Protocol::Receive (Ptr<Packet> packet,
             }
           header.SetSourcePort (tcpHeader.GetDestinationPort ());
           header.SetDestinationPort (tcpHeader.GetSourcePort ());
-          SendPacket (rstPacket, header, ipHeader.GetDestinationAddress (), ipHeader.GetSourceAddress ());
+          SendPacket (rstPacket, header, ipHeader.GetDestinationAddress (), ipHeader.GetSourceAddress (), ipHeader.GetTrafficClass ());
           return IpL4Protocol::RX_ENDPOINT_CLOSED;
         }
       else
@@ -510,11 +510,11 @@ TcpL4Protocol::Receive (Ptr<Packet> packet,
 }
 
 void
-TcpL4Protocol::Send (Ptr<Packet> packet, 
-                     Ipv4Address saddr, Ipv4Address daddr,
+TcpL4Protocol::Send (Ptr<Packet> packet,
+                     Ipv4Address saddr, Ipv4Address daddr, uint8_t tos,
                      uint16_t sport, uint16_t dport, Ptr<NetDevice> oif)
 {
-  NS_LOG_FUNCTION (this << packet << saddr << daddr << sport << dport << oif);
+  NS_LOG_FUNCTION (this << packet << saddr << daddr << (uint32_t)tos << sport << dport << oif);
 
   TcpHeader tcpHeader;
   tcpHeader.SetDestinationPort (dport);
@@ -537,6 +537,7 @@ TcpL4Protocol::Send (Ptr<Packet> packet,
       Ipv4Header header;
       header.SetDestination (daddr);
       header.SetProtocol (PROT_NUMBER);
+      header.SetTos (tos);
       Socket::SocketErrno errno_;
       Ptr<Ipv4Route> route;
       Ptr<NetDevice> oif (0); //specify non-zero if bound to a source address
@@ -549,16 +550,16 @@ TcpL4Protocol::Send (Ptr<Packet> packet,
           NS_LOG_ERROR ("No IPV4 Routing Protocol");
           route = 0;
         }
-      ipv4->Send (packet, saddr, daddr, PROT_NUMBER, route);
+      ipv4->Send (packet, saddr, daddr, tos, PROT_NUMBER, route);
     }
 }
 
 void
 TcpL4Protocol::Send (Ptr<Packet> packet,
-                     Ipv6Address saddr, Ipv6Address daddr,
+                     Ipv6Address saddr, Ipv6Address daddr, uint8_t tClass,
                      uint16_t sport, uint16_t dport, Ptr<NetDevice> oif)
 {
-  NS_LOG_FUNCTION (this << packet << saddr << daddr << sport << dport << oif);
+  NS_LOG_FUNCTION (this << packet << saddr << daddr << (uint32_t)tClass << sport << dport << oif);
 
   TcpHeader tcpHeader;
   tcpHeader.SetDestinationPort (dport);
@@ -581,6 +582,7 @@ TcpL4Protocol::Send (Ptr<Packet> packet,
       Ipv6Header header;
       header.SetDestinationAddress (daddr);
       header.SetNextHeader (PROT_NUMBER);
+      header.SetTrafficClass (tClass);
       Socket::SocketErrno errno_;
       Ptr<Ipv6Route> route;
       Ptr<NetDevice> oif (0); //specify non-zero if bound to a source address
@@ -593,13 +595,13 @@ TcpL4Protocol::Send (Ptr<Packet> packet,
           NS_LOG_ERROR ("No IPV6 Routing Protocol");
           route = 0;
         }
-      ipv6->Send (packet, saddr, daddr, PROT_NUMBER, route);
+      ipv6->Send (packet, saddr, daddr, tClass, PROT_NUMBER, route);
     }
 }
 
 void
 TcpL4Protocol::SendPacket (Ptr<Packet> packet, const TcpHeader &outgoing,
-                           Ipv4Address saddr, Ipv4Address daddr, Ptr<NetDevice> oif)
+                           Ipv4Address saddr, Ipv4Address daddr, uint8_t tos, Ptr<NetDevice> oif)
 {
   NS_LOG_LOGIC ("TcpL4Protocol " << this
                                  << " sending seq " << outgoing.GetSequenceNumber ()
@@ -610,7 +612,6 @@ TcpL4Protocol::SendPacket (Ptr<Packet> packet, const TcpHeader &outgoing,
   // XXX outgoingHeader cannot be logged
 
   TcpHeader outgoingHeader = outgoing;
-  outgoingHeader.SetLength (5); //header length in units of 32bit words
   /* outgoingHeader.SetUrgentPointer (0); //XXX */
   if(Node::ChecksumEnabled ())
     {
@@ -620,13 +621,14 @@ TcpL4Protocol::SendPacket (Ptr<Packet> packet, const TcpHeader &outgoing,
 
   packet->AddHeader (outgoingHeader);
 
-  Ptr<Ipv4> ipv4 = 
+  Ptr<Ipv4> ipv4 =
     m_node->GetObject<Ipv4> ();
   if (ipv4 != 0)
     {
       Ipv4Header header;
       header.SetDestination (daddr);
       header.SetProtocol (PROT_NUMBER);
+      header.SetTos (tos);
       Socket::SocketErrno errno_;
       Ptr<Ipv4Route> route;
       if (ipv4->GetRoutingProtocol () != 0)
@@ -638,7 +640,7 @@ TcpL4Protocol::SendPacket (Ptr<Packet> packet, const TcpHeader &outgoing,
           NS_LOG_ERROR ("No IPV4 Routing Protocol");
           route = 0;
         }
-      m_downTarget (packet, saddr, daddr, PROT_NUMBER, route);
+      m_downTarget (packet, saddr, daddr, tos, PROT_NUMBER, route);
     }
   else
     NS_FATAL_ERROR ("Trying to use Tcp on a node without an Ipv4 interface");
@@ -646,7 +648,7 @@ TcpL4Protocol::SendPacket (Ptr<Packet> packet, const TcpHeader &outgoing,
 
 void
 TcpL4Protocol::SendPacket (Ptr<Packet> packet, const TcpHeader &outgoing,
-                           Ipv6Address saddr, Ipv6Address daddr, Ptr<NetDevice> oif)
+                           Ipv6Address saddr, Ipv6Address daddr, uint8_t tClass, Ptr<NetDevice> oif)
 {
   NS_LOG_LOGIC ("TcpL4Protocol " << this
                                  << " sending seq " << outgoing.GetSequenceNumber ()
@@ -658,10 +660,9 @@ TcpL4Protocol::SendPacket (Ptr<Packet> packet, const TcpHeader &outgoing,
 
   if (daddr.IsIpv4MappedAddress ())
     {
-      return (SendPacket (packet, outgoing, saddr.GetIpv4MappedAddress(), daddr.GetIpv4MappedAddress(), oif));
+      return (SendPacket (packet, outgoing, saddr.GetIpv4MappedAddress(), daddr.GetIpv4MappedAddress(), tClass, oif));
     }
   TcpHeader outgoingHeader = outgoing;
-  outgoingHeader.SetLength (5); //header length in units of 32bit words
   /* outgoingHeader.SetUrgentPointer (0); //XXX */
   if(Node::ChecksumEnabled ())
     {
@@ -678,6 +679,7 @@ TcpL4Protocol::SendPacket (Ptr<Packet> packet, const TcpHeader &outgoing,
       header.SetDestinationAddress (daddr);
       header.SetSourceAddress (saddr);
       header.SetNextHeader (PROT_NUMBER);
+      header.SetTrafficClass (tClass);
       Socket::SocketErrno errno_;
       Ptr<Ipv6Route> route;
       if (ipv6->GetRoutingProtocol () != 0)
@@ -689,7 +691,7 @@ TcpL4Protocol::SendPacket (Ptr<Packet> packet, const TcpHeader &outgoing,
           NS_LOG_ERROR ("No IPV6 Routing Protocol");
           route = 0;
         }
-      m_downTarget6 (packet, saddr, daddr, PROT_NUMBER, route);
+      m_downTarget6 (packet, saddr, daddr, tClass, PROT_NUMBER, route);
     }
   else
     NS_FATAL_ERROR ("Trying to use Tcp on a node without an Ipv6 interface");

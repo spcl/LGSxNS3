@@ -24,10 +24,10 @@
 #include "ns3/type-id.h"
 #include "ns3/test.h"
 #include "ns3/string.h"
-#include <cstdlib>
-#include <cstdarg>
+#include <stdlib.h>
+#include <stdarg.h>
 
-using namespace ns3;
+namespace ns3 {
 
 // ===========================================================================
 // A test base class that drives Command Line parsing
@@ -219,10 +219,12 @@ public:
 CommandLineTestSuite::CommandLineTestSuite ()
   : TestSuite ("command-line", UNIT)
 {
-  AddTestCase (new CommandLineBooleanTestCase, TestCase::QUICK);
-  AddTestCase (new CommandLineIntTestCase, TestCase::QUICK);
-  AddTestCase (new CommandLineUnsignedIntTestCase, TestCase::QUICK);
-  AddTestCase (new CommandLineStringTestCase, TestCase::QUICK);
+  AddTestCase (new CommandLineBooleanTestCase);
+  AddTestCase (new CommandLineIntTestCase);
+  AddTestCase (new CommandLineUnsignedIntTestCase);
+  AddTestCase (new CommandLineStringTestCase);
 }
 
 static CommandLineTestSuite CommandLineTestSuite;
+
+} // namespace ns3

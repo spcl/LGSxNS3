@@ -175,6 +175,13 @@ Object::DoGetObject (TypeId tid) const
     }
   return 0;
 }
+
+void
+Object::Start(void)
+{
+	Initialize();
+}
+
 void
 Object::Initialize (void)
 {
@@ -194,7 +201,7 @@ restart:
       Object *current = m_aggregates->buffer[i];
       if (!current->m_initialized)
         {
-          current->DoInitialize ();
+          current->DoStart ();
           current->m_initialized = true;
           goto restart;
         }
@@ -336,6 +343,13 @@ Object::DoDispose (void)
 {
   NS_LOG_FUNCTION (this);
   NS_ASSERT (!m_disposed);
+}
+
+
+void
+Object::DoStart(void)
+{
+	DoInitialize();
 }
 
 void

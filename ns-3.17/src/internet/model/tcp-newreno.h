@@ -61,6 +61,7 @@ protected:
   virtual uint32_t GetSSThresh (void) const;
   virtual void     SetInitialCwnd (uint32_t cwnd);
   virtual uint32_t GetInitialCwnd (void) const;
+  virtual void    HalveCwnd (void);
 private:
   void InitializeCwnd (void);            // set m_cWnd when connection starts
 
@@ -72,6 +73,15 @@ protected:
   uint32_t               m_retxThresh;   //< Fast Retransmit threshold
   bool                   m_inFastRec;    //< currently in fast recovery
   bool                   m_limitedTx;    //< perform limited transmit
+  Time                   m_ssThreshLastChange; //< Time when ssThresh was last changed
+
+  double m_alpha;
+  double m_g;
+  double m_last_update_alpha;
+  uint32_t m_received;
+  uint32_t m_marked;
+  uint32_t m_lastwin;
+
 };
 
 } // namespace ns3

@@ -27,7 +27,7 @@
 #include "ns3/log.h"
 #include "ns3/simulator.h"
 
-using namespace ns3;
+namespace ns3 {
 
 class RedQueueTestCase : public TestCase
 {
@@ -276,6 +276,8 @@ public:
   RedQueueTestSuite ()
     : TestSuite ("red-queue", UNIT)
   {
-    AddTestCase (new RedQueueTestCase (), TestCase::QUICK);
+    AddTestCase (new RedQueueTestCase ());
   }
 } g_redQueueTestSuite;
+
+} // namespace ns3

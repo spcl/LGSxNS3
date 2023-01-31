@@ -51,6 +51,16 @@ typedef enum {
   LAST_STATE
 } TcpStates_t;
 
+// ECN state related attributes
+enum EcnState {
+  NO_ECN        = 0x0,
+  ECN_CONN      = 0x1,     //< ECN Connection is established
+  ECN_TX_ECHO   = 0x2,     //< We're sending ECN Echo to transmitter
+  ECN_RX_ECHO   = 0x4,     //< We've received ECN Echo
+  ECN_SEND_CWR  = 0x8,     //< We're going to send CWR flag
+  ECN_STATE_MAX = 0x16
+};
+
 /**
  * \ingroup socket
  *
@@ -63,7 +73,7 @@ class TcpSocket : public Socket
 {
 public:
   static TypeId GetTypeId (void);
- 
+
   TcpSocket (void);
   virtual ~TcpSocket (void);
 
@@ -94,7 +104,8 @@ private:
   virtual bool GetTcpNoDelay (void) const = 0;
   virtual void SetPersistTimeout (Time timeout) = 0;
   virtual Time GetPersistTimeout (void) const = 0;
-
+  virtual void SetEcnCap (bool EcnCap) = 0;
+  virtual bool GetEcnCap (void) const = 0;
 };
 
 } // namespace ns3

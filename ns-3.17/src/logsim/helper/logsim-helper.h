@@ -26,11 +26,10 @@ namespace ns3 {
     };
 
 
-    void start_lgss(std::string);
     int start_lgs(std::string);
-    void ns3_schedule(u_int32_t, int, int, u_int64_t, int);
-    int ns3_simulate_until(u_int64_t,graph_node_properties* );
-    void initialize_interface_var(/*Ipv4InterfaceContainer ic, */NodeContainer nodesc);
+    void ns3_schedule(u_int32_t, int, int, int, u_int64_t, int);
+    int64_t ns3_simulate_until(u_int64_t, graph_node_properties*);
+    void initialize_interface_var(NodeContainer nodesc, Ipv4InterfaceContainer ic, std::string, int);
     std::unordered_map<std::string, MsgInfo> get_active_sends();
     void update_active_map(std::string, int);
     void update_node_map(int,  Ipv4Address);

@@ -31,7 +31,14 @@ namespace sgi = ::__gnu_cxx;
      #endif
   #endif
 #else      // ...  there are other compilers, right?
+#ifndef WIN32
 namespace sgi = std;
+#else
+#define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS
+#include <hash_map>
+namespace sgi = stdext;
+
+#endif
 #endif
 
 

@@ -18,19 +18,16 @@
  * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
  */
 
-#include "ns3/assert.h" 
-#include "ns3/node.h" 
+#include "ns3/assert.h"
+#include "ns3/node.h"
 #include "ns3/boolean.h"
 #include "ipv4.h"
-#include "ns3/log.h"
-
-NS_LOG_COMPONENT_DEFINE ("Ipv4");
 
 namespace ns3 {
 
 NS_OBJECT_ENSURE_REGISTERED (Ipv4);
 
-TypeId 
+TypeId
 Ipv4::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::Ipv4")
@@ -40,7 +37,7 @@ Ipv4::GetTypeId (void)
                    MakeBooleanAccessor (&Ipv4::SetIpForward,
                                         &Ipv4::GetIpForward),
                    MakeBooleanChecker ())
-    .AddAttribute ("WeakEsModel", 
+    .AddAttribute ("WeakEsModel",
                    "RFC1122 term for whether host accepts datagram with a dest. address on another interface",
                    BooleanValue (true),
                    MakeBooleanAccessor (&Ipv4::SetWeakEsModel,
@@ -59,12 +56,10 @@ Ipv4::GetTypeId (void)
 
 Ipv4::Ipv4 ()
 {
-  NS_LOG_FUNCTION (this);
 }
 
 Ipv4::~Ipv4 ()
 {
-  NS_LOG_FUNCTION (this);
 }
 
 } // namespace ns3

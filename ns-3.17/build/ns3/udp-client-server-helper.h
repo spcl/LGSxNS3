@@ -103,6 +103,9 @@ public:
   UdpClientHelper (Ipv4Address ip, uint16_t port, uint16_t pg);
   UdpClientHelper (Ipv6Address ip, uint16_t port);
   UdpClientHelper (Address ip, uint16_t port);
+  UdpClientHelper (Address ip, uint16_t port, uint16_t pg);
+  void SetPairs (Ptr<Application> app, std::vector <std::pair<Ipv4Address, int>> my_pairs);
+
 
   /**
    * Record an attribute to be set in each Application after it is is created.

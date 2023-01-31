@@ -67,6 +67,7 @@ protected:
   virtual uint32_t GetSSThresh (void) const;
   virtual void     SetInitialCwnd (uint32_t cwnd);
   virtual uint32_t GetInitialCwnd (void) const;
+  virtual void     HalveCwnd (void);
 private:
   void InitializeCwnd (void);            // set m_cWnd when connection starts
 
@@ -75,6 +76,7 @@ protected:
   uint32_t               m_ssThresh;     //< Slow Start Threshold
   uint32_t               m_initialCWnd;  //< Initial cWnd value
   uint32_t               m_retxThresh;   //< Fast Retransmit threshold
+  Time                   m_ssThreshLastChange; //< Time when ssThresh was last changed
 };
 
 } // namespace ns3

@@ -35,6 +35,10 @@
 #include "icmpv6-l4-protocol.h"
 #include "ndisc-cache.h"
 
+#ifdef WIN32
+#include "ipv4-interface.h"
+#endif
+
 namespace ns3 {
 
 NS_OBJECT_ENSURE_REGISTERED (Icmpv6L4Protocol);
@@ -79,17 +83,17 @@ TypeId Icmpv6L4Protocol::GetTypeId ()
 Icmpv6L4Protocol::Icmpv6L4Protocol ()
   : m_node (0)
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
 }
 
 Icmpv6L4Protocol::~Icmpv6L4Protocol ()
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
 }
 
 void Icmpv6L4Protocol::DoDispose ()
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
   for (CacheList::const_iterator it = m_cacheList.begin (); it != m_cacheList.end (); it++)
     {
       Ptr<NdiscCache> cache = *it;
@@ -105,7 +109,7 @@ void Icmpv6L4Protocol::DoDispose ()
 
 void Icmpv6L4Protocol::NotifyNewAggregate ()
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
   if (m_node == 0)
     {
       Ptr<Node> node = this->GetObject<Node> ();
@@ -139,19 +143,18 @@ uint16_t Icmpv6L4Protocol::GetStaticProtocolNumber ()
 
 int Icmpv6L4Protocol::GetProtocolNumber () const
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
   return PROT_NUMBER;
 }
 
 int Icmpv6L4Protocol::GetVersion () const
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
   return 1;
 }
 
 bool Icmpv6L4Protocol::IsAlwaysDad () const
 {
-  NS_LOG_FUNCTION (this);
   return m_alwaysDad;
 }
 
@@ -248,8 +251,6 @@ void Icmpv6L4Protocol::Forward (Ipv6Address source, Icmpv6Header icmp,
                                 uint32_t info, Ipv6Header ipHeader,
                                 const uint8_t payload[8])
 {
-  NS_LOG_FUNCTION (this << source << icmp << info << ipHeader << payload);
-
   Ptr<Ipv6L3Protocol> ipv6 = m_node->GetObject<Ipv6L3Protocol> ();
 
   // TODO assuming the ICMP is carrying a extensionless IP packet
@@ -780,7 +781,7 @@ void Icmpv6L4Protocol::HandleRedirection (Ptr<Packet> packet, Ipv6Address const 
 
 void Icmpv6L4Protocol::HandleDestinationUnreachable (Ptr<Packet> p, Ipv6Address const &src, Ipv6Address const &dst, Ptr<Ipv6Interface> interface)
 {
-  NS_LOG_FUNCTION (this << *p << src << dst << interface);
+  NS_LOG_FUNCTION (this << *p << src << dst);
   Ptr<Packet> pkt = p->Copy ();
 
   Icmpv6DestinationUnreachable unreach;
@@ -799,7 +800,7 @@ void Icmpv6L4Protocol::HandleDestinationUnreachable (Ptr<Packet> p, Ipv6Address 
 
 void Icmpv6L4Protocol::HandleTimeExceeded (Ptr<Packet> p, Ipv6Address const &src, Ipv6Address const &dst, Ptr<Ipv6Interface> interface)
 {
-  NS_LOG_FUNCTION (this << *p << src << dst << interface);
+  NS_LOG_FUNCTION (this << *p << src << dst);
   Ptr<Packet> pkt = p->Copy ();
 
   Icmpv6TimeExceeded timeexceeded;
@@ -815,7 +816,7 @@ void Icmpv6L4Protocol::HandleTimeExceeded (Ptr<Packet> p, Ipv6Address const &src
 
 void Icmpv6L4Protocol::HandlePacketTooBig (Ptr<Packet> p, Ipv6Address const &src, Ipv6Address const &dst, Ptr<Ipv6Interface> interface)
 {
-  NS_LOG_FUNCTION (this << *p << src << dst << interface);
+  NS_LOG_FUNCTION (this << *p << src << dst);
   Ptr<Packet> pkt = p->Copy ();
 
   Icmpv6TooBig tooBig;
@@ -831,7 +832,7 @@ void Icmpv6L4Protocol::HandlePacketTooBig (Ptr<Packet> p, Ipv6Address const &src
 
 void Icmpv6L4Protocol::HandleParameterError (Ptr<Packet> p, Ipv6Address const &src, Ipv6Address const &dst, Ptr<Ipv6Interface> interface)
 {
-  NS_LOG_FUNCTION (this << *p << src << dst << interface);
+  NS_LOG_FUNCTION (this << *p << src << dst);
   Ptr<Packet> pkt = p->Copy ();
 
   Icmpv6ParameterError paramErr;
@@ -854,7 +855,7 @@ void Icmpv6L4Protocol::SendMessage (Ptr<Packet> packet, Ipv6Address src, Ipv6Add
 
   tag.SetTtl (ttl);
   packet->AddPacketTag (tag);
-  m_downTarget (packet, src, dst, PROT_NUMBER, 0);
+  m_downTarget (packet, src, dst, 0, PROT_NUMBER, 0);
 }
 
 void Icmpv6L4Protocol::SendMessage (Ptr<Packet> packet, Ipv6Address dst, Icmpv6Header& icmpv6Hdr, uint8_t ttl)
@@ -880,7 +881,7 @@ void Icmpv6L4Protocol::SendMessage (Ptr<Packet> packet, Ipv6Address dst, Icmpv6H
 
       icmpv6Hdr.CalculatePseudoHeaderChecksum (src, dst, packet->GetSize () + icmpv6Hdr.GetSerializedSize (), PROT_NUMBER);
       packet->AddHeader (icmpv6Hdr);
-      m_downTarget (packet, src, dst, PROT_NUMBER, route);
+      m_downTarget (packet, src, dst, 0, PROT_NUMBER, route);
     }
   else
     {
@@ -890,7 +891,7 @@ void Icmpv6L4Protocol::SendMessage (Ptr<Packet> packet, Ipv6Address dst, Icmpv6H
 
 void Icmpv6L4Protocol::SendNA (Ipv6Address src, Ipv6Address dst, Address* hardwareAddress, uint8_t flags)
 {
-  NS_LOG_FUNCTION (this << src << dst << hardwareAddress << static_cast<uint32_t> (flags));
+  NS_LOG_FUNCTION (this << src << dst << hardwareAddress << flags);
   Ptr<Packet> p = Create<Packet> ();
   Icmpv6NA na;
   Icmpv6OptionLinkLayerAddress llOption (0, *hardwareAddress); /* not a source link layer */
@@ -1025,7 +1026,7 @@ void Icmpv6L4Protocol::SendErrorTooBig (Ptr<Packet> malformedPacket, Ipv6Address
 
 void Icmpv6L4Protocol::SendErrorTimeExceeded (Ptr<Packet> malformedPacket, Ipv6Address dst, uint8_t code)
 {
-  NS_LOG_FUNCTION (this << malformedPacket << dst << static_cast<uint32_t> (code));
+  NS_LOG_FUNCTION (this << malformedPacket << dst << code);
   Ptr<Packet> p = Create<Packet> ();
   uint32_t malformedPacketSize = malformedPacket->GetSize ();
   Icmpv6TimeExceeded header;
@@ -1049,7 +1050,7 @@ void Icmpv6L4Protocol::SendErrorTimeExceeded (Ptr<Packet> malformedPacket, Ipv6A
 
 void Icmpv6L4Protocol::SendErrorParameterError (Ptr<Packet> malformedPacket, Ipv6Address dst, uint8_t code, uint32_t ptr)
 {
-  NS_LOG_FUNCTION (this << malformedPacket << dst << static_cast<uint32_t> (code) << ptr);
+  NS_LOG_FUNCTION (this << malformedPacket << dst << code << ptr);
   Ptr<Packet> p = Create<Packet> ();
   uint32_t malformedPacketSize = malformedPacket->GetSize ();
   Icmpv6ParameterError header;
@@ -1212,8 +1213,6 @@ Ptr<NdiscCache> Icmpv6L4Protocol::FindCache (Ptr<NetDevice> device)
 
 Ptr<NdiscCache> Icmpv6L4Protocol::CreateCache (Ptr<NetDevice> device, Ptr<Ipv6Interface> interface)
 {
-  NS_LOG_FUNCTION (this << device << interface);
-
   Ptr<NdiscCache> cache = CreateObject<NdiscCache> ();
 
   cache->SetDevice (device, interface);
@@ -1224,7 +1223,7 @@ Ptr<NdiscCache> Icmpv6L4Protocol::CreateCache (Ptr<NetDevice> device, Ptr<Ipv6In
 
 bool Icmpv6L4Protocol::Lookup (Ipv6Address dst, Ptr<NetDevice> device, Ptr<NdiscCache> cache, Address* hardwareDestination)
 {
-  NS_LOG_FUNCTION (this << dst << device << cache << hardwareDestination);
+  NS_LOG_FUNCTION (this << dst << device << hardwareDestination);
 
   if (!cache)
     {
@@ -1237,7 +1236,7 @@ bool Icmpv6L4Protocol::Lookup (Ipv6Address dst, Ptr<NetDevice> device, Ptr<Ndisc
 
 bool Icmpv6L4Protocol::Lookup (Ptr<Packet> p, Ipv6Address dst, Ptr<NetDevice> device, Ptr<NdiscCache> cache, Address* hardwareDestination)
 {
-  NS_LOG_FUNCTION (this << p << dst << device << cache << hardwareDestination);
+  NS_LOG_FUNCTION (this << p << dst << device << hardwareDestination);
 
   if (!cache)
     {
@@ -1352,27 +1351,23 @@ void Icmpv6L4Protocol::FunctionDadTimeout (Ptr<Icmpv6L4Protocol> icmpv6, Ipv6Int
 void
 Icmpv6L4Protocol::SetDownTarget (IpL4Protocol::DownTargetCallback callback)
 {
-  NS_LOG_FUNCTION (this << &callback);
 }
 
 void
 Icmpv6L4Protocol::SetDownTarget6 (IpL4Protocol::DownTargetCallback6 callback)
 {
-  NS_LOG_FUNCTION (this << &callback);
   m_downTarget = callback;
 }
 
 IpL4Protocol::DownTargetCallback
 Icmpv6L4Protocol::GetDownTarget (void) const
 {
-  NS_LOG_FUNCTION (this);
   return (IpL4Protocol::DownTargetCallback)NULL;
 }
 
 IpL4Protocol::DownTargetCallback6
 Icmpv6L4Protocol::GetDownTarget6 (void) const
 {
-  NS_LOG_FUNCTION (this);
   return m_downTarget;
 }
 

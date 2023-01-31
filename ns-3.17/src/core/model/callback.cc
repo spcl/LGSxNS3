@@ -46,6 +46,7 @@ CallbackValue::DeserializeFromString (std::string value, Ptr<const AttributeChec
   return false;
 }
 
+/** Attribute checker */
 ATTRIBUTE_CHECKER_IMPLEMENT (Callback);
 
 } // namespace ns3
@@ -102,7 +103,7 @@ CallbackBase::Demangle (const std::string& mangled)
 std::string
 ns3::CallbackBase::Demangle (const std::string& mangled)
 {
-  NS_LOG_FUNCTION (this << mangled);
+  NS_LOG_FUNCTION (mangled);
   return mangled;
 }
 

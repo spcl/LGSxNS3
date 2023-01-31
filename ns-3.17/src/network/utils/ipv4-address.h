@@ -26,6 +26,11 @@
 #include "ns3/address.h"
 #include "ns3/attribute-helper.h"
 
+#ifdef WIN32
+#define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS
+#include <hash_map>
+#endif
+
 namespace ns3 {
 
 class Ipv4Mask;
@@ -308,10 +313,22 @@ inline bool operator < (const Ipv4Address &a, const Ipv4Address &b)
 }
 
 
+#ifndef WIN32
 class Ipv4AddressHash : public std::unary_function<Ipv4Address, size_t> {
 public:
-  size_t operator() (Ipv4Address const &x) const;
+	size_t operator() (Ipv4Address const &x) const;
 };
+#else
+class Ipv4AddressHash : public stdext::hash_compare<ns3::Ipv4Address> {
+public:
+	size_t operator()(Ipv4Address const &x) const;
+	bool operator() (const Ipv4Address& s1, const Ipv4Address& s2) const
+	{
+		return s1 < s2;
+	}
+
+};
+#endif
 
 bool operator == (Ipv4Mask const &a, Ipv4Mask const &b);
 bool operator != (Ipv4Mask const &a, Ipv4Mask const &b);

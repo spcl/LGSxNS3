@@ -27,14 +27,10 @@
 #include "ns3/header.h"
 #include "ns3/buffer.h"
 #include "pcap-file.h"
-#include "ns3/log.h"
 //
 // This file is used as part of the ns-3 test framework, so please refrain from 
 // adding any ns-3 specific constructs such as Packet to this file.
 //
-
-NS_LOG_COMPONENT_DEFINE ("PcapFile");
-
 namespace ns3 {
 
 const uint32_t MAGIC = 0xa1b2c3d4;            /**< Magic number identifying standard pcap file format */
@@ -51,13 +47,11 @@ PcapFile::PcapFile ()
   : m_file (),
     m_swapMode (false)
 {
-  NS_LOG_FUNCTION (this);
   FatalImpl::RegisterStream (&m_file);
 }
 
 PcapFile::~PcapFile ()
 {
-  NS_LOG_FUNCTION (this);
   FatalImpl::UnregisterStream (&m_file);
   Close ();
 }
@@ -66,19 +60,16 @@ PcapFile::~PcapFile ()
 bool 
 PcapFile::Fail (void) const
 {
-  NS_LOG_FUNCTION (this);
   return m_file.fail ();
 }
 bool 
 PcapFile::Eof (void) const
 {
-  NS_LOG_FUNCTION (this);
   return m_file.eof ();
 }
 void 
 PcapFile::Clear (void)
 {
-  NS_LOG_FUNCTION (this);
   m_file.clear ();
 }
 
@@ -86,91 +77,78 @@ PcapFile::Clear (void)
 void
 PcapFile::Close (void)
 {
-  NS_LOG_FUNCTION (this);
   m_file.close ();
 }
 
 uint32_t
 PcapFile::GetMagic (void)
 {
-  NS_LOG_FUNCTION (this);
   return m_fileHeader.m_magicNumber;
 }
 
 uint16_t
 PcapFile::GetVersionMajor (void)
 {
-  NS_LOG_FUNCTION (this);
   return m_fileHeader.m_versionMajor;
 }
 
 uint16_t
 PcapFile::GetVersionMinor (void)
 {
-  NS_LOG_FUNCTION (this);
   return m_fileHeader.m_versionMinor;
 }
 
 int32_t
 PcapFile::GetTimeZoneOffset (void)
 {
-  NS_LOG_FUNCTION (this);
   return m_fileHeader.m_zone;
 }
 
 uint32_t
 PcapFile::GetSigFigs (void)
 {
-  NS_LOG_FUNCTION (this);
   return m_fileHeader.m_sigFigs;
 }
 
 uint32_t
 PcapFile::GetSnapLen (void)
 {
-  NS_LOG_FUNCTION (this);
   return m_fileHeader.m_snapLen;
 }
 
 uint32_t
 PcapFile::GetDataLinkType (void)
 {
-  NS_LOG_FUNCTION (this);
   return m_fileHeader.m_type;
 }
 
 bool
 PcapFile::GetSwapMode (void)
 {
-  NS_LOG_FUNCTION (this);
   return m_swapMode;
 }
 
 uint8_t
 PcapFile::Swap (uint8_t val)
 {
-  NS_LOG_FUNCTION (this << static_cast<uint32_t> (val));
   return val;
 }
 
 uint16_t
 PcapFile::Swap (uint16_t val)
 {
-  NS_LOG_FUNCTION (this << val);
   return ((val >> 8) & 0x00ff) | ((val << 8) & 0xff00);
 }
 
 uint32_t 
 PcapFile::Swap (uint32_t val)
 {
-  NS_LOG_FUNCTION (this << val);
   return ((val >> 24) & 0x000000ff) | ((val >> 8) & 0x0000ff00) | ((val << 8) & 0x00ff0000) | ((val << 24) & 0xff000000);
 }
 
 void
 PcapFile::Swap (PcapFileHeader *from, PcapFileHeader *to)
 {
-  NS_LOG_FUNCTION (this << from << to);
   to->m_magicNumber = Swap (from->m_magicNumber);
   to->m_versionMajor = Swap (from->m_versionMajor);
   to->m_versionMinor = Swap (from->m_versionMinor);
@@ -183,7 +161,6 @@ PcapFile::Swap (PcapFileHeader *from, PcapFileHeader *to)
 void
 PcapFile::Swap (PcapRecordHeader *from, PcapRecordHeader *to)
 {
-  NS_LOG_FUNCTION (this << from << to);
   to->m_tsSec = Swap (from->m_tsSec);
   to->m_tsUsec = Swap (from->m_tsUsec);
   to->m_inclLen = Swap (from->m_inclLen);
@@ -193,7 +170,6 @@ PcapFile::Swap (PcapRecordHeader *from, PcapRecordHeader *to)
 void
 PcapFile::WriteFileHeader (void)
 {
-  NS_LOG_FUNCTION (this);
   //
   // If we're initializing the file, we need to write the pcap file header
   // at the start of the file.
@@ -238,7 +214,6 @@ PcapFile::WriteFileHeader (void)
 void
 PcapFile::ReadAndVerifyFileHeader (void)
 {
-  NS_LOG_FUNCTION (this);
   //
   // Pcap file header is always at the start of the file
   //
@@ -310,7 +285,6 @@ PcapFile::ReadAndVerifyFileHeader (void)
 void
 PcapFile::Open (std::string const &filename, std::ios::openmode mode)
 {
-  NS_LOG_FUNCTION (this << filename << mode);
   NS_ASSERT ((mode & std::ios::app) == 0);
   NS_ASSERT (!m_file.fail ());
   //
@@ -329,7 +303,6 @@ PcapFile::Open (std::string const &filename, std::ios::openmode mode)
 void
 PcapFile::Init (uint32_t dataLinkType, uint32_t snapLen, int32_t timeZoneCorrection, bool swapMode)
 {
-  NS_LOG_FUNCTION (this << dataLinkType << snapLen << timeZoneCorrection << swapMode);
   //
   // Initialize the in-memory file header.
   //
@@ -374,7 +347,6 @@ PcapFile::Init (uint32_t dataLinkType, uint32_t snapLen, int32_t timeZoneCorrect
 uint32_t
 PcapFile::WritePacketHeader (uint32_t tsSec, uint32_t tsUsec, uint32_t totalLen)
 {
-  NS_LOG_FUNCTION (this << tsSec << tsUsec << totalLen);
   NS_ASSERT (m_file.good ());
 
   uint32_t inclLen = totalLen > m_fileHeader.m_snapLen ? m_fileHeader.m_snapLen : totalLen;
@@ -404,7 +376,6 @@ PcapFile::WritePacketHeader (uint32_t tsSec, uint32_t tsUsec, uint32_t totalLen)
 void
 PcapFile::Write (uint32_t tsSec, uint32_t tsUsec, uint8_t const * const data, uint32_t totalLen)
 {
-  NS_LOG_FUNCTION (this << tsSec << tsUsec << &data << totalLen);
   uint32_t inclLen = WritePacketHeader (tsSec, tsUsec, totalLen);
   m_file.write ((const char *)data, inclLen);
 }
@@ -412,7 +383,6 @@ PcapFile::Write (uint32_t tsSec, uint32_t tsUsec, uint8_t const * const data, ui
 void 
 PcapFile::Write (uint32_t tsSec, uint32_t tsUsec, Ptr<const Packet> p)
 {
-  NS_LOG_FUNCTION (this << tsSec << tsUsec << p);
   uint32_t inclLen = WritePacketHeader (tsSec, tsUsec, p->GetSize ());
   p->CopyData (&m_file, inclLen);
 }
@@ -420,7 +390,6 @@ PcapFile::Write (uint32_t tsSec, uint32_t tsUsec, Ptr<const Packet> p)
 void 
 PcapFile::Write (uint32_t tsSec, uint32_t tsUsec, Header &header, Ptr<const Packet> p)
 {
-  NS_LOG_FUNCTION (this << tsSec << tsUsec << &header << p);
   uint32_t headerSize = header.GetSerializedSize ();
   uint32_t totalSize = headerSize + p->GetSize ();
   uint32_t inclLen = WritePacketHeader (tsSec, tsUsec, totalSize);
@@ -444,7 +413,6 @@ PcapFile::Read (
   uint32_t &origLen,
   uint32_t &readLen)
 {
-  NS_LOG_FUNCTION (this << &data <<maxBytes << tsSec << tsUsec << inclLen << origLen << readLen);
   NS_ASSERT (m_file.good ());
 
   PcapRecordHeader header;
@@ -498,7 +466,6 @@ PcapFile::Diff (std::string const & f1, std::string const & f2,
                 uint32_t & sec, uint32_t & usec, 
                 uint32_t snapLen)
 {
-  NS_LOG_FUNCTION (f1 << f2 << sec << usec << snapLen);
   PcapFile pcap1, pcap2;
   pcap1.Open (f1, std::ios::in);
   pcap2.Open (f2, std::ios::in);

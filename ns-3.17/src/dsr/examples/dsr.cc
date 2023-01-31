@@ -147,12 +147,12 @@ main (int argc, char *argv[])
   pos.Set ("Y", StringValue ("ns3::UniformRandomVariable[Min=0.0|Max=1500.0]"));
   Ptr<PositionAllocator> taPositionAlloc = pos.Create ()->GetObject<PositionAllocator> ();
 
-  std::ostringstream speedUniformRandomVariableStream;
+  ostringstream speedUniformRandomVariableStream;
   speedUniformRandomVariableStream << "ns3::UniformRandomVariable[Min=0.0|Max="
                                    << nodeSpeed
                                    << "]";
 
-  std::ostringstream pauseConstantRandomVariableStream;
+  ostringstream pauseConstantRandomVariableStream;
   pauseConstantRandomVariableStream << "ns3::ConstantRandomVariable[Constant="
                                    << pauseTime
                                    << "]";

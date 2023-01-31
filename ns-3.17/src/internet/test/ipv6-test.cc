@@ -31,7 +31,6 @@
 #include "ns3/icmpv6-l4-protocol.h"
 
 namespace ns3 {
-
 class Ipv6L3ProtocolTestCase : public TestCase
 {
 public:
@@ -144,8 +143,7 @@ public:
   IPv6L3ProtocolTestSuite () :
     TestSuite ("ipv6-protocol", UNIT)
   {
-    AddTestCase (new Ipv6L3ProtocolTestCase (), TestCase::QUICK);
+    AddTestCase (new Ipv6L3ProtocolTestCase ());
   }
 } g_ipv6protocolTestSuite;
-
 } // namespace ns3

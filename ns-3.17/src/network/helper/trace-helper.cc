@@ -19,6 +19,7 @@
 #include <stdint.h>
 #include <string>
 #include <fstream>
+#include <iomanip>
 
 #include "ns3/abort.h"
 #include "ns3/assert.h"
@@ -383,11 +384,39 @@ AsciiTraceHelper::DefaultReceiveSinkWithoutContext (Ptr<OutputStreamWrapper> str
   *stream->GetStream () << "r " << Simulator::Now ().GetSeconds () << " " << *p << std::endl;
 }
 
+/*
+std::string& replace_all(std::string& str,const std::string& old_value,const std::string& new_value)   
+{   
+	while(true)   
+	{   
+		std::string::size_type pos(0);   
+		if((pos=str.find(old_value))!=std::string::npos)   
+			str.replace(pos,old_value.length(),new_value);   
+		else   
+			break;   
+	}   
+	return str;   
+}  
+*/
+
 void
 AsciiTraceHelper::DefaultReceiveSinkWithContext (Ptr<OutputStreamWrapper> stream, std::string context, Ptr<const Packet> p)
 {
   NS_LOG_FUNCTION (stream << p);
-  *stream->GetStream () << "r " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << std::endl;
+  //*stream->GetStream () << "r " << Simulator::Now ().GetSeconds () << " " << context << " " << *p << std::endl;
+
+  /*
+  std::string tmp=context;
+  replace_all(tmp,"/NodeList","");
+  replace_all(tmp,"DeviceList/","");
+  replace_all(tmp,"/$ns3::QbbNetDevice/MacRx","|");
+  */
+
+  uint32_t n,d;
+  sscanf(context.c_str(),"/NodeList/%d/DeviceList/%d/",&n,&d);
+
+  //*stream->GetStream () << Simulator::Now ().GetSeconds () << " /" << n <<"/" << d << "| " << *p << std::endl;
+  *stream->GetStream () << std::setprecision(7) << Simulator::Now ().GetSeconds () << " /" << n << " " << *p << std::endl;
 }
 
 void 

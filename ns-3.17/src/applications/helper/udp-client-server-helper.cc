@@ -90,12 +90,26 @@ UdpClientHelper::UdpClientHelper (Ipv4Address address, uint16_t port, uint16_t p
 	SetAttribute ("PriorityGroup", UintegerValue (pg));
 }
 
+UdpClientHelper::UdpClientHelper (Address address, uint16_t port, uint16_t pg)
+{
+	m_factory.SetTypeId (UdpClient::GetTypeId ());
+	SetAttribute ("RemoteAddress", AddressValue (Address(address)));
+	SetAttribute ("RemotePort", UintegerValue (port));
+	SetAttribute ("PriorityGroup", UintegerValue (pg));
+}
 
 UdpClientHelper::UdpClientHelper (Ipv6Address address, uint16_t port)
 {
   m_factory.SetTypeId (UdpClient::GetTypeId ());
   SetAttribute ("RemoteAddress", AddressValue (Address(address)));
   SetAttribute ("RemotePort", UintegerValue (port));
+}
+
+void
+UdpClientHelper::SetPairs (Ptr<Application> app, std::vector <std::pair<Ipv4Address, int>> my_pairs)
+{
+  app->GetObject<UdpClient>()->SetPairs (my_pairs);
+  printf("Pairs size %d\n", my_pairs.size());
 }
 
 void

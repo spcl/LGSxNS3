@@ -558,8 +558,10 @@ static void CheckEnvironmentVariables (void)
 void LogSetTimePrinter (LogTimePrinter printer)
 {
   g_logTimePrinter = printer;
-  // This is the only place where we are more or less sure that all log variables
-  // are registered. See bug 1082 for details.
+  /** \internal
+   *  This is the only place where we are more or less sure that all log variables
+   * are registered. See \bugid{1082} for details.
+   */
   CheckEnvironmentVariables(); 
 }
 LogTimePrinter LogGetTimePrinter (void)
@@ -576,9 +578,8 @@ LogNodePrinter LogGetNodePrinter (void)
   return g_logNodePrinter;
 }
 
-
 ParameterLogger::ParameterLogger (std::ostream &os)
-  : m_itemNumber (0),
+  : std::basic_ostream<char> (os.rdbuf ()), m_itemNumber (0),
     m_os (os)
 {
 }

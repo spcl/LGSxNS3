@@ -42,19 +42,19 @@ TcpSocket::GetTypeId (void)
     .SetParent<Socket> ()
     .AddAttribute ("SndBufSize",
                    "TcpSocket maximum transmit buffer size (bytes)",
-                   UintegerValue (131072), // 128k
+                   UintegerValue (4194304), // 4M
                    MakeUintegerAccessor (&TcpSocket::GetSndBufSize,
                                          &TcpSocket::SetSndBufSize),
                    MakeUintegerChecker<uint32_t> ())
     .AddAttribute ("RcvBufSize",
                    "TcpSocket maximum receive buffer size (bytes)",
-                   UintegerValue (131072),
+				   UintegerValue(4194304), // 4M
                    MakeUintegerAccessor (&TcpSocket::GetRcvBufSize,
                                          &TcpSocket::SetRcvBufSize),
                    MakeUintegerChecker<uint32_t> ())
     .AddAttribute ("SegmentSize",
                    "TCP maximum segment size in bytes (may be adjusted based on MTU discovery)",
-                   UintegerValue (536),
+                   UintegerValue (988),
                    MakeUintegerAccessor (&TcpSocket::GetSegSize,
                                          &TcpSocket::SetSegSize),
                    MakeUintegerChecker<uint32_t> ())
@@ -90,7 +90,7 @@ TcpSocket::GetTypeId (void)
                    MakeTimeChecker ())
     .AddAttribute ("DelAckCount",
                    "Number of packets to wait before sending a TCP ack",
-                   UintegerValue (2),
+                   UintegerValue (0),
                    MakeUintegerAccessor (&TcpSocket::GetDelAckMaxCount,
                                          &TcpSocket::SetDelAckMaxCount),
                    MakeUintegerChecker<uint32_t> ())
@@ -105,6 +105,12 @@ TcpSocket::GetTypeId (void)
                    MakeTimeAccessor (&TcpSocket::GetPersistTimeout,
                                      &TcpSocket::SetPersistTimeout),
                    MakeTimeChecker ())
+    .AddAttribute ("ECN",
+                   "ECN capability of TCP socket",
+                   BooleanValue (true),
+                   MakeBooleanAccessor (&TcpSocket::GetEcnCap,
+                                        &TcpSocket::SetEcnCap),
+                   MakeBooleanChecker ())
   ;
   return tid;
 }

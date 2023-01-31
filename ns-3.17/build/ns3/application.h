@@ -121,7 +121,7 @@ private:
   virtual void StopApplication (void);
 protected:
   virtual void DoDispose (void);
-  virtual void DoInitialize (void);
+  virtual void DoStart (void);
 
   Ptr<Node>       m_node;
   Time m_startTime;

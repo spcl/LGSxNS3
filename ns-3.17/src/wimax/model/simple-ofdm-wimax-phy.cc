@@ -33,6 +33,7 @@
 #include "simple-ofdm-wimax-channel.h"
 #include "ns3/trace-source-accessor.h"
 #include <string>
+#include <cstring>
 #include <cmath>
 
 NS_LOG_COMPONENT_DEFINE ("SimpleOfdmWimaxPhy");

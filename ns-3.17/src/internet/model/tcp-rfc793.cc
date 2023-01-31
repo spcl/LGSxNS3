@@ -88,4 +88,10 @@ TcpRfc793::GetInitialCwnd (void) const
   return 0;
 }
 
+void
+TcpRfc793::HalveCwnd(void)
+{
+  NS_LOG_WARN ("DoD TCP does not have congestion window");
+}
+
 } // namespace ns3

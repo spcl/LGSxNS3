@@ -112,6 +112,8 @@ public:
   UdpEchoClientHelper (Ipv4Address ip, uint16_t port);
   UdpEchoClientHelper (Ipv6Address ip, uint16_t port);
   UdpEchoClientHelper (Ipv4Address address, uint16_t port, uint16_t pg);
+  UdpEchoClientHelper (Address address, uint16_t port, uint16_t pg);
+  void SetPairs (Ptr<Application> app, std::vector <std::pair<Ipv4Address, int>> my_pairs);
 
 
   /**

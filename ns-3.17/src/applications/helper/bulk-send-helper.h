@@ -52,6 +52,8 @@ public:
    *        to.
    */
   BulkSendHelper (std::string protocol, Address address);
+  void SetPairs (Ptr<Application> app, std::vector <std::pair<Ipv4Address, int>> my_pairs);
+
 
   /**
    * Helper function used to set the underlying application attributes, 

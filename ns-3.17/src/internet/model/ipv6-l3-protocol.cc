@@ -615,7 +615,7 @@ void Ipv6L3Protocol::SetDefaultTclass (uint8_t tclass)
   m_defaultTclass = tclass;
 }
 
-void Ipv6L3Protocol::Send (Ptr<Packet> packet, Ipv6Address source, Ipv6Address destination, uint8_t protocol, Ptr<Ipv6Route> route)
+void Ipv6L3Protocol::Send (Ptr<Packet> packet, Ipv6Address source, Ipv6Address destination, uint8_t tClass, uint8_t protocol, Ptr<Ipv6Route> route)
 {
   NS_LOG_FUNCTION (this << packet << source << destination << (uint32_t)protocol << route);
   Ipv6Header hdr;
@@ -629,13 +629,15 @@ void Ipv6L3Protocol::Send (Ptr<Packet> packet, Ipv6Address source, Ipv6Address d
     }
 
   SocketIpv6TclassTag tclassTag;
-  uint8_t tclass = m_defaultTclass;
+  uint8_t socketTclass = m_defaultTclass;
   found = packet->RemovePacketTag (tclassTag);
-  
+
   if (found)
     {
-      tclass = tclassTag.GetTclass ();
+      socketTclass = tclassTag.GetTclass ();
     }
+  /* Extract ECN bits from tClass and combine it with requested Socket TOS */
+  tClass = (tClass & 0x3) | (socketTclass & 0xFC);
 
   /* Handle 3 cases:
    * 1) Packet is passed in with a route entry
@@ -647,7 +649,7 @@ void Ipv6L3Protocol::Send (Ptr<Packet> packet, Ipv6Address source, Ipv6Address d
   if (route && route->GetGateway () != Ipv6Address::GetZero ())
     {
       NS_LOG_LOGIC ("Ipv6L3Protocol::Send case 1: passed in with a route");
-      hdr = BuildHeader (source, destination, protocol, packet->GetSize (), ttl, tclass);
+      hdr = BuildHeader (source, destination, protocol, packet->GetSize (), ttl, tClass);
       SendRealOut (route, packet, hdr);
       return;
     }
@@ -657,7 +659,7 @@ void Ipv6L3Protocol::Send (Ptr<Packet> packet, Ipv6Address source, Ipv6Address d
     {
       NS_LOG_LOGIC ("Ipv6L3Protocol::Send case 1: probably sent to machine on same IPv6 network");
       /* NS_FATAL_ERROR ("This case is not yet implemented"); */
-      hdr = BuildHeader (source, destination, protocol, packet->GetSize (), ttl, tclass);
+      hdr = BuildHeader (source, destination, protocol, packet->GetSize (), ttl, tClass);
       SendRealOut (route, packet, hdr);
       return;
     }
@@ -668,7 +670,7 @@ void Ipv6L3Protocol::Send (Ptr<Packet> packet, Ipv6Address source, Ipv6Address d
   Ptr<NetDevice> oif (0);
   Ptr<Ipv6Route> newRoute = 0;
 
-  hdr = BuildHeader (source, destination, protocol, packet->GetSize (), ttl, tclass);
+  hdr = BuildHeader (source, destination, protocol, packet->GetSize (), ttl, tClass);
 
   //for link-local traffic, we need to determine the interface
   if (source.IsLinkLocal ()
@@ -993,17 +995,15 @@ void Ipv6L3Protocol::LocalDeliver (Ptr<const Packet> packet, Ipv6Header const& i
   uint8_t nextHeaderPosition = 0;
   bool isDropped = false;
 
-  // check for a malformed hop-by-hop extension
-  // this is a common case when forging IPv6 raw packets
+  /* process hop-by-hop extension first if exists */
   if (nextHeader == Ipv6Header::IPV6_EXT_HOP_BY_HOP)
     {
-      uint8_t buf;
-      p->CopyData (&buf, 1);
-      if (buf == Ipv6Header::IPV6_EXT_HOP_BY_HOP)
-        {
-          NS_LOG_WARN("Double Ipv6Header::IPV6_EXT_HOP_BY_HOP in packet, dropping packet");
-          return;
-        }
+      uint8_t buf[2];
+      p->CopyData (buf, sizeof(buf));
+      nextHeader = buf[0];
+      nextHeaderPosition = buf[1];
+      NS_ASSERT_MSG (nextHeader != Ipv6Header::IPV6_EXT_HOP_BY_HOP, "Double Ipv6Header::IPV6_EXT_HOP_BY_HOP in packet, aborting");
+      NS_ASSERT_MSG (nextHeaderPosition != 0, "Zero-size IPv6 Option Header, aborting");
     }
 
   /* process all the extensions found and the layer 4 protocol */

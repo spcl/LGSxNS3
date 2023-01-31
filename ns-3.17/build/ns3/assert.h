@@ -20,15 +20,17 @@
  */
 #ifndef NS_ASSERT_H
 #define NS_ASSERT_H
+#include <algorithm>
 
 #ifdef NS3_ASSERT_ENABLE
 
 #include <iostream>
 
+
 #include "fatal-error.h"
 
 /**
- * \ingroup constructs
+ * \ingroup core
  * \defgroup debugging Debugging
  */
 /**

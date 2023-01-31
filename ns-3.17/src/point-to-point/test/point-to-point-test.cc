@@ -4,7 +4,7 @@
 #include "ns3/point-to-point-net-device.h"
 #include "ns3/point-to-point-channel.h"
 
-using namespace ns3;
+namespace ns3 {
 
 class PointToPointTest : public TestCase
 {
@@ -65,7 +65,9 @@ public:
 PointToPointTestSuite::PointToPointTestSuite ()
   : TestSuite ("devices-point-to-point", UNIT)
 {
-  AddTestCase (new PointToPointTest, TestCase::QUICK);
+  AddTestCase (new PointToPointTest);
 }
 
 static PointToPointTestSuite g_pointToPointTestSuite;
+
+} // namespace ns3

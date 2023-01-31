@@ -39,7 +39,7 @@ class Ipv4Route;
 class Ipv6Route;
 
 /**
- * \brief L4 Protocol abstract base class 
+ * \brief L4 Protocol abstract base class
  *
  * This is an abstract base class for layer four protocols which use IP as
  * the network layer.
@@ -67,9 +67,9 @@ public:
    * \param p packet to forward up
    * \param header IPv4 Header information
    * \param incomingInterface the Ipv4Interface on which the packet arrived
-   * 
+   *
    * Called from lower-level layers to send the packet up
-   * in the stack. 
+   * in the stack.
    */
   virtual enum RxStatus Receive (Ptr<Packet> p,
                                  Ipv4Header const &header,
@@ -101,8 +101,8 @@ public:
                             Ipv6Address payloadSource, Ipv6Address payloadDestination,
                             const uint8_t payload[8]);
 
-  typedef Callback<void,Ptr<Packet>, Ipv4Address, Ipv4Address, uint8_t, Ptr<Ipv4Route> > DownTargetCallback;
-  typedef Callback<void,Ptr<Packet>, Ipv6Address, Ipv6Address, uint8_t, Ptr<Ipv6Route> > DownTargetCallback6;
+  typedef Callback<void,Ptr<Packet>, Ipv4Address, Ipv4Address, uint8_t, uint8_t, Ptr<Ipv4Route> > DownTargetCallback;
+  typedef Callback<void,Ptr<Packet>, Ipv6Address, Ipv6Address, uint8_t, uint8_t, Ptr<Ipv6Route> > DownTargetCallback6;
   /**
    * This method allows a caller to set the current down target callback
    * set for this L4 protocol

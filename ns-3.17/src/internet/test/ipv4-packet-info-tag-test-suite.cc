@@ -48,9 +48,7 @@
 #include "ns3/simulator.h"
 #include "ns3/node.h"
 
-using namespace ns3;
-
-namespace {
+namespace ns3 {
 
 static void
 AddInternetStack (Ptr<Node> node)
@@ -72,8 +70,6 @@ AddInternetStack (Ptr<Node> node)
   //UDP
   Ptr<UdpL4Protocol> udp = CreateObject<UdpL4Protocol> ();
   node->AggregateObject (udp);
-}
-
 }
 
 class Ipv4PacketInfoTagTest : public TestCase
@@ -162,7 +158,7 @@ Ipv4PacketInfoTagTest::DoRun (void)
   InetSocketAddress local =  InetSocketAddress (Ipv4Address::GetAny (), 200);
   socket->Bind (local);
   socket->SetRecvPktInfo (true);
-  socket->SetRecvCallback (MakeCallback (&Ipv4PacketInfoTagTest::RxCb, this));
+  socket->SetRecvCallback (MakeCallback (&ns3::Ipv4PacketInfoTagTest::RxCb, this));
 
   // receive on loopback 
   Simulator::ScheduleWithContext (socket->GetNode ()->GetId (), Seconds (0),
@@ -181,7 +177,7 @@ Ipv4PacketInfoTagTest::DoRun (void)
   local =  InetSocketAddress (Ipv4Address::GetAny (), 0);
   socket->Bind (local);
   socket->SetRecvPktInfo (true);
-  socket->SetRecvCallback (MakeCallback (&Ipv4PacketInfoTagTest::RxCb, this));
+  socket->SetRecvCallback (MakeCallback (&ns3::Ipv4PacketInfoTagTest::RxCb, this));
 
   // receive on loopback 
   Simulator::ScheduleWithContext (socket->GetNode ()->GetId (), Seconds (0),
@@ -206,5 +202,8 @@ private:
 Ipv4PacketInfoTagTestSuite::Ipv4PacketInfoTagTestSuite ()
   : TestSuite ("ipv4-packet-info-tag", UNIT)
 {
-  AddTestCase (new Ipv4PacketInfoTagTest (), TestCase::QUICK);
+  AddTestCase (new Ipv4PacketInfoTagTest ());
+}
+
+
 }

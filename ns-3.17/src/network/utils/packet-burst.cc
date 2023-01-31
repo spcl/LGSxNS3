@@ -42,12 +42,10 @@ PacketBurst::GetTypeId (void)
 
 PacketBurst::PacketBurst (void)
 {
-  NS_LOG_FUNCTION (this);
 }
 
 PacketBurst::~PacketBurst (void)
 {
-  NS_LOG_FUNCTION (this);
   for (std::list<Ptr<Packet> >::const_iterator iter = m_packets.begin (); iter
        != m_packets.end (); ++iter)
     {
@@ -59,13 +57,11 @@ PacketBurst::~PacketBurst (void)
 void
 PacketBurst::DoDispose (void)
 {
-  NS_LOG_FUNCTION (this);
   m_packets.clear ();
 }
 
 Ptr<PacketBurst> PacketBurst::Copy (void) const
 {
-  NS_LOG_FUNCTION (this);
   Ptr<PacketBurst> burst = Create<PacketBurst> ();
 
   for (std::list<Ptr<Packet> >::const_iterator iter = m_packets.begin (); iter
@@ -80,7 +76,6 @@ Ptr<PacketBurst> PacketBurst::Copy (void) const
 void
 PacketBurst::AddPacket (Ptr<Packet> packet)
 {
-  NS_LOG_FUNCTION (this << packet);
   if (packet)
     {
       m_packets.push_back (packet);
@@ -90,21 +85,18 @@ PacketBurst::AddPacket (Ptr<Packet> packet)
 std::list<Ptr<Packet> >
 PacketBurst::GetPackets (void) const
 {
-  NS_LOG_FUNCTION (this);
   return m_packets;
 }
 
 uint32_t
 PacketBurst::GetNPackets (void) const
 {
-  NS_LOG_FUNCTION (this);
   return m_packets.size ();
 }
 
 uint32_t
 PacketBurst::GetSize (void) const
 {
-  NS_LOG_FUNCTION (this);
   uint32_t size = 0;
   for (std::list<Ptr<Packet> >::const_iterator iter = m_packets.begin (); iter
        != m_packets.end (); ++iter)
@@ -118,14 +110,12 @@ PacketBurst::GetSize (void) const
 std::list<Ptr<Packet> >::const_iterator
 PacketBurst::Begin (void) const
 {
-  NS_LOG_FUNCTION (this);
   return m_packets.begin ();
 }
 
 std::list<Ptr<Packet> >::const_iterator
 PacketBurst::End (void) const
 {
-  NS_LOG_FUNCTION (this);
   return m_packets.end ();
 }
 

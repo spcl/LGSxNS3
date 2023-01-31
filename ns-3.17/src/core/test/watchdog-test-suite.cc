@@ -20,7 +20,7 @@
 #include "ns3/watchdog.h"
 #include "ns3/test.h"
 
-using namespace ns3;
+namespace ns3 {
 
 class WatchdogTestCase : public TestCase
 {
@@ -74,6 +74,9 @@ public:
   WatchdogTestSuite()
     : TestSuite ("watchdog", UNIT)
   {
-    AddTestCase (new WatchdogTestCase (), TestCase::QUICK);
+    AddTestCase (new WatchdogTestCase ());
   }
 } g_watchdogTestSuite;
+
+} // namespace ns3
+

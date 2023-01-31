@@ -133,13 +133,23 @@ OptionField::~OptionField ()
 
 uint32_t OptionField::GetSerializedSize () const
 {
-  return m_optionData.GetSize () + CalculatePad ((Ipv6OptionHeader::Alignment) { 8,0});
+#ifndef WIN32
+	return m_optionData.GetSize() + CalculatePad((Ipv6OptionHeader::Alignment) { 8, 0 });
+#else
+	Ipv6OptionHeader::Alignment a = { 8, 0 };
+	return m_optionData.GetSize() + CalculatePad(a);
+#endif
 }
 
 void OptionField::Serialize (Buffer::Iterator start) const
 {
   start.Write (m_optionData.Begin (), m_optionData.End ());
-  uint32_t fill = CalculatePad ((Ipv6OptionHeader::Alignment) { 8,0});
+#ifndef WIN32
+  uint32_t fill = CalculatePad((Ipv6OptionHeader::Alignment) { 8, 0 });
+#else
+  Ipv6OptionHeader::Alignment a = { 8, 0 };
+  uint32_t fill = CalculatePad(a);
+#endif
   NS_LOG_LOGIC ("fill with " << fill << " bytes padding");
   switch (fill)
     {

@@ -16,7 +16,6 @@
 #include "dsr-network-queue.h"
 #include "dsr-option-header.h"
 #include "dsr-options.h"
-#include "dsr-passive-buff.h"
 #include "dsr-rcache.h"
 #include "dsr-routing.h"
 #include "dsr-rreq-table.h"

@@ -110,6 +110,14 @@ UdpEchoClientHelper::UdpEchoClientHelper (Ipv4Address address, uint16_t port, ui
 	SetAttribute ("PriorityGroup", UintegerValue (pg));
 }
 
+UdpEchoClientHelper::UdpEchoClientHelper (Address address, uint16_t port, uint16_t pg)
+{
+	m_factory.SetTypeId (UdpEchoClient::GetTypeId ());
+	SetAttribute ("RemoteAddress", AddressValue (Address(address)));
+	SetAttribute ("RemotePort", UintegerValue (port));
+	SetAttribute ("PriorityGroup", UintegerValue (pg));
+}
+
 void 
 UdpEchoClientHelper::SetAttribute (
   std::string name, 
@@ -122,6 +130,12 @@ void
 UdpEchoClientHelper::SetFill (Ptr<Application> app, std::string fill)
 {
   app->GetObject<UdpEchoClient>()->SetFill (fill);
+}
+
+void
+UdpEchoClientHelper::SetPairs (Ptr<Application> app, std::vector <std::pair<Ipv4Address, int>> my_pairs)
+{
+  app->GetObject<UdpEchoClient>()->SetPairs (my_pairs);
 }
 
 void

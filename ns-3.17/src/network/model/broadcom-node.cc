@@ -220,6 +220,7 @@ namespace ns3 {
 	{
 		if (m_usedEgressQSharedBytes[port][qIndex] >= psize)
 		{
+			printf("Node %d removing %d bytes, total %d - port %d - qIndex %d\n",ns3::NodeList::GetNode(ns3::Simulator::GetContext())->GetId(), psize, m_usedEgressQSharedBytes[port][qIndex], port, qIndex );
 			m_usedEgressQSharedBytes[port][qIndex] -= psize;
 			m_usedEgressPortBytes[port] -= psize;
 			m_usedEgressSPBytes[GetIngressSP(port, qIndex)] -= psize;
@@ -337,6 +338,7 @@ namespace ns3 {
 		{
 			if (m_usedEgressQSharedBytes[ifindex][qIndex] > m_dctcp_threshold_max)
 			{
+				printf(" Used bytes %d vs %d\n", m_usedEgressQSharedBytes[ifindex][qIndex], m_dctcp_threshold_max);
 				return true;
 			}
 			else
@@ -344,8 +346,10 @@ namespace ns3 {
 				if (m_usedEgressQSharedBytes[ifindex][qIndex] > m_dctcp_threshold && m_dctcp_threshold != m_dctcp_threshold_max)
 				{
 					double p = 1.0 * (m_usedEgressQSharedBytes[ifindex][qIndex] - m_dctcp_threshold) / (m_dctcp_threshold_max - m_dctcp_threshold);
-					if (UniformVariable(0, 1).GetValue() < p)
+					if (UniformVariable(0, 1).GetValue() < p) {
+						printf(" Used bytes %d vs %d\n", m_usedEgressQSharedBytes[ifindex][qIndex], m_dctcp_threshold);
 						return true;
+					}
 				}
 			}
 			return false;
@@ -354,13 +358,16 @@ namespace ns3 {
 		{
 			if (m_usedEgressQSharedBytes[ifindex][qIndex] > m_pg_qcn_threshold_max)
 			{
+				printf(" Used bytes %d vs %d\n", m_usedEgressQSharedBytes[ifindex][qIndex], m_dctcp_threshold_max);
 				return true;
 			}
 			else if (m_usedEgressQSharedBytes[ifindex][qIndex] > m_pg_qcn_threshold && m_pg_qcn_threshold != m_pg_qcn_threshold_max)
 			{
 				double p = 1.0 * (m_usedEgressQSharedBytes[ifindex][qIndex] - m_pg_qcn_threshold) / (m_pg_qcn_threshold_max - m_pg_qcn_threshold) * m_pg_qcn_maxp;
-				if (UniformVariable(0, 1).GetValue() < p)
+				if (UniformVariable(0, 1).GetValue() < p) {
+					printf(" Used bytes %d vs %d\n", m_usedEgressQSharedBytes[ifindex][qIndex], m_dctcp_threshold);
 					return true;
+				}
 			}
 			return false;
 		}

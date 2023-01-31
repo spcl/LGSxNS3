@@ -50,8 +50,7 @@
 
 #include <string>
 #include <limits>
-
-using namespace ns3;
+namespace ns3 {
 
 static void
 AddInternetStack (Ptr<Node> node)
@@ -576,9 +575,11 @@ class UdpTestSuite : public TestSuite
 public:
   UdpTestSuite () : TestSuite ("udp", UNIT)
   {
-    AddTestCase (new UdpSocketImplTest, TestCase::QUICK);
-    AddTestCase (new UdpSocketLoopbackTest, TestCase::QUICK);
-    AddTestCase (new Udp6SocketImplTest, TestCase::QUICK);
-    AddTestCase (new Udp6SocketLoopbackTest, TestCase::QUICK);
+    AddTestCase (new UdpSocketImplTest);
+    AddTestCase (new UdpSocketLoopbackTest);
+    AddTestCase (new Udp6SocketImplTest);
+    AddTestCase (new Udp6SocketLoopbackTest);
   }
 } g_udpTestSuite;
+
+} // namespace ns3

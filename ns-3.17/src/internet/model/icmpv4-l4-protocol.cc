@@ -18,7 +18,7 @@ NS_OBJECT_ENSURE_REGISTERED (Icmpv4L4Protocol);
 // see rfc 792
 const uint8_t Icmpv4L4Protocol::PROT_NUMBER = 1;
 
-TypeId 
+TypeId
 Icmpv4L4Protocol::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::Icmpv4L4Protocol")
@@ -31,18 +31,15 @@ Icmpv4L4Protocol::GetTypeId (void)
 Icmpv4L4Protocol::Icmpv4L4Protocol ()
   : m_node (0)
 {
-  NS_LOG_FUNCTION (this);
 }
 Icmpv4L4Protocol::~Icmpv4L4Protocol ()
 {
-  NS_LOG_FUNCTION (this);
   NS_ASSERT (m_node == 0);
 }
 
 void
 Icmpv4L4Protocol::SetNode (Ptr<Node> node)
 {
-  NS_LOG_FUNCTION (this << node);
   m_node = node;
 }
 
@@ -54,7 +51,6 @@ Icmpv4L4Protocol::SetNode (Ptr<Node> node)
 void
 Icmpv4L4Protocol::NotifyNewAggregate ()
 {
-  NS_LOG_FUNCTION (this);
   if (m_node == 0)
     {
       Ptr<Node> node = this->GetObject<Node> ();
@@ -74,23 +70,20 @@ Icmpv4L4Protocol::NotifyNewAggregate ()
   Object::NotifyNewAggregate ();
 }
 
-uint16_t 
+uint16_t
 Icmpv4L4Protocol::GetStaticProtocolNumber (void)
 {
-  NS_LOG_FUNCTION_NOARGS ();
   return PROT_NUMBER;
 }
 
-int 
+int
 Icmpv4L4Protocol::GetProtocolNumber (void) const
 {
-  NS_LOG_FUNCTION (this);
   return PROT_NUMBER;
 }
 void
 Icmpv4L4Protocol::SendMessage (Ptr<Packet> packet, Ipv4Address dest, uint8_t type, uint8_t code)
 {
-  NS_LOG_FUNCTION (this << packet << dest << static_cast<uint32_t> (type) << static_cast<uint32_t> (code));
   Ptr<Ipv4> ipv4 = m_node->GetObject<Ipv4> ();
   NS_ASSERT (ipv4 != 0 && ipv4->GetRoutingProtocol () != 0);
   Ipv4Header header;
@@ -115,7 +108,6 @@ Icmpv4L4Protocol::SendMessage (Ptr<Packet> packet, Ipv4Address dest, uint8_t typ
 void
 Icmpv4L4Protocol::SendMessage (Ptr<Packet> packet, Ipv4Address source, Ipv4Address dest, uint8_t type, uint8_t code, Ptr<Ipv4Route> route)
 {
-  NS_LOG_FUNCTION (this << packet << source << dest << static_cast<uint32_t> (type) << static_cast<uint32_t> (code) << route);
   Icmpv4Header icmp;
   icmp.SetType (type);
   icmp.SetCode (code);
@@ -125,25 +117,25 @@ Icmpv4L4Protocol::SendMessage (Ptr<Packet> packet, Ipv4Address source, Ipv4Addre
     }
   packet->AddHeader (icmp);
 
-  m_downTarget (packet, source, dest, PROT_NUMBER, route);
+  m_downTarget (packet, source, dest, 0, PROT_NUMBER, route);
 }
-void 
-Icmpv4L4Protocol::SendDestUnreachFragNeeded (Ipv4Header header, 
+void
+Icmpv4L4Protocol::SendDestUnreachFragNeeded (Ipv4Header header,
                                              Ptr<const Packet> orgData,
                                              uint16_t nextHopMtu)
 {
   NS_LOG_FUNCTION (this << header << *orgData << nextHopMtu);
   SendDestUnreach (header, orgData, Icmpv4DestinationUnreachable::FRAG_NEEDED, nextHopMtu);
 }
-void 
-Icmpv4L4Protocol::SendDestUnreachPort (Ipv4Header header, 
+void
+Icmpv4L4Protocol::SendDestUnreachPort (Ipv4Header header,
                                        Ptr<const Packet> orgData)
 {
   NS_LOG_FUNCTION (this << header << *orgData);
   SendDestUnreach (header, orgData, Icmpv4DestinationUnreachable::PORT_UNREACHABLE, 0);
 }
-void 
-Icmpv4L4Protocol::SendDestUnreach (Ipv4Header header, Ptr<const Packet> orgData, 
+void
+Icmpv4L4Protocol::SendDestUnreach (Ipv4Header header, Ptr<const Packet> orgData,
                                    uint8_t code, uint16_t nextHopMtu)
 {
   NS_LOG_FUNCTION (this << header << *orgData << (uint32_t) code << nextHopMtu);
@@ -156,7 +148,7 @@ Icmpv4L4Protocol::SendDestUnreach (Ipv4Header header, Ptr<const Packet> orgData,
   SendMessage (p, header.GetSource (), Icmpv4Header::DEST_UNREACH, code);
 }
 
-void 
+void
 Icmpv4L4Protocol::SendTimeExceededTtl (Ipv4Header header, Ptr<const Packet> orgData)
 {
   NS_LOG_FUNCTION (this << header << *orgData);
@@ -187,8 +179,6 @@ Icmpv4L4Protocol::Forward (Ipv4Address source, Icmpv4Header icmp,
                            uint32_t info, Ipv4Header ipHeader,
                            const uint8_t payload[8])
 {
-  NS_LOG_FUNCTION (this << source << icmp << info << ipHeader << payload);
-
   Ptr<Ipv4> ipv4 = m_node->GetObject<Ipv4> ();
   Ptr<IpL4Protocol> l4 = ipv4->GetProtocol (ipHeader.GetProtocol ());
   if (l4 != 0)
@@ -262,7 +252,7 @@ Icmpv4L4Protocol::Receive (Ptr<Packet> p,
   NS_LOG_FUNCTION (this << p << header.GetSourceAddress () << header.GetDestinationAddress () << incomingInterface);
   return IpL4Protocol::RX_ENDPOINT_UNREACH;
 }
-void 
+void
 Icmpv4L4Protocol::DoDispose (void)
 {
   NS_LOG_FUNCTION (this);
@@ -274,27 +264,23 @@ Icmpv4L4Protocol::DoDispose (void)
 void
 Icmpv4L4Protocol::SetDownTarget (IpL4Protocol::DownTargetCallback callback)
 {
-  NS_LOG_FUNCTION (this << &callback);
   m_downTarget = callback;
 }
 
 void
 Icmpv4L4Protocol::SetDownTarget6 (IpL4Protocol::DownTargetCallback6 callback)
 {
-  NS_LOG_FUNCTION (this << &callback);
 }
 
 IpL4Protocol::DownTargetCallback
 Icmpv4L4Protocol::GetDownTarget (void) const
 {
-  NS_LOG_FUNCTION (this);
   return m_downTarget;
 }
 
 IpL4Protocol::DownTargetCallback6
 Icmpv4L4Protocol::GetDownTarget6 (void) const
 {
-  NS_LOG_FUNCTION (this);
   return (IpL4Protocol::DownTargetCallback6)NULL;
 }
 

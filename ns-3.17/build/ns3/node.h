@@ -29,7 +29,6 @@
 #include "ns3/net-device.h"
 #include "ns3/broadcom-node.h"
 
-
 namespace ns3 {
 
 class Application;
@@ -196,21 +195,108 @@ public:
    */
   static bool ChecksumEnabled (void);
 
+  //yibo
   Ptr<BroadcomNode> m_broadcom;
   void SetNodeType(uint32_t type, bool dynamicth);
   void SetNodeType(uint32_t type);
   uint32_t GetNodeType();
+  bool isNic = false;
+  
+  /*
+  bool CheckIngressAdmission(uint32_t port,uint32_t qIndex, uint32_t psize);
+  bool CheckEgressAdmission(uint32_t port,uint32_t qIndex, uint32_t psize);
+  void UpdateIngressAdmission(uint32_t port,uint32_t qIndex, uint32_t psize);
+  void UpdateEgressAdmission(uint32_t port,uint32_t qIndex, uint32_t psize);
+  void RemoveFromIngressAdmission(uint32_t port,uint32_t qIndex, uint32_t psize);
+  void RemoveFromEgressAdmission(uint32_t port,uint32_t qIndex, uint32_t psize);
 
+  void GetPauseClasses(uint32_t port, uint32_t qIndex, bool pClasses[]);
+  
+  void SetBroadcomParams(uint32_t maxBufferBytes, 
+	  uint32_t maxIngressPortBytes,
+	  uint32_t maxIngressSPBytes,
+	  uint32_t maxIngressPGBytes,
+	  uint32_t maxEgressPortBytes,
+	  uint32_t maxEgressSPBytes,
+	  uint32_t maxEgressPGBytes,
+	  uint32_t buffer_cell_limit_sp, //ingress sp buffer threshold p.120
+	  uint32_t buffer_cell_limit_sp_shared, //ingress sp buffer shared threshold p.120, nonshare -> share
+	  uint32_t pg_min_cell, //ingress pg guarantee p.121					---1
+	  uint32_t port_min_cell, //ingress port guarantee						---2
+	  uint32_t pg_shared_limit_cell, //max buffer for an ingress pg			---3	PAUSE
+	  uint32_t port_max_shared_cell, //max buffer for an ingress port		---4	PAUSE
+	  uint32_t pg_hdrm_limit, //ingress pg headroom
+	  uint32_t port_max_pkt_size, //ingress global headroom
+	  uint32_t op_buffer_shared_limit_cell, //per egress sp limit
+	  uint32_t m_uc_port_config_cell //per egress port limit
+	  );
+	  */
 protected:
+	//yibo
+	//uint32_t GetIngressSP(uint32_t port,uint32_t pgIndex);
+	//uint32_t GetEgressSP(uint32_t port,uint32_t qIndex);
+
+
   /**
    * The dispose method. Subclasses must override this method
    * and must chain up to it by calling Node::DoDispose at the
    * end of their own DoDispose method.
    */
-  uint32_t m_node_type;
   virtual void DoDispose (void);
-  virtual void DoInitialize (void);
-private:
+  virtual void DoStart (void);
+protected:
+
+	//yibo
+	uint32_t m_node_type;
+	/*
+	uint32_t m_maxBufferBytes;
+	uint32_t m_usedTotalBytes;
+
+	uint32_t m_usedIngressPGMinBytes[32][8];
+	uint32_t m_usedIngressPortMinBytes[32];
+	uint32_t m_usedIngressSPBytes[4];
+	uint32_t m_usedIngressSPSharedBytes;
+	uint32_t m_usedIngressPGSharedBytes[32][8];
+	uint32_t m_usedIngressPortSharedBytes[32];
+
+	uint32_t m_usedIngressPGMinExceed[32][8];
+	uint32_t m_usedIngressPortMinExceed[32];
+	uint32_t m_usedIngressSPExceed[4];
+	uint32_t m_usedIngressSPSharedExceed;
+	uint32_t m_usedIngressPGSharedExceed[32][8];
+	uint32_t m_usedIngressPortSharedExceed[32];
+
+	uint32_t m_usedIngressHeadroomBytes;
+
+	
+
+	
+	uint32_t m_usedEgressQMinBytes[32][8];
+	uint32_t m_usedEgressQSharedBytes[32][8];
+	uint32_t m_usedEgressPortBytes[32];
+	uint32_t m_usedEgressSPBytes[4];
+	
+	
+
+	//ingress params
+	uint32_t m_buffer_cell_limit_sp; //ingress sp buffer threshold p.120
+	uint32_t m_buffer_cell_limit_sp_shared; //ingress sp buffer shared threshold p.120, nonshare -> share
+	uint32_t m_pg_min_cell; //ingress pg guarantee p.121					---1
+	uint32_t m_port_min_cell; //ingress port guarantee						---2
+	uint32_t m_pg_shared_limit_cell; //max buffer for an ingress pg			---3	PAUSE
+	uint32_t m_port_max_shared_cell; //max buffer for an ingress port		---4	PAUSE
+	uint32_t m_pg_hdrm_limit; //ingress pg headroom
+	uint32_t m_port_max_pkt_size; //ingress global headroom
+	//still needs reset limits..
+
+	//egress params
+	uint32_t m_q_min_cell;	//egress queue guaranteed buffer
+	uint32_t m_op_uc_port_config1_cell; //egress queue threshold
+	uint32_t m_op_uc_port_config_cell; //egress port threshold
+	uint32_t m_op_buffer_shared_limit_cell; //egress sp threshold
+
+	*/
+
   void NotifyDeviceAdded (Ptr<NetDevice> device);
   bool NonPromiscReceiveFromDevice (Ptr<NetDevice> device, Ptr<const Packet>, uint16_t protocol, const Address &from);
   bool PromiscReceiveFromDevice (Ptr<NetDevice> device, Ptr<const Packet>, uint16_t protocol,

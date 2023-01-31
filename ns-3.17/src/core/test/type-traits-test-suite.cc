@@ -19,7 +19,7 @@
 #include "ns3/type-traits.h"
 #include "ns3/test.h"
 
-using namespace ns3;
+namespace ns3 {
 
 class TypeTraitsTestCase : public TestCase
 {
@@ -56,7 +56,9 @@ public:
 TypeTraitsTestSuite::TypeTraitsTestSuite ()
   : TestSuite ("type-traits", UNIT)
 {
-  AddTestCase (new TypeTraitsTestCase, TestCase::QUICK);
+  AddTestCase (new TypeTraitsTestCase);
 }
 
 static TypeTraitsTestSuite typeTraitsTestSuite;
+
+} // namespace ns3

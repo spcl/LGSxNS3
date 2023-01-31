@@ -35,14 +35,14 @@ NixVector::NixVector ()
     m_currentVectorBitSize (0),
     m_totalBitSize (0)
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
 
   m_nixVector.push_back (0);
 }
 
 NixVector::~NixVector ()
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
 }
 
 NixVector::NixVector (const NixVector &o)
@@ -70,7 +70,6 @@ NixVector::operator = (const NixVector &o)
 Ptr<NixVector>
 NixVector::Copy (void) const
 {
-  NS_LOG_FUNCTION (this);
   // we need to invoke the copy constructor directly
   // rather than calling Create because the copy constructor
   // is private.
@@ -86,7 +85,7 @@ std::ostream & operator << (std::ostream &os, const NixVector &nix)
 void
 NixVector::AddNeighborIndex (uint32_t newBits, uint32_t numberOfBits)
 {
-  NS_LOG_FUNCTION (this << newBits << numberOfBits);
+  NS_LOG_FUNCTION_NOARGS ();
 
   if (numberOfBits > 32)
     {
@@ -158,7 +157,7 @@ NixVector::AddNeighborIndex (uint32_t newBits, uint32_t numberOfBits)
 uint32_t
 NixVector::ExtractNeighborIndex (uint32_t numberOfBits)
 {
-  NS_LOG_FUNCTION (this << numberOfBits);
+  NS_LOG_FUNCTION_NOARGS ();
 
   if (numberOfBits > 32)
     {
@@ -212,7 +211,6 @@ NixVector::ExtractNeighborIndex (uint32_t numberOfBits)
 uint32_t
 NixVector::GetSerializedSize (void) const
 {
-  NS_LOG_FUNCTION (this);
   uint32_t totalSizeInBytes = 0;
   totalSizeInBytes = sizeof (m_used) + sizeof (m_currentVectorBitSize) + 
     sizeof (m_totalBitSize) + (4 * m_nixVector.size ());
@@ -223,7 +221,7 @@ NixVector::GetSerializedSize (void) const
 uint32_t
 NixVector::Serialize (uint32_t* buffer, uint32_t maxSize) const
 {
-  NS_LOG_FUNCTION (this << buffer << maxSize);
+  NS_LOG_FUNCTION (this);
   uint32_t* p = buffer;
   uint32_t size = 0;
 
@@ -280,7 +278,7 @@ NixVector::Serialize (uint32_t* buffer, uint32_t maxSize) const
 uint32_t
 NixVector::Deserialize (const uint32_t* buffer, uint32_t size)
 {
-  NS_LOG_FUNCTION (this << buffer << size);
+  NS_LOG_FUNCTION (this);
   const uint32_t* p = buffer;
   uint32_t sizeCheck = size - 4;
 
@@ -317,7 +315,7 @@ NixVector::Deserialize (const uint32_t* buffer, uint32_t size)
 void
 NixVector::DumpNixVector (std::ostream &os) const
 {
-  NS_LOG_FUNCTION (this << &os);
+  NS_LOG_FUNCTION_NOARGS ();
   uint32_t i = m_nixVector.size ();
   std::vector<uint32_t>::const_reverse_iterator rIter;
   for (rIter = m_nixVector.rbegin (); rIter != m_nixVector.rend (); rIter++)
@@ -355,7 +353,7 @@ NixVector::DumpNixVector (std::ostream &os) const
 uint32_t 
 NixVector::GetRemainingBits (void)
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
 
   return (m_totalBitSize - m_used);
 }
@@ -363,7 +361,7 @@ NixVector::GetRemainingBits (void)
 uint32_t
 NixVector::BitCount (uint32_t numberOfNeighbors) const
 {
-  NS_LOG_FUNCTION (this << numberOfNeighbors);
+  NS_LOG_FUNCTION_NOARGS ();
 
   // Given the numberOfNeighbors, return the number 
   // of bits needed (essentially, log2(numberOfNeighbors-1)
@@ -386,7 +384,6 @@ NixVector::BitCount (uint32_t numberOfNeighbors) const
 void
 NixVector::PrintDec2BinNix (uint32_t decimalNum, uint32_t bitCount, std::ostream &os) const
 {
-  NS_LOG_FUNCTION (this << decimalNum << bitCount << &os);
   if(decimalNum == 0)
     {
       for (; bitCount > 0; bitCount--)
@@ -413,7 +410,6 @@ NixVector::PrintDec2BinNix (uint32_t decimalNum, uint32_t bitCount, std::ostream
 void
 NixVector::PrintDec2BinNixFill (uint32_t decimalNum, uint32_t bitCount, std::ostream &os) const
 {
-  NS_LOG_FUNCTION (this << decimalNum << bitCount << &os);
   if(decimalNum == 0)
     {
       os << 0;

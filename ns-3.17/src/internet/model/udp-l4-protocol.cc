@@ -39,6 +39,7 @@
 #include "ipv4-l3-protocol.h"
 #include "ipv6-l3-protocol.h"
 #include "udp-socket-impl.h"
+#include "ns3/seq-ts-header.h"
 
 NS_LOG_COMPONENT_DEFINE ("UdpL4Protocol");
 
@@ -346,12 +347,9 @@ UdpL4Protocol::Receive (Ptr<Packet> packet,
         {
           NS_LOG_LOGIC ("  No Ipv4 endpoints matched on UdpL4Protocol, trying Ipv6 "<<this);
           Ptr<Ipv6Interface> fakeInterface;
-          Ipv6Header ipv6Header;
           Ipv6Address src = Ipv6Address::MakeIpv4MappedAddress (header.GetSource ());
           Ipv6Address dst = Ipv6Address::MakeIpv4MappedAddress (header.GetDestination ());
-          ipv6Header.SetSourceAddress (src);
-          ipv6Header.SetDestinationAddress (dst);
-          return (this->Receive (packet, ipv6Header, fakeInterface));
+          return (this->Receive (packet, src, dst, fakeInterface));
         }
 
       NS_LOG_LOGIC ("RX_ENDPOINT_UNREACH");
@@ -368,32 +366,43 @@ UdpL4Protocol::Receive (Ptr<Packet> packet,
   return IpL4Protocol::RX_OK;
 }
 
+//not supporting 6
 enum IpL4Protocol::RxStatus
 UdpL4Protocol::Receive (Ptr<Packet> packet,
                         Ipv6Header const &header,
                         Ptr<Ipv6Interface> interface)
 {
-  NS_LOG_FUNCTION (this << packet << header.GetSourceAddress () << header.GetDestinationAddress ());
+    return IpL4Protocol::RX_OK;;
+}
+                        
+                        
+enum IpL4Protocol::RxStatus
+UdpL4Protocol::Receive (Ptr<Packet> packet,
+                        Ipv6Address &src,
+                        Ipv6Address &dst,
+                        Ptr<Ipv6Interface> interface)
+{
+  NS_LOG_FUNCTION (this << packet << src << dst);
   UdpHeader udpHeader;
   if(Node::ChecksumEnabled ())
     {
       udpHeader.EnableChecksums ();
     }
 
-  udpHeader.InitializeChecksum (header.GetSourceAddress (), header.GetDestinationAddress (), PROT_NUMBER);
+  udpHeader.InitializeChecksum (src, dst, PROT_NUMBER);
 
   packet->RemoveHeader (udpHeader);
 
-  if(!udpHeader.IsChecksumOk () && !header.GetSourceAddress ().IsIpv4MappedAddress ())
+  if(!udpHeader.IsChecksumOk () && !src.IsIpv4MappedAddress ())
     {
       NS_LOG_INFO ("Bad checksum : dropping packet!");
       return IpL4Protocol::RX_CSUM_FAILED;
     }
 
-  NS_LOG_DEBUG ("Looking up dst " << header.GetDestinationAddress () << " port " << udpHeader.GetDestinationPort ()); 
+  NS_LOG_DEBUG ("Looking up dst " << dst << " port " << udpHeader.GetDestinationPort ()); 
   Ipv6EndPointDemux::EndPoints endPoints =
-    m_endPoints6->Lookup (header.GetDestinationAddress (), udpHeader.GetDestinationPort (),
-                         header.GetSourceAddress (), udpHeader.GetSourcePort (), interface);
+    m_endPoints6->Lookup (dst, udpHeader.GetDestinationPort (),
+                         src, udpHeader.GetSourcePort (), interface);
   if (endPoints.empty ())
     {
       NS_LOG_LOGIC ("RX_ENDPOINT_UNREACH");
@@ -402,7 +411,8 @@ UdpL4Protocol::Receive (Ptr<Packet> packet,
   for (Ipv6EndPointDemux::EndPointsI endPoint = endPoints.begin ();
        endPoint != endPoints.end (); endPoint++)
     {
-      (*endPoint)->ForwardUp (packet->Copy (), header, udpHeader.GetSourcePort ());
+    //not supporting 6
+      //(*endPoint)->ForwardUp (packet->Copy (), src, dst, udpHeader.GetSourcePort ());
     }
   return IpL4Protocol::RX_OK;
 }
@@ -427,7 +437,11 @@ UdpL4Protocol::Send (Ptr<Packet> packet,
 
   packet->AddHeader (udpHeader);
 
-  m_downTarget (packet, saddr, daddr, PROT_NUMBER, 0);
+  //SeqTsHeader sth;
+  //packet->PeekHeader(sth);
+  //std::cout << "in udp l4 protocol send with port " << sth.GetSeq() << "\n";
+
+  m_downTarget (packet, saddr, daddr, 0 ,PROT_NUMBER, 0);
 }
 
 void
@@ -448,9 +462,13 @@ UdpL4Protocol::Send (Ptr<Packet> packet,
   udpHeader.SetDestinationPort (dport);
   udpHeader.SetSourcePort (sport);
 
+ 
   packet->AddHeader (udpHeader);
 
-  m_downTarget (packet, saddr, daddr, PROT_NUMBER, route);
+  
+
+  //let tos=0
+  m_downTarget (packet, saddr, daddr, 0, PROT_NUMBER, route);
 }
 
 void
@@ -473,7 +491,7 @@ UdpL4Protocol::Send (Ptr<Packet> packet,
 
   packet->AddHeader (udpHeader);
 
-  m_downTarget6 (packet, saddr, daddr, PROT_NUMBER, 0);
+  m_downTarget6 (packet, saddr, daddr, 0, PROT_NUMBER, 0);
 }
 
 void
@@ -496,7 +514,7 @@ UdpL4Protocol::Send (Ptr<Packet> packet,
 
   packet->AddHeader (udpHeader);
 
-  m_downTarget6 (packet, saddr, daddr, PROT_NUMBER, route);
+  m_downTarget6 (packet, saddr, daddr, 0, PROT_NUMBER, route);
 }
 
 void

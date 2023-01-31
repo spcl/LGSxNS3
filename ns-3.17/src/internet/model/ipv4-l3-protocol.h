@@ -53,7 +53,7 @@ class Icmpv4L4Protocol;
 
 /**
  * \brief Implement the Ipv4 layer.
- * 
+ *
  * This is the actual implementation of IP.  It contains APIs to send and
  * receive packets at the IP layer, as well as APIs for IP routing.
  *
@@ -87,7 +87,7 @@ public:
    * \enum DropReason
    * \brief Reason why a packet has been dropped.
    */
-  enum DropReason 
+  enum DropReason
   {
     DROP_TTL_EXPIRED = 1,   /**< Packet TTL has expired */
     DROP_NO_ROUTE,   /**< No route to host */
@@ -112,7 +112,7 @@ public:
    * \returns the L4Protocol effectively added.
    *
    * Invoke Copy on the input template to get a copy of the input
-   * protocol which can be used on the Node on which this L4 Demux 
+   * protocol which can be used on the Node on which this L4 Demux
    * is running. The new L4Protocol is registered internally as
    * a working L4 Protocol and returned from this method.
    * The caller does not get ownership of the returned pointer.
@@ -163,14 +163,15 @@ public:
    * \param packet packet to send
    * \param source source address of packet
    * \param destination address of packet
+   * \param Type Of Service of packet
    * \param protocol number of packet
    * \param route route entry
    *
    * Higher-level layers call this method to send a packet
    * down the stack to the MAC and PHY layers.
    */
-  void Send (Ptr<Packet> packet, Ipv4Address source, 
-             Ipv4Address destination, uint8_t protocol, Ptr<Ipv4Route> route);
+  void Send (Ptr<Packet> packet, Ipv4Address source,
+             Ipv4Address destination, uint8_t tos, uint8_t protocol, Ptr<Ipv4Route> route);
   /**
    * \param packet packet to send
    * \param ipHeader IP Header
@@ -242,14 +243,14 @@ private:
                Ptr<Packet> packet,
                Ipv4Header const &ipHeader);
 
-  void 
-  IpForward (Ptr<Ipv4Route> rtentry, 
-             Ptr<const Packet> p, 
+  void
+  IpForward (Ptr<Ipv4Route> rtentry,
+             Ptr<const Packet> p,
              const Ipv4Header &header);
 
   void
-  IpMulticastForward (Ptr<Ipv4MulticastRoute> mrtentry, 
-                      Ptr<const Packet> p, 
+  IpMulticastForward (Ptr<Ipv4MulticastRoute> mrtentry,
+                      Ptr<const Packet> p,
                       const Ipv4Header &header);
 
   void LocalDeliver (Ptr<const Packet> p, Ipv4Header const&ip, uint32_t iif);

@@ -73,14 +73,12 @@ ChannelListPriv::GetTypeId (void)
 Ptr<ChannelListPriv> 
 ChannelListPriv::Get (void)
 {
-  NS_LOG_FUNCTION_NOARGS ();
   return *DoGet ();
 }
 
 Ptr<ChannelListPriv> *
 ChannelListPriv::DoGet (void)
 {
-  NS_LOG_FUNCTION_NOARGS ();
   static Ptr<ChannelListPriv> ptr = 0;
   if (ptr == 0)
     {
@@ -101,17 +99,16 @@ ChannelListPriv::Delete (void)
 
 ChannelListPriv::ChannelListPriv ()
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
 }
 
 ChannelListPriv::~ChannelListPriv ()
 {
-  NS_LOG_FUNCTION (this);
 }
 void
 ChannelListPriv::DoDispose (void)
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
   for (std::vector<Ptr<Channel> >::iterator i = m_channels.begin ();
        i != m_channels.end (); i++)
     {
@@ -126,7 +123,6 @@ ChannelListPriv::DoDispose (void)
 uint32_t
 ChannelListPriv::Add (Ptr<Channel> channel)
 {
-  NS_LOG_FUNCTION (this << channel);
   uint32_t index = m_channels.size ();
   m_channels.push_back (channel);
   return index;
@@ -136,28 +132,24 @@ ChannelListPriv::Add (Ptr<Channel> channel)
 ChannelList::Iterator 
 ChannelListPriv::Begin (void) const
 {
-  NS_LOG_FUNCTION (this);
   return m_channels.begin ();
 }
 
 ChannelList::Iterator 
 ChannelListPriv::End (void) const
 {
-  NS_LOG_FUNCTION (this);
   return m_channels.end ();
 }
 
 uint32_t 
 ChannelListPriv::GetNChannels (void)
 {
-  NS_LOG_FUNCTION (this);
   return m_channels.size ();
 }
 
 Ptr<Channel>
 ChannelListPriv::GetChannel (uint32_t n)
 {
-  NS_LOG_FUNCTION (this << n);
   NS_ASSERT_MSG (n < m_channels.size (), "Channel index " << n <<
                  " is out of range (only have " << m_channels.size () << " channels).");
   return m_channels[n];
@@ -166,35 +158,30 @@ ChannelListPriv::GetChannel (uint32_t n)
 uint32_t
 ChannelList::Add (Ptr<Channel> channel)
 {
-  NS_LOG_FUNCTION_NOARGS ();
   return ChannelListPriv::Get ()->Add (channel);
 }
 
 ChannelList::Iterator 
 ChannelList::Begin (void)
 {
-  NS_LOG_FUNCTION_NOARGS ();
   return ChannelListPriv::Get ()->Begin ();
 }
 
 ChannelList::Iterator 
 ChannelList::End (void)
 {
-  NS_LOG_FUNCTION_NOARGS ();
   return ChannelListPriv::Get ()->End ();
 }
 
 Ptr<Channel>
 ChannelList::GetChannel (uint32_t n)
 {
-  NS_LOG_FUNCTION (n);
   return ChannelListPriv::Get ()->GetChannel (n);
 }
 
 uint32_t
 ChannelList::GetNChannels (void)
 {
-  NS_LOG_FUNCTION_NOARGS ();
   return ChannelListPriv::Get ()->GetNChannels ();
 }
 

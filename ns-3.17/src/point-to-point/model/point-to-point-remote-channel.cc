@@ -27,6 +27,8 @@
 #include "ns3/log.h"
 #include "ns3/mpi-interface.h"
 
+using namespace std;
+
 NS_LOG_COMPONENT_DEFINE ("PointToPointRemoteChannel");
 
 namespace ns3 {

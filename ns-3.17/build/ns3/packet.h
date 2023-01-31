@@ -21,6 +21,7 @@
 #define PACKET_H
 
 #include <stdint.h>
+#include <iostream>
 #include "buffer.h"
 #include "header.h"
 #include "trailer.h"
@@ -35,6 +36,10 @@
 #include "ns3/deprecated.h"
 
 namespace ns3 {
+
+
+//class Packet;
+//extern Packet packet_pool[32767];
 
 /**
  * \ingroup network
@@ -203,6 +208,20 @@ private:
 class Packet : public SimpleRefCount<Packet>
 {
 public:
+
+
+	//yibo
+	/*
+	inline void Unref (void) const
+	{
+		m_count--;
+		if (m_count == 0)
+		{
+			//std::cout<<"TEST\n";
+			//DELETER::Delete (static_cast<T*> (const_cast<SimpleRefCount *> (this)));
+		}
+	}
+	*/
 
   /**
    * Create an empty packet with a new uid (as returned
@@ -612,6 +631,12 @@ std::ostream& operator<< (std::ostream& os, const Packet &packet);
  * data copies and will thus be still very fast.
  */
 
+
+//yibo optimize
+template <>
+Ptr<Packet> Create (uint32_t a1);
+
+
 } // namespace ns3
 
 namespace ns3 {
@@ -621,6 +646,8 @@ Packet::GetSize (void) const
 {
   return m_buffer.GetSize ();
 }
+
+
 
 } // namespace ns3
 

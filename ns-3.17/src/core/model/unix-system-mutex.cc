@@ -17,8 +17,9 @@
  *
  * Author: Mathieu Lacage <mathieu.lacage.inria.fr>
  */
-
+#ifndef WIN32
 #include <pthread.h>
+#endif
 #include <cstring>
 #include <cerrno> // for strerror
 
@@ -30,6 +31,7 @@
 NS_LOG_COMPONENT_DEFINE ("SystemMutex");
 
 namespace ns3 {
+#ifndef WIN32
 
 class SystemMutexPrivate {
 public: 
@@ -137,5 +139,23 @@ CriticalSection::~CriticalSection ()
   NS_LOG_FUNCTION (this);
   m_mutex.Unlock ();
 }
+#else
+SystemMutex::SystemMutex() 
+{
+}
+SystemMutex::~SystemMutex()
+{
+}
+CriticalSection::CriticalSection (SystemMutex &mutex)
+	  : m_mutex (mutex)
 
+{
+  NS_LOG_FUNCTION (this << &mutex);
+}
+
+CriticalSection::~CriticalSection ()
+{
+  NS_LOG_FUNCTION (this);
+}
+#endif
 } // namespace ns3

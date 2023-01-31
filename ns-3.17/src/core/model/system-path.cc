@@ -25,6 +25,7 @@
 #include <cstdlib>
 #include <cerrno>
 #include <cstring>
+#ifndef WIN32
 #if defined (HAVE_DIRENT_H) and defined (HAVE_SYS_TYPES_H)
 #define HAVE_OPENDIR
 #include <sys/types.h>
@@ -34,6 +35,7 @@
 #define HAVE_MKDIR_H
 #include <sys/types.h>
 #include <sys/stat.h>
+#endif
 #endif
 #include <sstream>
 #ifdef __APPLE__
@@ -49,11 +51,15 @@
 #include <unistd.h>
 #endif
 
-#if defined (__win32__)
+#if defined (WIN32)
 #define SYSTEM_PATH_SEP "\\"
+#include <Windows.h>
+#include <WinBase.h>
+#define HAVE_FIND_FIRST_FILE
 #else
 #define SYSTEM_PATH_SEP "/"
 #endif
+
 
 NS_LOG_COMPONENT_DEFINE ("SystemPath");
 
@@ -108,19 +114,20 @@ std::string FindSelfDirectory (void)
     filename = buffer;
     free (buffer);
   }
-#elif defined (__win32__)
+#elif defined (WIN32)
   {
-    // XXX: untested. it should work if code is compiled with
-    // LPTSTR = char *
+    /// \todo untested. it should work if code is compiled with
+    /// LPTSTR = char *
     DWORD size = 1024;
     LPTSTR lpFilename = (LPTSTR) malloc (sizeof(TCHAR) * size);
-    DWORD status = GetModuleFilename (0, lpFilename, size);
-    while (status == size)
+    DWORD status = GetModuleFileName (0, lpFilename, size);
+    
+	while (status == size)
       {
 	size = size * 2;
 	free (lpFilename);
 	lpFilename = (LPTSTR) malloc (sizeof(TCHAR) * size);
-	status = GetModuleFilename (0, lpFilename, size);
+	status = GetModuleFileName (0, lpFilename, size);
       }
     NS_ASSERT (status != 0);
     filename = lpFilename;
@@ -232,19 +239,38 @@ std::list<std::string> ReadFiles (std::string path)
     }
   closedir (dp);
 #elif defined (HAVE_FIND_FIRST_FILE)
-  // XXX: untested
   HANDLE hFind;
   WIN32_FIND_DATA fileData;
+ 
+  std::stringstream ss;
+  ss << path << "\\*";
   
-  hFind = FindFirstFile (path.c_str (), &FindFileData);
+  hFind = FindFirstFile (ss.str().c_str(), &fileData);
+  std::string buffer;
+  if(hFind != INVALID_HANDLE_VALUE)
+  {
+	  buffer = fileData.cFileName;
+	  files.push_back(fileData.cFileName);
+	  while(FindNextFile(hFind, &fileData))	 
+	  {
+		buffer = fileData.cFileName;
+		files.push_back(fileData.cFileName);
+	  }
+  }
+  else
+  {
+	NS_FATAL_ERROR ("Could not open directory=" << path);
+  }
+/*
   if (hFind == INVALID_HANDLE_VALUE)
     {
-      NS_FATAL_ERROR ("Could not open directory=" << path);
+      
     }
   do
     {
       files.push_back (fileData.cFileName);
     } while (FindNextFile (hFind, &fileData));
+*/
   FindClose(hFind);
 #else
 #error "No support for reading a directory on this platform"
@@ -272,15 +298,18 @@ MakeTemporaryDirectoryName (void)
   // Just in case the user wants to go back and find the output, we give
   // a hint as to which dir we created by including a time hint.
   //
+#ifndef WIN32
   time_t now = time (NULL);
   struct tm *tm_now = localtime (&now);
+#endif
   //
   // But we also randomize the name in case there are multiple users doing
   // this at the same time
   //
+#ifndef WIN32
   srand (time (0));
   long int n = rand ();
-
+#endif
   //
   // The final path to the directory is going to look something like
   // 
@@ -293,9 +322,13 @@ MakeTemporaryDirectoryName (void)
   // 29 seconds PM).
   //
   std::ostringstream oss;
+#ifndef WIN32
   oss << path << SYSTEM_PATH_SEP << "ns-3." << tm_now->tm_hour << "."
       << tm_now->tm_min << "." << tm_now->tm_sec << "." << n;
-
+#else
+  //This may need to be fixed.  Used?
+  oss << path << SYSTEM_PATH_SEP << "ns-3";
+#endif
   return oss.str ();
 }
 
@@ -307,12 +340,28 @@ MakeDirectories (std::string path)
   for (std::list<std::string>::const_iterator i = elements.begin (); i != elements.end (); ++i)
     {
       std::string tmp = Join (elements.begin (), i);
-#if defined(HAVE_MKDIR_H)
-      mkdir (tmp.c_str (), S_IRWXU);
+#ifdef WIN32
+	  if(!CreateDirectory(tmp.c_str(), NULL) && GetLastError() != ERROR_ALREADY_EXISTS && tmp.size() != 0)
+	   {
+		   NS_LOG_ERROR ("failed creating directory " << tmp);
+	   }
+#elif defined(HAVE_MKDIR_H)
+      if (mkdir (tmp.c_str (), S_IRWXU))
+        {
+          NS_LOG_ERROR ("failed creating directory " << tmp);
+        }
 #endif
     }
-#if defined(HAVE_MKDIR_H)
-  mkdir (path.c_str (), S_IRWXU);
+#ifdef WIN32
+	   if(!CreateDirectory(path.c_str (), NULL) && GetLastError() != ERROR_ALREADY_EXISTS)
+	   {
+		   NS_LOG_ERROR ("failed creating directory " << path);
+	   }
+#elif defined(HAVE_MKDIR_H)
+      if (mkdir (path.c_str (), S_IRWXU))
+        {
+          NS_LOG_ERROR ("failed creating directory " << path);
+        }
 #endif
 
 }

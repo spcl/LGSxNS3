@@ -45,8 +45,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
-
-using namespace ns3;
+namespace ns3 {
 
 static void
 AddInternetStack (Ptr<Node> node)
@@ -261,6 +260,8 @@ class Ipv4HeaderTestSuite : public TestSuite
 public:
   Ipv4HeaderTestSuite () : TestSuite ("ipv4-header", UNIT)
   {
-    AddTestCase (new Ipv4HeaderTest, TestCase::QUICK);
+    AddTestCase (new Ipv4HeaderTest);
   }
 } g_ipv4HeaderTestSuite;
+
+} // namespace ns3

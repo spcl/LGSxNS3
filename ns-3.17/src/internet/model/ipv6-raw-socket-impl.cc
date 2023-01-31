@@ -18,9 +18,13 @@
  * Author: Sebastien Vincent <vincent@clarinet.u-strasbg.fr>
  */
 
+#ifndef WIN32
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#else
+#include <WinSock2.h>
+#endif
 #include "ns3/inet6-socket-address.h"
 #include "ns3/node.h"
 #include "ns3/packet.h"
@@ -47,7 +51,7 @@ TypeId Ipv6RawSocketImpl::GetTypeId ()
 {
   static TypeId tid = TypeId ("ns3::Ipv6RawSocketImpl")
     .SetParent<Socket> ()
-    .AddAttribute ("Protocol", "Protocol number to match.", 
+    .AddAttribute ("Protocol", "Protocol number to match.",
                    UintegerValue (0),
                    MakeUintegerAccessor (&Ipv6RawSocketImpl::m_protocol),
                    MakeUintegerChecker<uint16_t> ())
@@ -186,6 +190,23 @@ int Ipv6RawSocketImpl::Send (Ptr<Packet> p, uint32_t flags)
 {
   NS_LOG_FUNCTION (this << p << flags);
   Inet6SocketAddress to = Inet6SocketAddress (m_dst, m_protocol);
+  /*
+   * Add tags for each socket option.
+   */
+  if (IsManualIpv6Tclass ())
+    {
+      SocketIpv6TclassTag ipTclassTag;
+      ipTclassTag.SetTclass (GetIpv6Tclass ());
+      p->AddPacketTag (ipTclassTag);
+    }
+
+  if (IsManualIpv6HopLimit ())
+    {
+      SocketIpv6HopLimitTag ipHopLimitTag;
+      ipHopLimitTag.SetHopLimit (GetIpv6HopLimit ());
+      p->AddPacketTag (ipHopLimitTag);
+    }
+
   return SendTo (p, flags, to);
 }
 
@@ -230,8 +251,8 @@ int Ipv6RawSocketImpl::SendTo (Ptr<Packet> p, uint32_t flags, const Address& toA
           NS_LOG_LOGIC ("Route exists");
           if (m_protocol == Icmpv6L4Protocol::GetStaticProtocolNumber ())
             {
-              /* calculate checksum here for ICMPv6 echo request (sent by ping6) 
-               * as we cannot determine source IPv6 address at application level 
+              /* calculate checksum here for ICMPv6 echo request (sent by ping6)
+               * as we cannot determine source IPv6 address at application level
                */
               uint8_t type;
               p->CopyData (&type, sizeof(type));
@@ -244,9 +265,7 @@ int Ipv6RawSocketImpl::SendTo (Ptr<Packet> p, uint32_t flags, const Address& toA
                 }
             }
 
-          ipv6->Send (p, route->GetSource (), dst, m_protocol, route);
-          // Return only payload size (as Linux does).
-          return p->GetSize () - hdr.GetSerializedSize ();
+          ipv6->Send (p, route->GetSource (), dst, 0, m_protocol, route);
         }
       else
         {
@@ -275,7 +294,7 @@ Ptr<Packet> Ipv6RawSocketImpl::RecvFrom (uint32_t maxSize, uint32_t flags, Addre
   /* get packet */
   struct Data data = m_data.front ();
   m_data.pop_front ();
-  fromAddress = Inet6SocketAddress (data.fromIp, data.fromProtocol);
+
   if (data.packet->GetSize () > maxSize)
     {
       Ptr<Packet> first = data.packet->CreateFragment (0, maxSize);
@@ -287,6 +306,7 @@ Ptr<Packet> Ipv6RawSocketImpl::RecvFrom (uint32_t maxSize, uint32_t flags, Addre
       return first;
     }
 
+  fromAddress = Inet6SocketAddress (data.fromIp, data.fromProtocol);
   return data.packet;
 }
 
@@ -327,7 +347,7 @@ bool Ipv6RawSocketImpl::ForwardUp (Ptr<const Packet> p, Ipv6Header hdr, Ptr<NetD
         }
     }
 
-  if ((m_src == Ipv6Address::GetAny () || hdr.GetDestinationAddress () == m_src) && 
+  if ((m_src == Ipv6Address::GetAny () || hdr.GetDestinationAddress () == m_src) &&
       (m_dst == Ipv6Address::GetAny () || hdr.GetSourceAddress () == m_dst) &&
       hdr.GetNextHeader () == m_protocol)
     {

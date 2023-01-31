@@ -26,6 +26,7 @@
 #include "ns3/boolean.h"
 #include "ns3/uinteger.h"
 #include "ns3/double.h"
+#include "ns3/custom_tag.h"
 #include "ns3/data-rate.h"
 #include "ns3/object-vector.h"
 #include "ns3/pause-header.h"
@@ -255,6 +256,7 @@ namespace ns3 {
 		QbbNetDevice::DequeueAndTransmit(void)
 	{
 		NS_LOG_FUNCTION(this);
+		//printf("DequeueAndTransmit");
 		if (m_txMachineState == BUSY) return;	// Quit if channel busy
 		Ptr<Packet> p;
 		if (m_node->GetNodeType() == 0 && m_qcnEnabled) //QCN enable NIC    
@@ -292,13 +294,13 @@ namespace ns3 {
 						m_targetRate[fIndex][j] = m_bps;
 					}
 				}
-				double creditsDue = std::max(0.0, m_bps.GetBitRate() / m_rate[fIndex].GetBitRate() * (p->GetSize() - m_credits[fIndex]));
+				double creditsDue = std::max(0.0, m_bps / m_rate[fIndex] * (p->GetSize() - m_credits[fIndex]));
 				Time nextSend = m_tInterframeGap + Seconds(m_bps.CalculateTxTime(creditsDue));
 				m_nextAvail[fIndex] = Simulator::Now() + nextSend;
 				for (uint32_t i = 0; i < m_queue->m_fcount; i++)	//distribute credits
 				{
 					if (m_nextAvail[i].GetTimeStep() <= Simulator::Now().GetTimeStep())
-						m_credits[i] += m_rate[i].GetBitRate() / m_bps.GetBitRate()*creditsDue;
+						m_credits[i] += m_rate[i] / m_bps*creditsDue;
 				}
 				m_credits[fIndex] = 0;	//reset credits
 				for (uint32_t i = 0; i < 1; i++)
@@ -348,6 +350,10 @@ namespace ns3 {
 			{
 				if (m_queue->GetLastQueue() == qCnt - 1)//this is a pause or cnp, send it immediately!
 				{
+				    if (h.GetProtocol() != 0xFE) //not PFC , here h refers to ipv4header
+				    {
+				        p->RemovePacketTag(t);
+				    }
 					TransmitStart(p);
 				}
 				else
@@ -365,6 +371,7 @@ namespace ns3 {
 						bool egressCongested = ShouldSendCN(inDev, m_ifIndex, m_queue->GetLastQueue());
 						if (egressCongested)
 						{
+							printf("Setting ECN on node %d\n", GetNode()->GetId());
 							h.SetEcn((Ipv4Header::EcnType)0x03);
 						}
 						p->AddHeader(h);
@@ -464,6 +471,7 @@ namespace ns3 {
 					if (ipv4h.GetProtocol() == 17)	//look at udp only
 					{
 						uint16_t ecnbits = ipv4h.GetEcn();
+						//printf("ECN Bits are %d\n", ecnbits);
 
 						UdpHeader udph;
 						p->RemoveHeader(udph);
@@ -573,6 +581,7 @@ namespace ns3 {
 			else // If this is a Pause, stop the corresponding queue
 			{
 				if (!m_qbbEnabled) return;
+				printf("Stopping Queue");
 				PauseHeader pauseh;
 				p->RemoveHeader(pauseh);
 				unsigned qIndex = pauseh.GetQIndex();
@@ -718,6 +727,7 @@ namespace ns3 {
 					break;
 				}
 			}
+			printf("i and fcount %d %d\n", i, m_queue->m_fcount); fflush(stdout);
 			if (i == m_queue->m_fcount)
 			{
 				std::cout << "ERROR: ACK NIC cannot find the flow\n";
@@ -845,6 +855,21 @@ namespace ns3 {
 	{
 		NS_LOG_FUNCTION(this << packet << dest << protocolNumber);
 		NS_LOG_LOGIC("UID is " << packet->GetUid());
+
+		CustomDataTag tag;
+		if (packet->FindFirstMatchingByteTag(tag))
+		{
+			tag.SetCurrentHop(tag.GetCurrentHop() + 1);
+			//printf("I am Node %d (from %d) - Am I am final NIC? %d - Size %d - Hop %d - Tag %d\n", tag.GetNodeId(), m_node->GetId(), m_node->isNic, packet->GetSize(),tag.GetCurrentHop() - 1, tag.GetPersonalTag());
+		} else {
+
+			//printf("No TAG I am Node %d (from %d) - Am I am final NIC? %d - Size %d\n",tag.GetNodeId(), m_node->GetId(), m_node->isNic, packet->GetSize());
+		}
+		packet->RemoveAllByteTags();
+		packet->AddByteTag(tag);
+
+		//printf("Sending from %d to %d\n", GetNode()->GetId(), packet->GetSize());
+
 		if (IsLinkUp() == false) {
 			m_macTxDropTrace(packet);
 			return false;
@@ -1352,7 +1377,7 @@ namespace ns3 {
 	void
 		QbbNetDevice::rpr_hyper_increase(uint32_t fIndex, uint32_t hop)
 	{
-		AdjustRates(fIndex, hop, m_rhai.GetBitRate()*(std::min(m_rpByteStage[fIndex][hop], m_rpTimeStage[fIndex][hop]) - m_rpgThreshold + 1));
+		AdjustRates(fIndex, hop, m_rhai*(std::min(m_rpByteStage[fIndex][hop], m_rpTimeStage[fIndex][hop]) - m_rpgThreshold + 1));
 		m_rpStage[fIndex][hop] = 3;
 		return;
 	}
@@ -1360,7 +1385,7 @@ namespace ns3 {
 	void
 		QbbNetDevice::AdjustRates(uint32_t fIndex, uint32_t hop, DataRate increase)
 	{
-		if (((m_rpByteStage[fIndex][hop] == 1) || (m_rpTimeStage[fIndex][hop] == 1)) && (m_targetRate[fIndex][hop].GetBitRate() > 10 * m_rateAll[fIndex][hop].GetBitRate()))
+		if (((m_rpByteStage[fIndex][hop] == 1) || (m_rpTimeStage[fIndex][hop] == 1)) && (m_targetRate[fIndex][hop] > 10 * m_rateAll[fIndex][hop]))
 			m_targetRate[fIndex][hop] /= 8;
 		else
 			m_targetRate[fIndex][hop] += increase;

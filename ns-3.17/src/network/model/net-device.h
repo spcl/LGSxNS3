@@ -76,8 +76,12 @@ class NetDevice : public Object
 {
 public:
   static TypeId GetTypeId (void);
-  virtual ~NetDevice();
+
+  //Yibo: optimize
   virtual uint32_t GetUsedBuffer(uint32_t port, uint32_t qIndex);
+
+
+  virtual ~NetDevice();
 
   /**
    * \param index ifIndex of the device 

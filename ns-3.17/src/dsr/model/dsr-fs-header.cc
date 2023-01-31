@@ -122,7 +122,7 @@ uint16_t DsrFsHeader::GetDestId () const
 void DsrFsHeader::Print (std::ostream &os) const
 {
   os
-  << "nextHeader: " << (uint32_t)GetNextHeader () << " messageType: " << (uint32_t)GetMessageType ()
+  << " nextHeader: " << (uint32_t)GetNextHeader () << " messageType: " << (uint32_t)GetMessageType ()
   << " sourceId: " << (uint32_t)GetSourceId () << " destinationId: " << (uint32_t)GetDestId ()
   << " length: " << (uint32_t)GetPayloadLength ();
 }
@@ -156,7 +156,11 @@ uint32_t DsrFsHeader::Deserialize (Buffer::Iterator start)
   m_payloadLen = i.ReadU16 ();
 
   uint32_t dataLength = GetPayloadLength ();
+#ifndef WIN32
   uint8_t data[dataLength];
+#else
+  uint8_t * data = new uint8_t[dataLength];
+#endif
   i.Read (data, dataLength);
 
   if (dataLength > m_data.GetSize ())
@@ -170,7 +174,9 @@ uint32_t DsrFsHeader::Deserialize (Buffer::Iterator start)
 
   i = m_data.Begin ();
   i.Write (data, dataLength);
-
+#ifdef WIN32
+  delete[] data;
+#endif
   return GetSerializedSize ();
 }
 
@@ -211,11 +217,18 @@ void DsrOptionField::Serialize (Buffer::Iterator start) const
 
 uint32_t DsrOptionField::Deserialize (Buffer::Iterator start, uint32_t length)
 {
-  uint8_t buf[length];
+#ifndef WIN32
+	uint8_t buf[length];
+#else
+	uint8_t * buf = new uint8_t[length];
+#endif
   start.Read (buf, length);
   m_optionData = Buffer ();
   m_optionData.AddAtEnd (length);
   m_optionData.Begin ().Write (buf, length);
+#ifdef WIN32
+  delete[] buf;
+#endif
   return length;
 }
 

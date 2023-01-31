@@ -27,11 +27,11 @@
 #include "ns3/string.h"
 #include "ns3/system-thread.h"
 
-#include <ctime>
+#include <time.h>
 #include <list>
 #include <utility>
 
-using namespace ns3;
+namespace ns3 {
 
 #define MAXTHREADS 64
 
@@ -99,7 +99,7 @@ ThreadedSimulatorEventsTestCase::SchedulingThread (std::pair<ThreadedSimulatorEv
           struct timespec ts;
           ts.tv_sec = 0;
           ts.tv_nsec = 500;
-          nanosleep (&ts, NULL);
+          nanosleep(&ts, NULL);
         }
     }
 }
@@ -258,9 +258,11 @@ public:
             for (unsigned int k=0; k < (sizeof(schedulerTypes) / sizeof(schedulerTypes[0])); ++k) 
               {
                 factory.SetTypeId(schedulerTypes[k]);
-                AddTestCase (new ThreadedSimulatorEventsTestCase (factory, simulatorTypes[i], threadcounts[j]), TestCase::QUICK);
+                AddTestCase (new ThreadedSimulatorEventsTestCase (factory, simulatorTypes[i], threadcounts[j]));
               }
           }
       }
   }
 } g_threadedSimulatorTestSuite;
+
+} // namespace ns3

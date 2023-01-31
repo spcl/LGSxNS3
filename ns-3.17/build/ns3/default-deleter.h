@@ -15,7 +15,7 @@ template <typename T>
 struct DefaultDeleter
 {
   inline static void Delete (T *object) {
-      delete object;
+    delete object;
   }
 };
 

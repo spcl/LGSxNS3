@@ -29,6 +29,8 @@ public:
 	uint32_t GetOffset();
 	uint32_t GetReceivingNode();
 	uint32_t GetPersonalTag();
+	uint32_t GetCurrentHop();
+	uint32_t* GetHops();
 	Time GetTimestamp ();
 
 	void SetNodeId (uint32_t node_id);
@@ -36,6 +38,8 @@ public:
 	void SetPersonalTag (uint32_t tag);
 	void SetOffset (uint32_t size);
 	void SetTimestamp (Time t);
+	void SetCurrentHop(uint32_t);
+	void SetHops(uint32_t);
 
 
 
@@ -49,7 +53,8 @@ private:
 	uint32_t personal_tag;
 	uint32_t offset;
 	Time m_timestamp;
-
+	uint32_t hop[10];
+	uint32_t current_hop = 0;
 };
 }
 

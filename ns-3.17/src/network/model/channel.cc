@@ -45,19 +45,18 @@ Channel::GetTypeId (void)
 Channel::Channel ()
   : m_id (0)
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
   m_id = ChannelList::Add (this);
 }
 
 Channel::~Channel ()
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION_NOARGS ();
 }
 
 uint32_t 
 Channel::GetId (void) const
 {
-  NS_LOG_FUNCTION (this);
   return m_id;
 }
 

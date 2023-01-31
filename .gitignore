@@ -14,3 +14,16 @@ doxygen.warnings.log
 ns3_html_theme/static/ns3_version.js
 *.pcap
 *.bin
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix

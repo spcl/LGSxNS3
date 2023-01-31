@@ -1,0 +1,12 @@
+num_ranks 2
+
+rank 0 {
+l1: send 2000b to 1 tag 0
+l2: recv 3000b from 1 tag 0
+}
+
+rank 1 {
+l1: recv 2000b from 0 tag 0
+l2: send 3000b to 0 tag 0
+l2 requires l1
+}

@@ -88,7 +88,7 @@ If everything was succesful NS-3 should be built after several minutes. For more
 
 Once the repository has been downloaded and installed the repository provides a toy TCP or UDP application that can be run using the default run command of NS-3 such as:
 ```
-./waf --run "scratch/ring --goal_filename='pingpong.bin' --protocol='UDP' --packet_size='512'
+./waf --run "scratch/simple_example --goal_filename='pingpong_example.bin' --protocol='UDP' --packet_size='512'"
 ```
 The main difference is that here we specificy a GOAL input file, a protocol and the wanted packet size.
 

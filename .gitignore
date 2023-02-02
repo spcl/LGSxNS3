@@ -14,7 +14,7 @@ doxygen.warnings.log
 ns3_html_theme/static/ns3_version.js
 *.pcap
 *.bin
-
+build/*
 */build/
 
 .vscode/*

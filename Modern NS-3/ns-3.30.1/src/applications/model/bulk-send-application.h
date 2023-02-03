@@ -93,6 +93,11 @@ public:
    */
   void SetMaxBytes (uint64_t maxBytes);
 
+  std::string app_id;
+  void termiante_conn();
+  void prepare_new_send();
+  void SetPairs (std::vector <std::pair<Ipv4Address, int>>);
+
   /**
    * \brief Get the socket this application is attached to.
    * \return pointer to associated socket

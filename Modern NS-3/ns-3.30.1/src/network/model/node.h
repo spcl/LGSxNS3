@@ -203,7 +203,8 @@ public:
   void UnregisterDeviceAdditionListener (DeviceAdditionListener listener);
 
 
-
+  bool isNic = false;
+  
   /**
    * \returns true if checksums are enabled, false otherwise.
    */

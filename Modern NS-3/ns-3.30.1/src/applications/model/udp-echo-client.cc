@@ -111,6 +111,10 @@ UdpEchoClient::SetRemote (Address ip, uint16_t port)
   m_peerPort = port;
 }
 
+void UdpEchoClient::SetPairs (std::vector <std::pair<Ipv4Address, int>> my) {
+  address_pair = my;
+}
+
 void 
 UdpEchoClient::SetRemote (Address addr)
 {

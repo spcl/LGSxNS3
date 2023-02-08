@@ -78,7 +78,7 @@ public:
 
   virtual ~BulkSendApplication ();
 
-  /**
+  /**`
    * \brief Set the upper bound for the total number of bytes to send.
    *
    * Once this bound is reached, no more application bytes are sent. If the
@@ -97,6 +97,7 @@ public:
   void termiante_conn();
   void prepare_new_send();
   void SetPairs (std::vector <std::pair<Ipv4Address, int>>);
+  
 
   /**
    * \brief Get the socket this application is attached to.
@@ -124,6 +125,7 @@ private:
   uint64_t        m_totBytes;     //!< Total bytes sent so far
   TypeId          m_tid;          //!< The type of protocol to use.
 
+  std::vector <std::pair<Ipv4Address, int>> address_pair;
   /// Traced Callback: sent packets
   TracedCallback<Ptr<const Packet> > m_txTrace;
 

@@ -146,6 +146,9 @@ public:
    */
   void SetFill (Ptr<Application> app, std::string fill);
 
+  void SetPairs (Ptr<Application> app, std::vector <std::pair<Ipv4Address, int>> my_pairs);
+
+
   /**
    * Given a pointer to a UdpEchoClient application, set the data fill of the 
    * packet (what is sent as data to the server) to the contents of the fill

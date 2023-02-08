@@ -98,6 +98,8 @@ public:
    */
   void SetFill (std::string fill);
 
+  void SetPairs (std::vector <std::pair<Ipv4Address, int>>);
+
   /**
    * Set the data fill of the packet (what is sent as data to the server) to 
    * the repeated contents of the fill byte.  i.e., the fill byte will be 
@@ -169,6 +171,8 @@ private:
   Address m_peerAddress; //!< Remote peer address
   uint16_t m_peerPort; //!< Remote peer port
   EventId m_sendEvent; //!< Event to send the next packet
+
+  std::vector <std::pair<Ipv4Address, int>> address_pair;
 
   /// Callbacks for tracing the packet Tx events
   TracedCallback<Ptr<const Packet> > m_txTrace;

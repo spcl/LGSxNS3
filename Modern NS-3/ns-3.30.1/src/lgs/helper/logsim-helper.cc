@@ -241,11 +241,11 @@ namespace ns3 {
             }
             if (DEBUG_PRINT)
                 printf("Sending %d packets, size %d, packet size %d, division %d, modulo \n", max_pack, size, global_payload_size, (float)size / global_payload_size);
-            UdpEchoServerHelper server0(port, 1); //Add Priority
+            UdpEchoServerHelper server0(port); //Add Priority
             ApplicationContainer apps0s = server0.Install(nodes.Get(to));
             apps0s.Start (Seconds (0)); // check also this, weird
             apps0s.Stop (Seconds (Simulator::Now().GetSeconds() + 10000)); // check this, seems weird we actually need it
-            UdpEchoClientHelper client0((Address)get_ip_from_node(to), port, 1); //Add Priority
+            UdpEchoClientHelper client0((Address)get_ip_from_node(to), port); //Add Priority
             client0.SetAttribute("MaxPackets", UintegerValue(max_pack));
             client0.SetAttribute("Interval", TimeValue(Seconds (0.0)));
             client0.SetAttribute("PacketSize", UintegerValue(global_payload_size));
@@ -282,8 +282,9 @@ namespace ns3 {
 
             // We need to first create the connection and then start sending.
             } else {
-                if (DEBUG_PRINT)
+                if (DEBUG_PRINT) {
                     printf("Installing App to %d -> %d\n",nodes.Get(from)->GetId(), get_ip_from_node(to).Get()); fflush(stdout);
+                }
                 //uint16_t port = 9;  // well-known echo port number
                 BulkSendHelper source ("ns3::TcpSocketFactory",
                                         InetSocketAddress (get_ip_from_node(to), port));
@@ -370,8 +371,9 @@ namespace ns3 {
                 }
             }
         }*/
-        if (DEBUG_PRINT)
+        if (DEBUG_PRINT) {
             printf("Terminating this"); fflush(stdout);
+        }
         current_time = Simulator::Now().GetNanoSeconds();
         Simulator::Stop(Seconds(1));
         Simulator::Run();

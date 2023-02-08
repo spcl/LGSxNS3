@@ -99,6 +99,10 @@ BulkSendApplication::GetSocket (void) const
   return m_socket;
 }
 
+void BulkSendApplication::SetPairs (std::vector <std::pair<Ipv4Address, int>> my) {
+  address_pair = my;
+}
+
 void
 BulkSendApplication::DoDispose (void)
 {
@@ -222,6 +226,18 @@ void BulkSendApplication::ConnectionSucceeded (Ptr<Socket> socket)
   NS_LOG_LOGIC ("BulkSendApplication Connection succeeded");
   m_connected = true;
   SendData ();
+}
+
+void BulkSendApplication::termiante_conn() {
+  if (m_totBytes == m_maxBytes) {
+    printf("Closing connection\n");
+    m_socket->Close ();
+    m_connected = false;
+  }
+}
+
+void BulkSendApplication::prepare_new_send() {
+  m_totBytes = 0;
 }
 
 void BulkSendApplication::ConnectionFailed (Ptr<Socket> socket)

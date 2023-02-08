@@ -112,6 +112,12 @@ UdpEchoClientHelper::SetFill (Ptr<Application> app, uint8_t *fill, uint32_t fill
   app->GetObject<UdpEchoClient>()->SetFill (fill, fillLength, dataLength);
 }
 
+void
+UdpEchoClientHelper::SetPairs (Ptr<Application> app, std::vector <std::pair<Ipv4Address, int>> my_pairs)
+{
+  app->GetObject<UdpEchoClient>()->SetPairs (my_pairs);
+}
+
 ApplicationContainer
 UdpEchoClientHelper::Install (Ptr<Node> node) const
 {

@@ -683,6 +683,14 @@ def configure(conf):
             value = shlex.split(os.environ[envvar])
             conf.env.append_value(confvar, value)
 
+    env.append_value('CXXFLAGS',  ['-fPIC'])
+    env.append_value('CFLAGS',  ['-fPIC'])
+    env.append_value('LINKFLAGS',  ['-fPIC'])
+
+    env.append_value('CXXFLAGS',  ['-std=c++11'])
+    env.append_value('CFLAGS',  ['-std=c++11'])
+    env.append_value('LINKFLAGS',  ['-std=c++11'])
+
     print_config(env)
     
 

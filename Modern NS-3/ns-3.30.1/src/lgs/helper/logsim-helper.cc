@@ -254,7 +254,7 @@ namespace ns3 {
             client0.SetPairs(apps0c.Get(0), vec_addresses);
             apps0c.Start (Seconds (0)); // check also this, weird
             apps0c.Stop (Seconds (Simulator::Now().GetSeconds() + 10000)); // check this, seems weird we actually need it
-            //port++;
+            port++;
         } else {
             // Check if we have already enstablished a connection for the specific src/dest pair. If we have just get it and update how much data to send.
             std::string to_hash = std::to_string(from) + "@" + std::to_string(to) + "@" + std::to_string(tag);
@@ -276,6 +276,7 @@ namespace ns3 {
                         if (bulk_app->app_id == to_hash) {
                             bulk_app->prepare_new_send();
                             bulk_app->SetAttribute ("MaxBytes", UintegerValue (size));
+                            bulk_app->SetAttribute("Tag", UintegerValue(tag));
                         }
                     }
                 }
@@ -291,6 +292,7 @@ namespace ns3 {
                                         
                 // Set the amount of data to send in bytes.  Zero is unlimited.
                 source.SetAttribute ("MaxBytes", UintegerValue (size));
+                source.SetAttribute("Tag", UintegerValue(tag));
                 sourceApps = source.Install (nodes.Get(from));
                 ns3::Ptr<ns3::Node> node = nodes.Get(from);
                 int num_apps = node->GetNApplications();

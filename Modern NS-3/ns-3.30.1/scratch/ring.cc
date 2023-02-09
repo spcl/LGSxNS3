@@ -45,11 +45,9 @@ int main(int argc, char *argv[])
   cmd.AddValue("goal_filename", "GOAL binary input file", filename_goal);
   cmd.AddValue("protocol", "TCP or UDP", protocol_name);
   cmd.AddValue("packet_size", "Payload Size of a packet", packet_size);
-  cmd.AddValue("k", "Ports Per Switch of a Fattree", k);
   cmd.Parse(argc, argv);
   printf("Filename is %s - Protocol %s\n\n", filename_goal.c_str(), protocol_name.c_str());
   int payload_size = std::stoi(packet_size);
-  int k_ft = std::stoi(k);
   // End Code Reserved for LGS 
 
   Time::SetResolution(Time::NS);

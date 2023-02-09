@@ -1,9 +1,6 @@
 
 # LGSxNS3
 
-> **Warning**
-> The Modern NS-3 repository is temporary not working pending resolution of few compatibility bugs that resulted in weird results during certain simulations.
-
 This work proposes a feeding engine for NS-3 in order to easily enable complex workloads with dependencies. The main motivation behind it is the growing importance of simulating complex deep learning workloads where the communication patterns are complex because of the dependencies between the operations.
 
 Since NS-3 does not provide any support for complex workloads, we propose to use LogGOPSim (LGS) [1] as a feeding engine to NS-3. A custom version of LGS will take care of the dependencies and everything related to the workloads while NS-3 will run as network backend.

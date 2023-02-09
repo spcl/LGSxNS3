@@ -124,6 +124,7 @@ private:
   uint64_t        m_maxBytes;     //!< Limit total number of bytes sent
   uint64_t        m_totBytes;     //!< Total bytes sent so far
   TypeId          m_tid;          //!< The type of protocol to use.
+  uint32_t m_tag;
 
   std::vector <std::pair<Ipv4Address, int>> address_pair;
   /// Traced Callback: sent packets

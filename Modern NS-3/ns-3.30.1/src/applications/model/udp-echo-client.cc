@@ -21,13 +21,19 @@
 #include "ns3/nstime.h"
 #include "ns3/inet-socket-address.h"
 #include "ns3/inet6-socket-address.h"
+#include "ns3/custom_tag.h"
 #include "ns3/socket.h"
 #include "ns3/simulator.h"
 #include "ns3/socket-factory.h"
 #include "ns3/packet.h"
 #include "ns3/uinteger.h"
 #include "ns3/trace-source-accessor.h"
+#include "ns3/ipv4-end-point.h"
 #include "udp-echo-client.h"
+#include "ns3/ipv4-address.h"
+#include "ns3/ipv6-address.h"
+#include "ns3/ipv4.h"
+#include "ns3/ipv4-header.h"
 
 namespace ns3 {
 
@@ -47,6 +53,11 @@ UdpEchoClient::GetTypeId (void)
                    UintegerValue (100),
                    MakeUintegerAccessor (&UdpEchoClient::m_count),
                    MakeUintegerChecker<uint32_t> ())
+    .AddAttribute("Tag",
+				"Tag",
+				UintegerValue(0),
+				MakeUintegerAccessor(&UdpEchoClient::m_tag),
+				MakeUintegerChecker<uint32_t>())
     .AddAttribute ("Interval", 
                    "The time to wait between packets",
                    TimeValue (Seconds (1.0)),
@@ -337,6 +348,19 @@ UdpEchoClient::Send (void)
       //
       p = Create<Packet> (m_size);
     }
+
+
+  CustomDataTag tag;
+  tag.SetReceivingNode (Ipv4Address::ConvertFrom(m_peerAddress).Get());
+  tag.SetPersonalTag (m_tag);
+  Ptr<Node> node = GetNode();
+  Ptr<Ipv4> ipv4 = node->GetObject<Ipv4> (); // Get Ipv4 instance of the node
+  //Ipv4Address addr = ipv4->GetAddress (0, 0).GetLocal().Get() // Get Ipv4InterfaceAddress of xth interface.
+  tag.SetNodeId (ipv4->GetAddress (1, 0).GetLocal().Get());
+  //timestamp is set in the default constructor of the CustomDataTag class as Simulator::Now()
+  //printf("Two innnnnnnterfaces are %d and %d  --- %d %d %d\n",ipv4->GetAddress (1, 0).GetLocal().Get(), Ipv4Address::ConvertFrom(m_peerAddress).Get(), m_count, m_size, 0);
+  //attach the tag to the packet
+  p->AddByteTag (tag);
   Address localAddress;
   m_socket->GetSockName (localAddress);
   // call to the trace sinks before the packet is actually sent,

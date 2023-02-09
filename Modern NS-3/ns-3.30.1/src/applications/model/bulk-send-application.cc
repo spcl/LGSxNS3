@@ -28,8 +28,11 @@
 #include "ns3/packet.h"
 #include "ns3/uinteger.h"
 #include "ns3/trace-source-accessor.h"
+#include "ns3/custom_tag.h"
 #include "ns3/tcp-socket-factory.h"
 #include "bulk-send-application.h"
+#include "ns3/ipv4.h"
+#include "ns3/ipv4-header.h"
 
 namespace ns3 {
 
@@ -48,6 +51,11 @@ BulkSendApplication::GetTypeId (void)
                    UintegerValue (512),
                    MakeUintegerAccessor (&BulkSendApplication::m_sendSize),
                    MakeUintegerChecker<uint32_t> (1))
+    .AddAttribute("Tag",
+				"Tag",
+				UintegerValue(0),
+				MakeUintegerAccessor(&BulkSendApplication::m_tag),
+				MakeUintegerChecker<uint32_t>())
     .AddAttribute ("Remote", "The address of the destination",
                    AddressValue (),
                    MakeAddressAccessor (&BulkSendApplication::m_peer),
@@ -198,6 +206,20 @@ void BulkSendApplication::SendData (void)
 
       NS_LOG_LOGIC ("sending packet at " << Simulator::Now ());
       Ptr<Packet> packet = Create<Packet> (toSend);
+
+    CustomDataTag tag;
+    InetSocketAddress iaddr = InetSocketAddress::ConvertFrom (m_peer);
+    tag.SetReceivingNode (iaddr.GetIpv4().Get());
+    tag.SetPersonalTag (m_tag);
+    Ptr<Node> node = GetNode();
+    Ptr<Ipv4> ipv4 = node->GetObject<Ipv4> (); // Get Ipv4 instance of the node
+    //Ipv4Address addr = ipv4->GetAddress (0, 0).GetLocal().Get() // Get Ipv4InterfaceAddress of xth interface.
+    tag.SetNodeId (ipv4->GetAddress (1, 0).GetLocal().Get());
+    //timestamp is set in the default constructor of the CustomDataTag class as Simulator::Now()
+    //printf("Two innnnnnnterfaces are %d and %d  --- %d %d %d\n",ipv4->GetAddress (1, 0).GetLocal().Get(), Ipv4Address::ConvertFrom(m_peerAddress).Get(), m_count, m_size, 0);
+    //attach the tag to the packet
+    packet->AddByteTag (tag);
+
       int actual = m_socket->Send (packet);
       if (actual > 0)
         {

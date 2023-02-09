@@ -53,6 +53,10 @@ int main(int argc, char *argv[])
   int k_ft = std::stoi(k);
   // End Code Reserved for LGS 
 
+  // Protocol Parameters
+  Config::SetDefault ("ns3::Ipv4GlobalRouting::RandomEcmpRouting",BooleanValue(true)); 
+
+
   // Fat Tree Parameters
   int ports_per_switch = k_ft;
   int num_pods = ports_per_switch;

@@ -220,13 +220,19 @@ Ipv4GlobalRouting::LookupGlobal (Ipv4Address dest, Ptr<NetDevice> oif)
       // ECMP routing is enabled, or always select the first route
       // consistently if random ECMP routing is disabled
       uint32_t selectIndex;
-      if (m_randomEcmpRouting)
+      if (m_randomEcmpRouting && true) {
+          selectIndex = m_rand->GetInteger (0, allRoutes.size ()-1);
+          printf("Using Random ECMP - Selected %d - Possibilities %d\n", selectIndex, allRoutes.size ());
+      } else if (m_randomEcmpRouting)
         {
           selectIndex = m_rand->GetInteger (0, allRoutes.size ()-1);
+          printf("Using Random ECMP - Selected %d - Possibilities %d\n", selectIndex, allRoutes.size ());
+          
         }
       else 
         {
           selectIndex = 0;
+          printf("Using Static ECMP - Selected %d - Possibilities %d\n", selectIndex, allRoutes.size ());
         }
       Ipv4RoutingTableEntry* route = allRoutes.at (selectIndex); 
       // create a Ipv4Route object from the selected routing table entry

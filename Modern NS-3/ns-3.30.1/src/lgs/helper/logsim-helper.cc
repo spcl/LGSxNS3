@@ -10,8 +10,13 @@
 #include "ns3/logsim-helper.h"
 #include "ns3/flow-monitor-module.h"
 #include "ns3/lgs-module.h"
+#include "ns3/tcp-header.h"
+#include "ns3/tcp-option-winscale.h"
+#include "ns3/tcp-option-ts.h"
 #include "ns3/packet-sink.h"
 #include <string>
+#include <iostream>
+#include <fstream>
 #include <utility>
 #define DEBUG_PRINT 1
 
@@ -69,12 +74,15 @@ namespace ns3 {
     void update_active_map(std::string to_hash, int size) {
 
         // Check that the flow actually exists
-        active_sends[to_hash].bytes_left_to_recv = active_sends[to_hash].bytes_left_to_recv - size;
+        active_sends[to_hash].bytes_left_to_recv = active_sends[to_hash].bytes_left_to_recv - 590;
         //printf("Updated is %d\n", active_sends[to_hash].bytes_left_to_recv);
         if (active_sends[to_hash].bytes_left_to_recv <= 0) {
-            active_sends.erase(to_hash);
+            printf("Received, erasing %s\n", to_hash.c_str());
+            //active_sends.erase(to_hash);
         }
     }
+
+    
 
     bool all_sends_delivered() {
         if (DEBUG_PRINT)
@@ -82,34 +90,134 @@ namespace ns3 {
         return active_sends.size() == 0;
     }
 
-    void SentPacketTrace(std::string context, Ptr<const Packet> pkt) {
+    void SentPacketTrace(std::string context, Ptr<Packet> pkt) {
         CustomDataTag tag;
         ns3::Ptr<ns3::Node> node = ns3::NodeList::GetNode(ns3::Simulator::GetContext());
-        printf("\nSent a packet %d at %f, size %d\n", node->GetId(), Simulator::Now().GetSeconds(),  pkt->GetSize());
-        if (pkt->FindFirstMatchingByteTag(tag))
-        {
-        } else {
-            return;
-        }
         if (!node->isNic) {
             return;
         }
+        if (pkt->FindFirstMatchingByteTag(tag))
+        {
+
+            /*
+            ns3::TcpHeader hdr2, hdr1;
+            pkt-> PeekHeader (hdr2);
+            hdr1=hdr2;
+            Ptr<TcpOptionTS> ts;
+            ts = DynamicCast<TcpOptionTS> (hdr1.GetOption (TcpOption::TS));
+
+            ts->SetEcho (0);
+            //ts->SetTimestamp (8);
+            pkt->RemoveAtEnd (hdr2);
+            pkt-> AddHeader (hdr1);
+
+            Ptr<TcpOptionTS> option = CreateObject<TcpOptionTS> ();
+
+            //option->SetTimestamp (TcpOptionTS::NowToTsValue ());
+            option->SetEcho (Simulator::Now().GetNanoSeconds() & 0xFFFFFFFF);
+
+            header.AppendOption (option);
+
+            pkt->*/
+
+
+            Ptr<Packet> q = pkt->Copy();
+            Ptr<Packet> qa = pkt->Copy();
+            //q->EnablePrinting();
+            pkt->Print(std::cout);  //where p is a Ptr<Packet>
+            //pkt->RemoveHeader();
+            PacketMetadata::ItemIterator metadataIterator = q->BeginItem();
+            PacketMetadata::Item item;
+            //q->PeekHeader
+
+            PppHeader pppHeader;
+            pkt->RemoveHeader(pppHeader);
+            Ipv4Header ipHeader;
+            pkt->RemoveHeader(ipHeader);
+            TcpHeader tcpHeader;
+            pkt->RemoveHeader(tcpHeader);
+
+            //tcpHeader.RemoveOpt
+
+            Ptr<TcpOptionTS> option = CreateObject<TcpOptionTS> ();
+            option->SetTimestamp (Simulator::Now().GetNanoSeconds());
+            option->SetEcho (11);
+            printf("Adding TCP TimeStamp %ld %d ---> %d\n", Simulator::Now().GetNanoSeconds(), TcpOptionTS::NowToTsValue (), tcpHeader.m_options.size());
+            
+            //tcpHeader.m_options.erase(tcpHeader.m_options.begin() + 0);
+            tcpHeader.AppendOption (option);
+            tcpHeader.m_options.pop_back();
+            tcpHeader.m_options.pop_back();
+            tcpHeader.m_options.pop_back();
+            printf("Adding TCP TimeStamp %ld %d ---> %d\n", Simulator::Now().GetNanoSeconds(), TcpOptionTS::NowToTsValue (), tcpHeader.m_options.size());
+
+            tcpHeader.AppendOption (option);
+
+            Ptr<const TcpOptionTS> ts;
+            ts = DynamicCast<const TcpOptionTS> (tcpHeader.GetOption (TcpOption::TS));
+
+            pkt->AddHeader(tcpHeader);
+            pkt->AddHeader(ipHeader);
+            pkt->AddHeader(pppHeader);
+            pkt->Print(std::cout);
+
+
+            printf("Sending Time is %ld and %d - Has Something %d", Simulator::Now().GetNanoSeconds(), ts->GetTimestamp(), metadataIterator.HasNext());
+            while (metadataIterator.HasNext())
+            {
+                item = metadataIterator.Next();
+                printf("Iterating %s\n", item.tid.GetName());
+                if(item.tid.GetName() == "ns3::TcpHeader")
+                {
+
+                        
+                    Callback<ObjectBase*> constr = item.tid.GetConstructor();
+                    NS_ASSERT(!constr.IsNull());
+
+                    // Ptr<> and DynamicCast<> won't work here as all headers are from ObjectBase, not Object
+                    ObjectBase *instance = constr();
+                    NS_ASSERT(instance != 0);
+
+                    TcpHeader* tcpHeader = dynamic_cast<TcpHeader*> (instance);
+                    NS_ASSERT(tcpHeader != 0);
+
+                    tcpHeader->Deserialize(item.current);
+                    SequenceNumber32 seq = tcpHeader->GetSequenceNumber(); 
+                    std::cout<<Simulator::Now().GetSeconds()<<"\t" <<pkt->GetSize()<<"\t" << seq<<std::endl;   	
+                    break;
+                }
+            }
+
+            printf("\nSent a packet %d at %f (%ld), size %d\n", node->GetId(), Simulator::Now().GetSeconds(), Simulator::Now().GetNanoSeconds(), pkt->GetSize());
+        } else {
+            return;
+        }
+        
     }
 
 
     void DropTrace(std::string context, Ptr<const Packet> pkt) {
+        ns3::Ptr<ns3::Node> node = ns3::NodeList::GetNode(ns3::Simulator::GetContext());
+        if (DEBUG_PRINT)
+            printf("\nDropped a packet %d at %f, size %d\n", node->GetId(), Simulator::Now().GetSeconds(),  pkt->GetSize());
         CustomDataTag tag;
         if (pkt->FindFirstMatchingByteTag(tag))
         {
         } else {
             return;
         }
-        ns3::Ptr<ns3::Node> node = ns3::NodeList::GetNode(ns3::Simulator::GetContext());
+        
         if (!node->isNic) {
             return;
         }
         if (DEBUG_PRINT)
             printf("\nDropped a packet %d at %f, size %d\n", node->GetId(), Simulator::Now().GetSeconds(),  pkt->GetSize());
+    }
+
+    // RTT Tracking
+    void RTTTrace(std::string context, Ptr<const Packet> pkt) {
+        if (DEBUG_PRINT)
+            printf("\nRTT is %ld\n", time);
     }
 
     // Function to check if the key is present or not using count()
@@ -125,7 +233,7 @@ namespace ns3 {
     {
         ns3::Ptr<ns3::Node> node = ns3::NodeList::GetNode(ns3::Simulator::GetContext());
         if (!node->isNic) {
-            if (DEBUG_PRINT)
+            if (DEBUG_PRINT && pkt->GetSize() > 100)
                 printf("I am Node %d - Am I am final NIC? %d - Size %d\n", node->GetId(), node->isNic, pkt->GetSize());
             return;
         }
@@ -133,28 +241,28 @@ namespace ns3 {
         CustomDataTag tag;
         if (pkt->FindFirstMatchingByteTag(tag))
         {
-            if (DEBUG_PRINT)
+            if (DEBUG_PRINT && pkt->GetSize() > 100)
                 printf("I am Node %d (from %d) - Am I am final NIC? %d - Size %d\n", tag.GetNodeId(), node->GetId(), node->isNic, pkt->GetSize());
         } else {
 
-            if (DEBUG_PRINT)
+            if (DEBUG_PRINT && pkt->GetSize() > 100)
                 printf("No TAG I am Node %d (from %d) - Am I am final NIC? %d - Size %d\n",tag.GetNodeId(), node->GetId(), node->isNic, pkt->GetSize());
             return;
         }
 
         std::string to_hash = std::to_string(get_node_from_ip(Ipv4Address(tag.GetNodeId()))) + "@" + std::to_string(node->GetId()) + "@" + std::to_string(tag.GetPersonalTag());
-        std::unordered_map<std::string, MsgInfo> active_sends_l = get_active_sends();
         if (DEBUG_PRINT)
             printf("Received Hash %s, tag %d, size %d - Left %d || Time %ld - \n", to_hash.c_str(), tag.GetPersonalTag(), pkt->GetSize(), get_active_sends()[to_hash].bytes_left_to_recv, Simulator::Now().GetNanoSeconds());
         int msg_size = get_active_sends()[to_hash].total_bytes_msg;
         update_active_map(to_hash, global_payload_size);
+        std::unordered_map<std::string, MsgInfo> active_sends_l = get_active_sends();
 
         if (start_time_flow.count(to_hash) == 0) {
             start_time_flow[to_hash] = Simulator::Now().GetNanoSeconds();
         }
 
         // Here we have received a message fully, we need to give control back to LGS
-        if (get_active_sends()[to_hash].bytes_left_to_recv <= 0)
+        if (get_active_sends()[to_hash].to_parse == 42 && get_active_sends()[to_hash].bytes_left_to_recv <= 0)
         {
             Simulator::Stop();
             graph_node_properties latest_element;
@@ -173,6 +281,7 @@ namespace ns3 {
             update_latest_receive(latest_element);
             printf("Flow Bandwidth is %f - Size %d - Time %ld\n", (msg_size / (double)(Simulator::Now().GetNanoSeconds() - start_time_flow[to_hash])) * 8, msg_size, (Simulator::Now().GetNanoSeconds() - start_time_flow[to_hash]));
             printf("Msg received, NS-3 giving control to LGS \n");
+            active_sends.erase(to_hash);
             return;
         }
 
@@ -180,15 +289,40 @@ namespace ns3 {
         update_latest_receive(latest_element);
     }
 
+
+    void RttTracer (std::string context, Time oldval, Time newval)
+    {
+        ns3::Ptr<ns3::Node> node = ns3::NodeList::GetNode(ns3::Simulator::GetContext());
+        printf("RTT -> Old %ld, new %ld\n -- Context %s", oldval.GetNanoSeconds(), newval.GetNanoSeconds(), context.c_str());
+
+
+        // Create and open a text file
+        std::string file_name = "rtt" + std::to_string(node->GetId()) + ".txt";
+        std::ofstream MyFile(file_name, std::ios_base::app);
+        
+
+        // Write to the file
+        MyFile << Simulator::Now().GetNanoSeconds() << "," << newval.GetNanoSeconds() << "\n";
+
+        // Close the file
+        MyFile.close();
+    }
+
     void initialize_interface_var(NodeContainer nodesc, Ipv4InterfaceContainer ic, std::string pro, int payload_size) {
         i = ic;
         nodes = nodesc;
         global_payload_size = payload_size;
+        ns3::PacketMetadata::Enable ();
         Config::Connect("/NodeList/*/DeviceList/*/$ns3::PointToPointNetDevice/PhyRxEnd",MakeCallback(&SinkRxTrace));
-        Config::Connect("/NodeList/*/DeviceList/*/$ns3::PointToPointNetDevice/PhyTxBegin",MakeCallback(&SentPacketTrace));
+        Config::Connect("/NodeList/*/DeviceList/*/$ns3::PointToPointNetDevice/PhyTxBegin2",MakeCallback(&SentPacketTrace));
         Config::Connect("/NodeList/*/DeviceList/*/$ns3::PointToPointNetDevice/PhyTxDrop",MakeCallback(&DropTrace));
         Config::Connect("/NodeList/*/DeviceList/*/$ns3::PointToPointNetDevice/PhyRxDrop",MakeCallback(&DropTrace));
         Config::Connect("/NodeList/*/DeviceList/*/$ns3::PointToPointNetDevice/MacTxDrop",MakeCallback(&DropTrace));
+        //"/NodeList/0/$ns3::TcpL4Protocol/SocketList/0/RTT"
+
+        Config::Connect("/NodeList/*/DeviceList/*/$ns3::TcpSocketBase/SocketList/*/RTT",MakeCallback(&RTTTrace));
+
+        
 
         if (pro == "TCP") {
             isTCP = true;
@@ -200,6 +334,27 @@ namespace ns3 {
         } else {
             exit(0);
         }
+    }
+
+
+    static void
+    CwndTracer (std::string context, uint32_t oldval, uint32_t newval)
+    {
+        ns3::Ptr<ns3::Node> node = ns3::NodeList::GetNode(ns3::Simulator::GetContext());
+        printf("Node %d - Moving cwnd from %d to %d - Context %s\n", node->GetId(), oldval,  newval, context.c_str());
+        // Create and open a text file
+        std::string file_name = "my" + std::to_string(node->GetId()) + ".txt";
+        std::ofstream MyFile(file_name, std::ios_base::app);
+        
+
+        // Write to the file
+        MyFile << Simulator::Now().GetNanoSeconds() << "," << newval << "\n";
+
+        // Close the file
+        MyFile.close();
+
+        //Simulator::Schedule (Seconds (0.00001), Config::Connect, "/NodeList/*/$ns3::TcpL4Protocol/SocketList/*/CongestionWindow", MakeCallback(&CwndTracer));
+        //Config::Set (context, IntegerValue (10));
     }
 
     void send_event(int from, int to, int size, int tag, u_int64_t start_time_event) {
@@ -260,13 +415,13 @@ namespace ns3 {
             std::string to_hash = std::to_string(from) + "@" + std::to_string(to) + "@" + std::to_string(tag);
             ApplicationContainer sourceApps;
             if (check_key(active_connections, to_hash) && false) {
-                active_connections.at(to_hash).SetAttribute ("MaxBytes", UintegerValue (size));
+                active_connections.at(to_hash).SetAttribute ("MaxBytes", UintegerValue (size + 400));
                 sourceApps = active_connections.at(to_hash).Install (nodes.Get(from));
                 if (DEBUG_PRINT)
                     printf("Using Stored Connection %d\n", ns3::NodeList::GetNode(ns3::Simulator::GetContext())->GetNApplications());
                 
                 ns3::Ptr<ns3::Node> node = ns3::NodeList::GetNode(ns3::Simulator::GetContext());
-                //node->GetApplication(0)->SetAttribute ("MaxBytes", UintegerValue (size));
+                //node->GetApplication(0)->SetAttribute ("MaxBytes", UintegerValue (size + 400));
 
                 int num_apps = node->GetNApplications();
                 for (int i = 0; i < num_apps; i++) {                
@@ -275,7 +430,7 @@ namespace ns3 {
                         //printf("XXXXXXXXXX %s %s A\n", node->GetApplication(i)->GetInstanceTypeId().GetName().c_str(), bulk_app->app_id.c_str());
                         if (bulk_app->app_id == to_hash) {
                             bulk_app->prepare_new_send();
-                            bulk_app->SetAttribute ("MaxBytes", UintegerValue (size));
+                            bulk_app->SetAttribute ("MaxBytes", UintegerValue (size + 400));
                             bulk_app->SetAttribute("Tag", UintegerValue(tag));
                         }
                     }
@@ -291,7 +446,7 @@ namespace ns3 {
                                         InetSocketAddress (get_ip_from_node(to), port));
                                         
                 // Set the amount of data to send in bytes.  Zero is unlimited.
-                source.SetAttribute ("MaxBytes", UintegerValue (size));
+                source.SetAttribute ("MaxBytes", UintegerValue (size + 400));
                 source.SetAttribute("Tag", UintegerValue(tag));
                 sourceApps = source.Install (nodes.Get(from));
                 ns3::Ptr<ns3::Node> node = nodes.Get(from);
@@ -313,6 +468,9 @@ namespace ns3 {
                 //port++;
             }
         }
+
+        Simulator::Schedule (NanoSeconds (2000), Config::Connect, "/NodeList/*/$ns3::TcpL4Protocol/SocketList/*/CongestionWindow", MakeCallback(&CwndTracer));
+        Simulator::Schedule (NanoSeconds (2000), Config::Connect, "/NodeList/*/$ns3::TcpL4Protocol/SocketList/*/RTT", MakeCallback(&RttTracer));
         
     }
 
@@ -327,6 +485,7 @@ namespace ns3 {
         entry.total_bytes_msg = size;
         entry.offset = my_offset;
         entry.bytes_left_to_recv = size;
+        entry.to_parse = 42;
         active_sends[to_hash] = entry;
         //printf("Hashing 1 is %s -> %d\n", to_hash.c_str(),  active_sends[to_hash]);
         if (DEBUG_PRINT)

@@ -367,6 +367,8 @@ private:
    */
   TracedCallback<Ptr<const Packet> > m_phyTxBeginTrace;
 
+  TracedCallback<Ptr<Packet> > m_phyTxBeginTrace2;
+
   /**
    * The trace source fired when a packet ends the transmission process on
    * the medium.

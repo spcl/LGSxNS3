@@ -123,6 +123,11 @@ PointToPointNetDevice::GetTypeId (void)
                      "transmitting over the channel",
                      MakeTraceSourceAccessor (&PointToPointNetDevice::m_phyTxBeginTrace),
                      "ns3::Packet::TracedCallback")
+    .AddTraceSource ("PhyTxBegin2", 
+                     "Trace source indicating a packet has begun "
+                     "transmitting over the channel",
+                     MakeTraceSourceAccessor (&PointToPointNetDevice::m_phyTxBeginTrace2),
+                     "ns3::Packet::TracedCallback")
     .AddTraceSource ("PhyTxEnd", 
                      "Trace source indicating a packet has been "
                      "completely transmitted over the channel",
@@ -247,6 +252,7 @@ PointToPointNetDevice::TransmitStart (Ptr<Packet> p)
   m_txMachineState = BUSY;
   m_currentPkt = p;
   m_phyTxBeginTrace (m_currentPkt);
+  m_phyTxBeginTrace2 (m_currentPkt);
 
   Time txTime = m_bps.CalculateBytesTxTime (p->GetSize ());
   Time txCompleteTime = txTime + m_tInterframeGap;

@@ -23,6 +23,7 @@ namespace ns3 {
         int identifier;
         u_int64_t start_time;
         int offset;
+        int to_parse;
     };
 
 

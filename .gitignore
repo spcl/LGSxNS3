@@ -12,10 +12,13 @@ doxygen.warnings.log
 */build/
 */source-temp/
 ns3_html_theme/static/ns3_version.js
-*.pcap
+*.pcapcd 
 *.bin
 build/*
 */build/
+*.txt
+*.pcap
+**/build/**
 
 .vscode/*
 !.vscode/settings.json

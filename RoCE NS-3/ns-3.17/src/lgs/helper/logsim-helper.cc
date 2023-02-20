@@ -154,7 +154,7 @@ namespace ns3 {
         }
 
         // Here we have received a message fully, we need to give control back to LGS
-        if (get_active_sends()[to_hash].bytes_left_to_recv <= 0)
+        if (get_active_sends().count(to_hash) > 0 && get_active_sends()[to_hash].bytes_left_to_recv <= 0)
         {
             Simulator::Stop();
             graph_node_properties latest_element;
@@ -260,7 +260,7 @@ namespace ns3 {
             std::string to_hash = std::to_string(from) + "@" + std::to_string(to) + "@" + std::to_string(tag);
             ApplicationContainer sourceApps;
             if (check_key(active_connections, to_hash) && false) {
-                active_connections.at(to_hash).SetAttribute ("MaxBytes", UintegerValue (size));
+                active_connections.at(to_hash).SetAttribute ("MaxBytes", UintegerValue (size + 1000));
                 sourceApps = active_connections.at(to_hash).Install (nodes.Get(from));
                 if (DEBUG_PRINT)
                     printf("Using Stored Connection %d\n", ns3::NodeList::GetNode(ns3::Simulator::GetContext())->GetNApplications());

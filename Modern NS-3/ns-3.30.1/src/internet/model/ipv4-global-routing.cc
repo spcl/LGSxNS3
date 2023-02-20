@@ -225,14 +225,14 @@ Ipv4GlobalRouting::LookupGlobal (Ipv4Address dest, Ptr<NetDevice> oif)
           printf("Using Random ECMP - Selected %d - Possibilities %d\n", selectIndex, allRoutes.size ());
       } else if (m_randomEcmpRouting)
         {
-          selectIndex = m_rand->GetInteger (0, allRoutes.size ()-1);
-          printf("Using Random ECMP - Selected %d - Possibilities %d\n", selectIndex, allRoutes.size ());
+          selectIndex = m_rand->GetInteger (0, allRoutes.size ()-1);         
+          printf("Node %d - Using Random ECMP - Selected %d - Possibilities %d\n", m_ipv4->GetObject<Node> ()->GetId (), selectIndex, allRoutes.size ());
           
         }
       else 
         {
           selectIndex = 0;
-          printf("Using Static ECMP - Selected %d - Possibilities %d\n", selectIndex, allRoutes.size ());
+          printf("Node %d - Using Static ECMP - Selected %d - Possibilities %d\n", m_ipv4->GetObject<Node> ()->GetId (), selectIndex, allRoutes.size ());
         }
       Ipv4RoutingTableEntry* route = allRoutes.at (selectIndex); 
       // create a Ipv4Route object from the selected routing table entry

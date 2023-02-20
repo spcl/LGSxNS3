@@ -104,6 +104,8 @@ TcpVegas::PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked,
     {
       return;
     }
+ //printf("\n\nCurrent RTT %ld - Min RTT %ld - Time %ld\n\n", rtt.GetNanoSeconds(), m_baseRtt.GetNanoSeconds(), Simulator::Now().GetNanoSeconds()); fflush(stdout);
+
 
   m_minRtt = std::min (m_minRtt, rtt);
   NS_LOG_DEBUG ("Updated m_minRtt = " << m_minRtt);
@@ -154,6 +156,8 @@ void
 TcpVegas::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
 {
   NS_LOG_FUNCTION (this << tcb << segmentsAcked);
+
+  printf("Increasing Size 2\n");
 
   if (!m_doingVegasNow)
     {

@@ -21,7 +21,10 @@
 #include "ns3/log.h"
 
 namespace ns3 {
+  
 
+int acked_amount = 512;
+int mtu = 512;
 NS_LOG_COMPONENT_DEFINE ("TcpCongestionOps");
 
 NS_OBJECT_ENSURE_REGISTERED (TcpCongestionOps);
@@ -125,7 +128,7 @@ uint32_t
 TcpNewReno::SlowStart (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
 {
   NS_LOG_FUNCTION (this << tcb << segmentsAcked);
-
+  printf("SlowStart");
   if (segmentsAcked >= 1)
     {
       tcb->m_cWnd += tcb->m_segmentSize;
@@ -172,9 +175,18 @@ TcpNewReno::CongestionAvoidance (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked
 void
 TcpNewReno::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
 {
-  NS_LOG_FUNCTION (this << tcb << segmentsAcked);
 
-  if (tcb->m_cWnd < tcb->m_ssThresh)
+  NS_LOG_FUNCTION (this << tcb << segmentsAcked);
+  printf("Window Size 1 - Was %d\n", tcb->m_cWnd.Get());
+  if (1) {
+
+    if (tcb->m_cWnd.Get() <= 12500) {
+      tcb->m_cWnd += segmentsAcked * 536;
+    }
+    
+
+  } else {
+    if (tcb->m_cWnd < tcb->m_ssThresh)
     {
       segmentsAcked = SlowStart (tcb, segmentsAcked);
     }
@@ -183,6 +195,11 @@ TcpNewReno::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
     {
       CongestionAvoidance (tcb, segmentsAcked);
     }
+  }
+
+  printf("Increase Is %d\n", tcb->m_cWnd.Get());
+
+  
 
   /* At this point, we could have segmentsAcked != 0. This because RFC says
    * that in slow start, we should increase cWnd by min (N, SMSS); if in

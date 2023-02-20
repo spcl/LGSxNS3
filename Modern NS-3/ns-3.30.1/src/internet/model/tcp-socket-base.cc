@@ -1594,6 +1594,8 @@ TcpSocketBase::DupAck ()
     {
       return;
     }
+  printf("No Dup Acks\n");
+  return;
 
   // RFC 6675, Section 5, 3rd paragraph:
   // If the incoming ACK is a duplicate acknowledgment per the definition
@@ -1728,6 +1730,10 @@ TcpSocketBase::ProcessAck (const SequenceNumber32 &ackNumber, bool scoreboardUpd
   bool exitedFastRecovery = false;
   uint32_t oldDupAckCount = m_dupAckCount; // remember the old value
   m_tcb->m_lastAckedSeq = ackNumber; // Update lastAckedSeq
+  int acked_amount = 512;
+  int mtu = 512;
+
+  printf("\n\nCurrentPo RTT %ld - Min RTT %ld - Time %ld\n\n",0,0, Simulator::Now().GetNanoSeconds()); fflush(stdout);
 
   /* In RFC 5681 the definition of duplicate acknowledgment was strict:
    *
@@ -1786,6 +1792,7 @@ TcpSocketBase::ProcessAck (const SequenceNumber32 &ackNumber, bool scoreboardUpd
     {
       // DupAck. Artificially call PktsAcked: after all, one segment has been ACKed.
       m_congestionControl->PktsAcked (m_tcb, 1, m_tcb->m_lastRtt);
+      ////printf("Here increasing 8\n");
     }
   else if (ackNumber > oldHeadSequence)
     {
@@ -1850,6 +1857,7 @@ TcpSocketBase::ProcessAck (const SequenceNumber32 &ackNumber, bool scoreboardUpd
           // previously lost and now successfully received. All others have
           // been processed when they come under the form of dupACKs
           m_congestionControl->PktsAcked (m_tcb, 1, m_tcb->m_lastRtt);
+          //printf("Here increasing 7\n");
           NewAck (ackNumber, m_isFirstPartialAck);
 
           if (m_isFirstPartialAck)
@@ -1877,7 +1885,8 @@ TcpSocketBase::ProcessAck (const SequenceNumber32 &ackNumber, bool scoreboardUpd
       else if (ackNumber < m_recover && m_tcb->m_congState == TcpSocketState::CA_LOSS)
         {
           m_congestionControl->PktsAcked (m_tcb, segsAcked, m_tcb->m_lastRtt);
-          m_congestionControl->IncreaseWindow (m_tcb, segsAcked);
+          //printf("Here increasing 1\n");
+          //m_congestionControl->IncreaseWindow (m_tcb, segsAcked);
 
           NS_LOG_DEBUG (" Cong Control Called, cWnd=" << m_tcb->m_cWnd <<
                         " ssTh=" << m_tcb->m_ssThresh);
@@ -1893,12 +1902,14 @@ TcpSocketBase::ProcessAck (const SequenceNumber32 &ackNumber, bool scoreboardUpd
         {
           if (m_tcb->m_congState == TcpSocketState::CA_OPEN)
             {
+              //printf("Here increasing 2\n");
               m_congestionControl->PktsAcked (m_tcb, segsAcked, m_tcb->m_lastRtt);
             }
           else if (m_tcb->m_congState == TcpSocketState::CA_DISORDER)
             {
               if (segsAcked >= oldDupAckCount)
                 {
+                  //printf("Here increasing 3\n");
                   m_congestionControl->PktsAcked (m_tcb, segsAcked - oldDupAckCount, m_tcb->m_lastRtt);
                 }
 
@@ -1906,7 +1917,7 @@ TcpSocketBase::ProcessAck (const SequenceNumber32 &ackNumber, bool scoreboardUpd
                 {
                   // The network reorder packets. Linux changes the counting lost
                   // packet algorithm from FACK to NewReno. We simply go back in Open.
-                  m_congestionControl->CongestionStateSet (m_tcb, TcpSocketState::CA_OPEN);
+                  //m_congestionControl->CongestionStateSet (m_tcb, TcpSocketState::CA_OPEN);
                   m_tcb->m_congState = TcpSocketState::CA_OPEN;
                   NS_LOG_DEBUG (segsAcked << " segments acked in CA_DISORDER, ack of " <<
                                 ackNumber << " exiting CA_DISORDER -> CA_OPEN");
@@ -1934,6 +1945,7 @@ TcpSocketBase::ProcessAck (const SequenceNumber32 &ackNumber, bool scoreboardUpd
               // (which are the ones we have not passed to PktsAcked and that
               // can increase cWnd)
               segsAcked = static_cast<uint32_t>(ackNumber - m_recover) / m_tcb->m_segmentSize;
+              //printf("Here increasing 4\n");
               m_congestionControl->PktsAcked (m_tcb, segsAcked, m_tcb->m_lastRtt);
               m_congestionControl->CwndEvent (m_tcb, TcpSocketState::CA_EVENT_COMPLETE_CWR);
               m_congestionControl->CongestionStateSet (m_tcb, TcpSocketState::CA_OPEN);
@@ -1952,7 +1964,7 @@ TcpSocketBase::ProcessAck (const SequenceNumber32 &ackNumber, bool scoreboardUpd
               // (which are the ones we have not passed to PktsAcked and that
               // can increase cWnd)
               segsAcked = (ackNumber - m_recover) / m_tcb->m_segmentSize;
-
+              //printf("Here increasing 5\n");
               m_congestionControl->PktsAcked (m_tcb, segsAcked, m_tcb->m_lastRtt);
 
               m_congestionControl->CongestionStateSet (m_tcb, TcpSocketState::CA_OPEN);
@@ -1970,9 +1982,23 @@ TcpSocketBase::ProcessAck (const SequenceNumber32 &ackNumber, bool scoreboardUpd
             }
           else
             {
-              m_congestionControl->IncreaseWindow (m_tcb, segsAcked);
 
-              m_tcb->m_cWndInfl = m_tcb->m_cWnd;
+              if (0) {
+                printf("OLD RTT %ld -- NEW RTT %ld",old_rtt.GetNanoSeconds(), new_rtt.GetNanoSeconds());
+                if (new_rtt.GetNanoSeconds() <= old_rtt.GetNanoSeconds() + 100000) {
+                  printf("Increasing");
+                  m_tcb->m_cWnd += mtu * acked_amount / m_tcb->m_cWnd;
+                } else {
+                  printf("Decreasing");
+                  m_tcb->m_cWnd += (mtu * acked_amount / m_tcb->m_cWnd) / 2;
+                }
+              } else {
+                //m_congestionControl->IncreaseWindow (m_tcb, segsAcked);
+              }
+              printf("New Window size is %d\n",  m_tcb->m_cWnd.Get());
+
+
+              //m_tcb->m_cWndInfl = m_tcb->m_cWnd;
 
               NS_LOG_LOGIC ("Congestion control called: " <<
                             " cWnd: " << m_tcb->m_cWnd <<
@@ -3327,23 +3353,30 @@ TcpSocketBase::EstimateRtt (const TcpHeader& tcpHeader)
   SequenceNumber32 ackSeq = tcpHeader.GetAckNumber ();
   Time m = Time (0.0);
 
+  
+
   // An ack has been received, calculate rtt and log this measurement
   // Note we use a linear search (O(n)) for this since for the common
   // case the ack'ed packet will be at the head of the list
   if (!m_history.empty ())
     {
+      printf("Fail1");
       RttHistory& h = m_history.front ();
       if (!h.retx && ackSeq >= (h.seq + SequenceNumber32 (h.count)))
         { // Ok to use this sample
+        printf("Fail2");
           if (m_timestampEnabled && tcpHeader.HasOption (TcpOption::TS))
             {
+              printf("Fail3");
               Ptr<const TcpOptionTS> ts;
               ts = DynamicCast<const TcpOptionTS> (tcpHeader.GetOption (TcpOption::TS));
               m = TcpOptionTS::ElapsedTimeFromTsValue (ts->GetEcho ());
+              printf("Estimating RTT2 %ld - Time stamp %d\n",  TcpOptionTS::ElapsedTimeFromTsValue (ts->GetEcho ()).GetNanoSeconds(), ts->GetTimestamp());
             }
           else
             {
               m = Simulator::Now () - h.time; // Elapsed time
+              printf("Estimating RTT, %ld\n",  h.time);
             }
         }
     }
@@ -3364,7 +3397,9 @@ TcpSocketBase::EstimateRtt (const TcpHeader& tcpHeader)
       m_rtt->Measurement (m);                // Log the measurement
       // RFC 6298, clause 2.4
       m_rto = Max (m_rtt->GetEstimate () + Max (m_clockGranularity, m_rtt->GetVariation () * 4), m_minRto);
-      m_tcb->m_lastRtt = m_rtt->GetEstimate ();
+      //m_tcb->m_lastRtt = m_rtt->GetEstimate ();
+      m_tcb->m_lastRtt = m;
+      printf("Garbage 1 %d - Garbage 2 %ld\n", m_rtt->GetEstimate ().GetNanoSeconds(), Max (m_rtt->GetEstimate () + Max (m_clockGranularity, m_rtt->GetVariation () * 4), m_minRto).GetNanoSeconds());
       m_tcb->m_minRtt = std::min (m_tcb->m_lastRtt.Get (), m_tcb->m_minRtt);
       NS_LOG_INFO (this << m_tcb->m_lastRtt << m_tcb->m_minRtt);
     }
@@ -4041,6 +4076,7 @@ TcpSocketBase::AddOptionTimestamp (TcpHeader& header)
 
   option->SetTimestamp (TcpOptionTS::NowToTsValue ());
   option->SetEcho (m_timestampToEcho);
+  printf("Adding TCP TimeStamp %ld %d\n", Simulator::Now().GetNanoSeconds(), m_timestampToEcho);
 
   header.AppendOption (option);
   NS_LOG_INFO (m_node->GetId () << " Add option TS, ts=" <<
@@ -4191,7 +4227,10 @@ TcpSocketBase::UpdateBytesInFlight (uint32_t oldValue, uint32_t newValue)
 void
 TcpSocketBase::UpdateRtt (Time oldValue, Time newValue)
 {
+  printf("Updating\n");
   m_lastRttTrace (oldValue, newValue);
+  old_rtt = oldValue;
+  new_rtt = newValue;
 }
 
 void

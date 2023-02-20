@@ -49,6 +49,8 @@ public:
 
   typedef std::list< Ptr<const TcpOption> > TcpOptionList; //!< List of TcpOption
 
+  TcpOptionList m_options;     //!< TcpOption present in the header
+
   /**
    * \brief Print a TCP header into an output stream
    *
@@ -349,7 +351,7 @@ private:
   bool m_goodChecksum;    //!< Flag to indicate that checksum is correct
 
   static const uint8_t m_maxOptionsLen = 40;         //!< Maximum options length
-  TcpOptionList m_options;     //!< TcpOption present in the header
+  
   uint8_t m_optionsLen;        //!< Tcp options length.
 };
 

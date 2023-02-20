@@ -518,9 +518,10 @@ namespace ns3 {
             //printf("Current elem time is %ld while NS3 %ld\n", temp_elem.time, ns3_time); fflush(stdout);
             if (!all_sends_delivered()) {
                 if (temp_elem.time > ns3_time) {
+                    printf("Running until\n");
                     ns3_time = ns3_simulate_until(temp_elem.time, &recev_msg);
                 } else {
-                    //printf("Running until");
+                    printf("Running infinite\n");
                     ns3_time = ns3_simulate_until(std::numeric_limits<int64_t>::max() - Simulator::Now().GetNanoSeconds() - 1, &recev_msg);
                 }
             }

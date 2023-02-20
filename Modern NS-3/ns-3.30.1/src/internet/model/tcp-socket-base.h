@@ -216,6 +216,9 @@ public:
 class TcpSocketBase : public TcpSocket
 {
 public:
+
+  Time old_rtt;
+  Time new_rtt;
   /**
    * Get the type ID.
    * \brief Get the type ID.

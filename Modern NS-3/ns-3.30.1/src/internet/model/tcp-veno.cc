@@ -24,8 +24,15 @@
  * The University of Kansas Lawrence, KS USA.
  */
 
+#include "ns3/simulator.h"
 #include "tcp-veno.h"
 #include "ns3/log.h"
+#include "ns3/nstime.h"
+#include "ns3/node.h"
+#include "ns3/node-list.h"
+#include <iostream>
+#include <fstream>
+#include <utility>
 
 namespace ns3 {
 
@@ -90,15 +97,63 @@ void
 TcpVeno::PktsAcked (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked,
                     const Time& rtt)
 {
+
+  int consecutive_good = 8;
+  int bias = 400;
+  int targetRtt = 1350;
+  int mtu_size = 536;
+
+  
   NS_LOG_FUNCTION (this << tcb << segmentsAcked << rtt);
 
   if (rtt.IsZero ())
     {
+      //printf("\n\nZero ACK - Current RTT %ld - Min RTT %ld - Time %ld\n\n", rtt.GetNanoSeconds(), m_baseRtt.GetNanoSeconds(), Simulator::Now().GetNanoSeconds()); fflush(stdout);
       return;
     }
-
+  //printf("\n\nCurrent RTT %ld - Min RTT %ld - Time %ld\n\n", rtt.GetNanoSeconds(), m_baseRtt.GetNanoSeconds(), Simulator::Now().GetNanoSeconds()); fflush(stdout);
   m_minRtt = std::min (m_minRtt, rtt);
+  //printf("\n\nCurrent RTT %ld - Min RTT %ld\n\n", rtt.GetNanoSeconds(), m_baseRtt.GetNanoSeconds());
   NS_LOG_DEBUG ("Updated m_minRtt= " << m_minRtt);
+
+
+  // Ok, logic here.
+  // 
+
+  // Save RTT
+  // Create and open a text file
+  ns3::Ptr<ns3::Node> node = ns3::NodeList::GetNode(ns3::Simulator::GetContext());
+  std::string file_name = "rtt_veno" + std::to_string(node->GetId()) + ".txt";
+  std::ofstream MyFile(file_name, std::ios_base::app);
+  
+
+  // Write to the file
+  MyFile << Simulator::Now().GetNanoSeconds() << "," << rtt.GetNanoSeconds() << "\n";
+
+  // Close the file
+  MyFile.close();
+
+
+  // Stop saving RTT
+  uint32_t old_w = tcb->m_cWnd.Get();
+  if (rtt.GetNanoSeconds() < targetRtt + bias) {
+    counter++;
+    printf("\n\nIncreasing RTT %ld - Counter %d - Time %ld\n\n", rtt.GetNanoSeconds(), counter, Simulator::Now().GetNanoSeconds()); fflush(stdout);
+    if (counter == consecutive_good) {
+      printf("---- Win Increase -----\n");
+      TcpNewReno::IncreaseWindow(tcb, 1);
+      counter = 0;
+    }
+  } else {
+    printf("\n\nDecreasing RTT %ld - Counter %d - Time %ld\n\n", rtt.GetNanoSeconds(), counter, Simulator::Now().GetNanoSeconds()); fflush(stdout);
+    float denominator =  ((rtt.GetNanoSeconds() - (float)targetRtt) / rtt.GetNanoSeconds());
+    printf("aaaaaaaaaaaaaa Den is %f\n", denominator);
+    float new_amount = tcb->m_cWnd.Get() - ((tcb->m_cWnd.Get() * denominator) / (old_w / (float)mtu_size));
+    //new_amount = new_amount / (old_w / (float)mtu_size);
+    
+    tcb->m_cWnd = (uint32_t)new_amount;
+    printf("---- Win Decrease from %d to %f - %f %d -----\n", old_w,new_amount,   denominator, tcb->m_cWnd.Get());
+  }
 
 
   m_baseRtt = std::min (m_baseRtt, rtt);
@@ -146,7 +201,9 @@ TcpVeno::CongestionStateSet (Ptr<TcpSocketState> tcb,
 void
 TcpVeno::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAcked)
 {
+  return;
   NS_LOG_FUNCTION (this << tcb << segmentsAcked);
+  //printf("Increasing Size 3\n");
 
   // Always calculate m_diff, even if we are not doing Veno now
   uint32_t targetCwnd;

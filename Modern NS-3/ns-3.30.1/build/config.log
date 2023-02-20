@@ -1,6 +1,6 @@
-# project ns (3.30.1) configured on Wed Feb  8 21:05:02 2023 by
+# project ns (3.30.1) configured on Fri Feb 17 17:00:00 2023 by
 # waf 2.0.18 (abi 20, python 3080af0 on linux)
-# using ./waf configure
+# using ./waf configure --disable-python
 #
 ----------------------------------------
 Setting top to
@@ -10,7 +10,7 @@ Setting out to
 /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build
 ----------------------------------------
 Checking for 'gcc' (C compiler)
-find program=['gcc', 'cc'] paths=['/home/tommaso/.vscode-server/bin/e2816fe719a4026ffa1ee0189dc89bdfdbafb164/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='CC' -> ['/usr/bin/gcc']
+find program=['gcc', 'cc'] paths=['/home/tommaso/.vscode-server/bin/441438abd1ac652551dbe4d408dfcec8a499b8bf/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='CC' -> ['/usr/bin/gcc']
 ['/usr/bin/gcc', '-dM', '-E', '-']
 out: #define __SSP_STRONG__ 3
 #define __DBL_MIN_EXP__ (-1021)
@@ -361,14 +361,14 @@ out: #define __SSP_STRONG__ 3
 #define __ATOMIC_ACQ_REL 4
 #define __ATOMIC_RELEASE 3
 
-find program=['ar'] paths=['/home/tommaso/.vscode-server/bin/e2816fe719a4026ffa1ee0189dc89bdfdbafb164/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='AR' -> ['/usr/bin/ar']
+find program=['ar'] paths=['/home/tommaso/.vscode-server/bin/441438abd1ac652551dbe4d408dfcec8a499b8bf/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='AR' -> ['/usr/bin/ar']
 /usr/bin/gcc
 ----------------------------------------
 Checking for cc version
 9.4.0
 ----------------------------------------
 Checking for 'g++' (C++ compiler)
-find program=['g++', 'c++'] paths=['/home/tommaso/.vscode-server/bin/e2816fe719a4026ffa1ee0189dc89bdfdbafb164/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='CXX' -> ['/usr/bin/g++']
+find program=['g++', 'c++'] paths=['/home/tommaso/.vscode-server/bin/441438abd1ac652551dbe4d408dfcec8a499b8bf/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='CXX' -> ['/usr/bin/g++']
 ['/usr/bin/g++', '-dM', '-E', '-']
 out: #define __SSP_STRONG__ 3
 #define __DBL_MIN_EXP__ (-1021)
@@ -719,7 +719,7 @@ out: #define __SSP_STRONG__ 3
 #define __ATOMIC_ACQ_REL 4
 #define __ATOMIC_RELEASE 3
 
-find program=['ar'] paths=['/home/tommaso/.vscode-server/bin/e2816fe719a4026ffa1ee0189dc89bdfdbafb164/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='AR' -> ['/usr/bin/ar']
+find program=['ar'] paths=['/home/tommaso/.vscode-server/bin/441438abd1ac652551dbe4d408dfcec8a499b8bf/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='AR' -> ['/usr/bin/ar']
 /usr/bin/g++
 ------------------------------------------------------
 Checking for compilation flag -Wl,--soname=foo support
@@ -748,291 +748,13 @@ Checking boost includes
 headers not found, please provide a --boost-includes argument (see help)
 from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1: The configuration failed
 ------------------------------------------------------
-Checking for program 'python'
-/usr/bin/python3
-find program=['python'] paths=['/home/tommaso/.vscode-server/bin/e2816fe719a4026ffa1ee0189dc89bdfdbafb164/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='PYTHON' -> ['/usr/bin/python3']
-['/usr/bin/python3', '-c', 'import imp;print(imp.get_tag())']
-out: cpython-38
-
-err: <string>:1: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
-
-['/usr/bin/python3', '-c', 'import sys\nfor x in sys.version_info: print(str(x))']
-out: 3
-8
-10
-final
-0
-
-['/usr/bin/python3', '-c', "from distutils.sysconfig import get_config_var, get_python_lib\n\nprint(repr(get_python_lib(standard_lib=0, prefix='/usr/local') or ''))"]
-out: '/usr/local/lib/python3/dist-packages'
-
-'/usr/local/lib/python3/dist-packages'
-
-['/usr/bin/python3', '-c', "from distutils.sysconfig import get_config_var, get_python_lib\n\nprint(repr(get_python_lib(plat_specific=1, standard_lib=0, prefix='/usr/local') or ''))"]
-out: '/usr/local/lib/python3/dist-packages'
-
-'/usr/local/lib/python3/dist-packages'
-
-------------------------------------------------------
-Checking for python version >= 2.3
-3.8.10
-['/usr/bin/python3', '-c', "from distutils.sysconfig import get_config_var, get_python_lib\n\nprint(repr(get_config_var('prefix') or ''))\nprint(repr(get_config_var('SO') or ''))\nprint(repr(get_config_var('LDFLAGS') or ''))\nprint(repr(get_config_var('LIBDIR') or ''))\nprint(repr(get_config_var('LIBPL') or ''))\nprint(repr(get_config_var('INCLUDEPY') or ''))\nprint(repr(get_config_var('Py_ENABLE_SHARED') or ''))\nprint(repr(get_config_var('MACOSX_DEPLOYMENT_TARGET') or ''))\nprint(repr(get_config_var('LDSHARED') or ''))\nprint(repr(get_config_var('CFLAGS') or ''))\nprint(repr(get_config_var('LDVERSION') or ''))"]
-out: '/usr'
-'.cpython-38-x86_64-linux-gnu.so'
-'-Wl,-Bsymbolic-functions  -Wl,-z,relro -g -fwrapv -O2   '
-'/usr/lib'
-'/usr/lib/python3.8/config-3.8-x86_64-linux-gnu'
-'/usr/include/python3.8'
-1
-''
-'x86_64-linux-gnu-gcc -pthread -shared -Wl,-O1 -Wl,-Bsymbolic-functions -Wl,-Bsymbolic-functions  -Wl,-z,relro -g -fwrapv -O2   '
-'-Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O2 -Wall -g   -fstack-protector-strong -Wformat -Werror=format-security  -g -fwrapv -O2   '
-'3.8'
-
-err: <string>:4: DeprecationWarning: SO is deprecated, use EXT_SUFFIX
-
-'/usr'
-'.cpython-38-x86_64-linux-gnu.so'
-'-Wl,-Bsymbolic-functions  -Wl,-z,relro -g -fwrapv -O2   '
-'/usr/lib'
-'/usr/lib/python3.8/config-3.8-x86_64-linux-gnu'
-'/usr/include/python3.8'
-1
-''
-'x86_64-linux-gnu-gcc -pthread -shared -Wl,-O1 -Wl,-Bsymbolic-functions -Wl,-Bsymbolic-functions  -Wl,-z,relro -g -fwrapv -O2   '
-'-Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O2 -Wall -g   -fstack-protector-strong -Wformat -Werror=format-security  -g -fwrapv -O2   '
-'3.8'
-
-Configuration returned from ['/usr/bin/python3']:
-prefix = '/usr'
-SO = '.cpython-38-x86_64-linux-gnu.so'
-LDFLAGS = '-Wl,-Bsymbolic-functions  -Wl,-z,relro -g -fwrapv -O2   '
-LIBDIR = '/usr/lib'
-LIBPL = '/usr/lib/python3.8/config-3.8-x86_64-linux-gnu'
-INCLUDEPY = '/usr/include/python3.8'
-Py_ENABLE_SHARED = 1
-MACOSX_DEPLOYMENT_TARGET = ''
-LDSHARED = 'x86_64-linux-gnu-gcc -pthread -shared -Wl,-O1 -Wl,-Bsymbolic-functions -Wl,-Bsymbolic-functions  -Wl,-z,relro -g -fwrapv -O2   '
-CFLAGS = '-Wno-unused-result -Wsign-compare -DNDEBUG -g -fwrapv -O2 -Wall -g   -fstack-protector-strong -Wformat -Werror=format-security  -g -fwrapv -O2   '
-LDVERSION = '3.8'
-
-------------------------------------------------------
-python-config
-/usr/bin/python3-config
-find program=['/usr/bin/python3-config', 'python3.8-config', 'python-config-3.8', 'python3.8m-config'] paths=['/home/tommaso/.vscode-server/bin/e2816fe719a4026ffa1ee0189dc89bdfdbafb164/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='PYTHON_CONFIG' -> ['/usr/bin/python3-config']
---------------------------------------------------------------------------
-Asking python-config for pyembed '--cflags --libs --ldflags --embed' flags
-['/usr/bin/python3-config', '--cflags', '--libs', '--ldflags', '--embed']
-out: -I/usr/include/python3.8 -I/usr/include/python3.8  -Wno-unused-result -Wsign-compare -g -fdebug-prefix-map=/build/python3.8-uvizni/python3.8-3.8.10=. -specs=/usr/share/dpkg/no-pie-compile.specs -fstack-protector -Wformat -Werror=format-security  -DNDEBUG -g -fwrapv -O3 -Wall
--lpython3.8 -lcrypt -lpthread -ldl  -lutil -lm -lm 
--L/usr/lib/python3.8/config-3.8-x86_64-linux-gnu -L/usr/lib -lpython3.8 -lcrypt -lpthread -ldl  -lutil -lm -lm 
-
-Unhandled flag '-Wno-unused-result'
-Unhandled flag '-Wsign-compare'
-Unhandled flag '-specs=/usr/share/dpkg/no-pie-compile.specs'
-Unhandled flag '-Wformat'
-Unhandled flag '-Werror=format-security'
-Unhandled flag '-Wall'
-yes
---------------------------------------------------------------------------
-Testing pyembed configuration
-==>
-
-#include <Python.h>
-#ifdef __cplusplus
-extern "C" {
-#endif
-	void Py_Initialize(void);
-	void Py_Finalize(void);
-#ifdef __cplusplus
-}
-#endif
-int main(int argc, char **argv)
-{
-   (void)argc; (void)argv;
-   Py_Initialize();
-   Py_Finalize();
-   return 0;
-}
-
-<==
-[1/2] Compiling [32mbuild/.conf_check_f8ef775e3cf1f559b692147c1226d7ba/test.cpp[0m
-
-['/usr/bin/g++', '-Wall', '-std=c++11', '-g', '-fdebug-prefix-map=/build/python3.8-uvizni/python3.8-3.8.10=.', '-fstack-protector', '-g', '-fwrapv', '-O3', '-I/usr/include/python3.8', '-DNS3_BUILD_PROFILE_DEBUG', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DPYTHONDIR="/usr/local/lib/python3/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python3/dist-packages"', '-DNDEBUG', '../test.cpp', '-c', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_f8ef775e3cf1f559b692147c1226d7ba/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/.conf_check_f8ef775e3cf1f559b692147c1226d7ba/testbuild/testprog[0m
-
-['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_f8ef775e3cf1f559b692147c1226d7ba/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L/usr/lib/python3.8/config-3.8-x86_64-linux-gnu', '-L/usr/lib', '-lpython3.8', '-lcrypt', '-lpthread', '-ldl', '-lutil', '-lm', '-lm', '-lpython3.8', '-lcrypt', '-lpthread', '-ldl', '-lutil', '-lm', '-lm']
-yes
---------------------------------------------------------------------------
-Asking python-config for pyext '--cflags --libs --ldflags' flags
-['/usr/bin/python3-config', '--cflags', '--libs', '--ldflags']
-out: -I/usr/include/python3.8 -I/usr/include/python3.8  -Wno-unused-result -Wsign-compare -g -fdebug-prefix-map=/build/python3.8-uvizni/python3.8-3.8.10=. -specs=/usr/share/dpkg/no-pie-compile.specs -fstack-protector -Wformat -Werror=format-security  -DNDEBUG -g -fwrapv -O3 -Wall
- -lcrypt -lpthread -ldl  -lutil -lm -lm 
--L/usr/lib/python3.8/config-3.8-x86_64-linux-gnu -L/usr/lib  -lcrypt -lpthread -ldl  -lutil -lm -lm 
-
-Unhandled flag '-Wno-unused-result'
-Unhandled flag '-Wsign-compare'
-Unhandled flag '-specs=/usr/share/dpkg/no-pie-compile.specs'
-Unhandled flag '-Wformat'
-Unhandled flag '-Werror=format-security'
-Unhandled flag '-Wall'
-yes
---------------------------------------------------------------------------
-Testing pyext configuration
-==>
-
-#include <Python.h>
-#ifdef __cplusplus
-extern "C" {
-#endif
-	void Py_Initialize(void);
-	void Py_Finalize(void);
-#ifdef __cplusplus
-}
-#endif
-int main(int argc, char **argv)
-{
-   (void)argc; (void)argv;
-   Py_Initialize();
-   Py_Finalize();
-   return 0;
-}
-
-<==
-[1/2] Compiling [32mbuild/.conf_check_eaab107a0ad0c09fe99b0e743a890f00/test.cpp[0m
-
-['/usr/bin/g++', '-Wall', '-std=c++11', '-fPIC', '-g', '-fdebug-prefix-map=/build/python3.8-uvizni/python3.8-3.8.10=.', '-fstack-protector', '-g', '-fwrapv', '-O3', '-I/usr/include/python3.8', '-DNS3_BUILD_PROFILE_DEBUG', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DPYTHONDIR="/usr/local/lib/python3/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python3/dist-packages"', '-DHAVE_PYEMBED=1', '-DNDEBUG', '../test.cpp', '-c', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_eaab107a0ad0c09fe99b0e743a890f00/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/.conf_check_eaab107a0ad0c09fe99b0e743a890f00/testbuild/testprog.cpython-38-x86_64-linux-gnu.so[0m
-
-['/usr/bin/g++', '-shared', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_eaab107a0ad0c09fe99b0e743a890f00/testbuild/testprog.cpython-38-x86_64-linux-gnu.so', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L/usr/lib/python3.8/config-3.8-x86_64-linux-gnu', '-L/usr/lib', '-lcrypt', '-lpthread', '-ldl', '-lutil', '-lm', '-lm', '-lcrypt', '-lpthread', '-ldl', '-lutil', '-lm', '-lm']
-yes
---------------------------------------------------------------------------
-Checking for compilation flag -fvisibility=hidden support
-==>
-int main() { return 0; }
-<==
-[1/1] Compiling [32mbuild/.conf_check_92724e97d2a8131cdbabec48e168cdc4/test.cpp[0m
-
-['/usr/bin/g++', '-Wall', '-std=c++11', '-fvisibility=hidden', '-DNS3_BUILD_PROFILE_DEBUG', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DPYTHONDIR="/usr/local/lib/python3/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python3/dist-packages"', '-DHAVE_PYEMBED=1', '-DHAVE_PYEXT=1', '-DHAVE_PYTHON_H=1', '../test.cpp', '-c', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_92724e97d2a8131cdbabec48e168cdc4/testbuild/test.cpp.1.o']
-ok
---------------------------------------------------------------------------
-Checking for compilation flag -Wno-array-bounds support
-==>
-int main() { return 0; }
-<==
-[1/1] Compiling [32mbuild/.conf_check_92724e97d2a8131cdbabec48e168cdc4/test.cpp[0m
-
-['/usr/bin/g++', '-Wall', '-std=c++11', '-Wno-array-bounds', '-DNS3_BUILD_PROFILE_DEBUG', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DPYTHONDIR="/usr/local/lib/python3/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python3/dist-packages"', '-DHAVE_PYEMBED=1', '-DHAVE_PYEXT=1', '-DHAVE_PYTHON_H=1', '../test.cpp', '-c', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_92724e97d2a8131cdbabec48e168cdc4/testbuild/test.cpp.1.o']
-ok
---------------------------------------------------------------------------
-Checking for pybindgen location
-../pybindgen-0.20.0 (guessed)
---------------------------------------------------------------------------
-Checking for python module 'pybindgen'
-['/usr/bin/python3', '-c', "\nimport pybindgen as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n\tprint(str(version))\nelse:\n\tprint('unknown version')\n"]
-out: 0.20.0
-
-0.20.0
---------------------------------------------------------------------------
-Checking for pybindgen version
-0.20.0
---------------------------------------------------------------------------
-Checking for code snippet
-==>
-
-#include <stdint.h>
-#include <vector>
-
-int main ()
-{
-   std::vector< uint64_t > t = std::vector< unsigned long > ();
-   return 0;
-}
-
-<==
-[1/1] Compiling [32mbuild/.conf_check_08a49a4b8e55fc7f07fb5fa692be882c/test.cpp[0m
-
-['/usr/bin/g++', '-Wall', '-std=c++11', '-DNS3_BUILD_PROFILE_DEBUG', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DPYTHONDIR="/usr/local/lib/python3/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python3/dist-packages"', '-DHAVE_PYEMBED=1', '-DHAVE_PYEXT=1', '-DHAVE_PYTHON_H=1', '../test.cpp', '-c', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_08a49a4b8e55fc7f07fb5fa692be882c/testbuild/test.cpp.1.o']
-yes
---------------------------------------------------------------------------
-Checking for types uint64_t and unsigned long equivalence
-no
---------------------------------------------------------------------------
-Checking for code snippet
-==>
-
-#include <stdint.h>
-#include <vector>
-
-int main ()
-{
-   std::vector< uint64_t > t = std::vector< unsigned long long > ();
-   return 0;
-}
-
-<==
-[1/1] Compiling [32mbuild/.conf_check_ea09671089e1dae4ca451449dba25145/test.cpp[0m
-
-['/usr/bin/g++', '-Wall', '-std=c++11', '-DNS3_BUILD_PROFILE_DEBUG', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DPYTHONDIR="/usr/local/lib/python3/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python3/dist-packages"', '-DHAVE_PYEMBED=1', '-DHAVE_PYEXT=1', '-DHAVE_PYTHON_H=1', '../test.cpp', '-c', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_ea09671089e1dae4ca451449dba25145/testbuild/test.cpp.1.o']
-err: ../test.cpp: In function ‘int main()’:
-../test.cpp:7:37: error: conversion from ‘vector<long long unsigned int>’ to non-scalar type ‘vector<long unsigned int>’ requested
-    7 |    std::vector< uint64_t > t = std::vector< unsigned long long > ();
-      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/bindings/python: Test does not build: Traceback (most recent call last):
-  File "/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/.waf3-2.0.18-ff4ae9f5cc05353d3dc3aeff8854ae69/waflib/Configure.py", line 333, in run_build
-    bld.compile()
-  File "/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/.waf3-2.0.18-ff4ae9f5cc05353d3dc3aeff8854ae69/waflib/Build.py", line 176, in compile
-    raise Errors.BuildError(self.producer.error)
-waflib.Errors.BuildError: Build failed
- -> task in 'testprog' failed with exit status 1 (run with -v to display more information)
-
-no
-from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/bindings/python: The configuration failed
---------------------------------------------------------------------------
-Checking for types uint64_t and unsigned long long equivalence
-yes
---------------------------------------------------------------------------
-Checking for the apidefs that can be used for Python bindings
-gcc-LP64
---------------------------------------------------------------------------
-Checking for internal GCC cxxabi
-==>
-
-# include <cxxabi.h>
-int main ()
-{
-   const abi::__si_class_type_info *_typeinfo  __attribute__((unused)) = NULL;
-   return 0;
-}
-
-<==
-[1/2] Compiling [32mbuild/.conf_check_5fe4043d889dab0109c4a956a6a1046f/test.cpp[0m
-
-['/usr/bin/g++', '-Wall', '-std=c++11', '-DNS3_BUILD_PROFILE_DEBUG', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DPYTHONDIR="/usr/local/lib/python3/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python3/dist-packages"', '-DHAVE_PYEMBED=1', '-DHAVE_PYEXT=1', '-DHAVE_PYTHON_H=1', '../test.cpp', '-c', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_5fe4043d889dab0109c4a956a6a1046f/testbuild/test.cpp.1.o']
-[2/2] Linking [33mbuild/.conf_check_5fe4043d889dab0109c4a956a6a1046f/testbuild/testprog[0m
-
-['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_5fe4043d889dab0109c4a956a6a1046f/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
-complete
---------------------------------------------------------------------------
-Checking for python module 'pygccxml'
-['/usr/bin/python3', '-c', "\nimport pygccxml as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n\tprint(str(version))\nelse:\n\tprint('unknown version')\n"]
-err: /usr/lib/python3/dist-packages/requests/__init__.py:89: RequestsDependencyWarning: urllib3 (1.26.12) or chardet (3.0.4) doesn't match a supported version!
-  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
-Traceback (most recent call last):
-  File "<string>", line 2, in <module>
-ModuleNotFoundError: No module named 'pygccxml'
-
-not found
-from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/bindings/python: Could not find the python module 'pygccxml'
---------------------------------------------------------------------------
 Checking for click location
 not found
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for program 'pkg-config'
 /usr/bin/pkg-config
-find program=['pkg-config'] paths=['/home/tommaso/.vscode-server/bin/e2816fe719a4026ffa1ee0189dc89bdfdbafb164/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='PKGCONFIG' -> ['/usr/bin/pkg-config']
---------------------------------------------------------------------------
+find program=['pkg-config'] paths=['/home/tommaso/.vscode-server/bin/441438abd1ac652551dbe4d408dfcec8a499b8bf/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='PKGCONFIG' -> ['/usr/bin/pkg-config']
+------------------------------------------------------
 Checking for 'gtk+-3.0'
 ['/usr/bin/pkg-config', '--cflags', '--libs', 'gtk+-3.0']
 err: Package gtk+-3.0 was not found in the pkg-config search path.
@@ -1042,7 +764,7 @@ No package 'gtk+-3.0' found
 
 not found
 from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/src/config-store: The configuration failed
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for 'libxml-2.0'
 ['/usr/bin/pkg-config', '--cflags', '--libs', 'libxml-2.0']
 err: Package libxml-2.0 was not found in the pkg-config search path.
@@ -1052,7 +774,7 @@ No package 'libxml-2.0' found
 
 not found
 from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/src/config-store: The configuration failed
---------------------------------------------------------------------------
+------------------------------------------------------
 checking for uint128_t
 ==>
 
@@ -1096,7 +818,7 @@ waflib.Errors.BuildError: Build failed
 
 not found
 from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/src/core: The configuration failed
---------------------------------------------------------------------------
+------------------------------------------------------
 checking for __uint128_t
 ==>
 
@@ -1117,10 +839,10 @@ checking for __uint128_t
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_b56575a1cf831cd90b0428197c1674e0/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking high precision implementation
 128-bit integer (default)
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header stdint.h
 ==>
 #include <stdint.h>
@@ -1138,7 +860,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_87dc75f4d5a4d81d3de89ccc66d2f410/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header inttypes.h
 ==>
 #include <inttypes.h>
@@ -1156,7 +878,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_71902e4db1e1fb33866f0d1c21c77ee8/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header sys/inttypes.h
 ==>
 #include <sys/inttypes.h>
@@ -1185,7 +907,7 @@ waflib.Errors.BuildError: Build failed
 
 not found
 from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/src/core: The configuration failed
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header sys/types.h
 ==>
 #include <sys/types.h>
@@ -1203,7 +925,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_a1f5eb99781ed72d6f7c486a9233dce5/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header sys/stat.h
 ==>
 #include <sys/stat.h>
@@ -1221,7 +943,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_df624e4ac3a4507c87a576ef6f3a3e18/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header dirent.h
 ==>
 #include <dirent.h>
@@ -1239,7 +961,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_b1c5fd3b060471dcecfecbeb771fc0d1/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header stdlib.h
 ==>
 #include <stdlib.h>
@@ -1257,7 +979,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_d5daedb867ba66fc80d74a2aecccd048/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header signal.h
 ==>
 #include <signal.h>
@@ -1275,7 +997,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_6f58fe0695dffc1ac60ac25f8cc70c24/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header pthread.h
 ==>
 
@@ -1295,7 +1017,7 @@ int main ()
 
 ['/usr/bin/g++', '-pthread', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_f7c0fffd93df9fe1a80ff12c0ddf12dd/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header stdint.h
 ==>
 #include <stdint.h>
@@ -1313,7 +1035,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_87dc75f4d5a4d81d3de89ccc66d2f410/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header inttypes.h
 ==>
 #include <inttypes.h>
@@ -1331,7 +1053,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_71902e4db1e1fb33866f0d1c21c77ee8/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header sys/inttypes.h
 ==>
 #include <sys/inttypes.h>
@@ -1360,7 +1082,7 @@ waflib.Errors.BuildError: Build failed
 
 not found
 from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/src/core: The configuration failed
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for library rt
 ==>
 
@@ -1377,7 +1099,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', '-pthread', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_ab72690583f2973c46ae66ff926bf40d/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-lrt']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header sys/ioctl.h
 ==>
 #include <sys/ioctl.h>
@@ -1395,7 +1117,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_a500e4e04895f8dce012d09437dc914c/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header net/if.h
 ==>
 #include <net/if.h>
@@ -1413,7 +1135,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_9f4e1a1ff328a1e8411b45269d846fdb/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header net/ethernet.h
 ==>
 #include <net/ethernet.h>
@@ -1431,7 +1153,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_6e41348326de2b334c4f59de3729bd6a/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header linux/if_tun.h
 ==>
 #include <linux/if_tun.h>
@@ -1449,7 +1171,7 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_8e878b6598e0eb4487674343c0115934/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header netpacket/packet.h
 ==>
 #include <netpacket/packet.h>
@@ -1467,10 +1189,10 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_fff5469bff6310ddc2b775af42c41fc5/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for NSC location
 not found
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for 'sqlite3'
 ['/usr/bin/pkg-config', '--cflags', '--libs', 'sqlite3']
 err: Package sqlite3 was not found in the pkg-config search path.
@@ -1480,7 +1202,7 @@ No package 'sqlite3' found
 
 not found
 from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/src/stats: The configuration failed
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for header linux/if_tun.h
 ==>
 #include <linux/if_tun.h>
@@ -1498,101 +1220,15 @@ int main(int argc, char **argv) {
 
 ['/usr/bin/g++', 'test.cpp.1.o', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_8e878b6598e0eb4487674343c0115934/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic']
 yes
---------------------------------------------------------------------------
-Checking for python module 'gi'
-['/usr/bin/python3', '-c', "\nimport gi as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n\tprint(str(version))\nelse:\n\tprint('unknown version')\n"]
-out: 3.36.0
-
-3.36.0
---------------------------------------------------------------------------
-Checking for python module 'gi.repository.GObject'
-['/usr/bin/python3', '-c', "\nimport gi.repository.GObject as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n\tprint(str(version))\nelse:\n\tprint('unknown version')\n"]
-out: unknown version
-
-ok
---------------------------------------------------------------------------
-Checking for python module 'cairo'
-['/usr/bin/python3', '-c', "\nimport cairo as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n\tprint(str(version))\nelse:\n\tprint('unknown version')\n"]
-err: /usr/lib/python3/dist-packages/requests/__init__.py:89: RequestsDependencyWarning: urllib3 (1.26.12) or chardet (3.0.4) doesn't match a supported version!
-  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
-Traceback (most recent call last):
-  File "<string>", line 2, in <module>
-ModuleNotFoundError: No module named 'cairo'
-
-not found
-from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/src/visualizer: Could not find the python module 'cairo'
---------------------------------------------------------------------------
-Checking for python module 'pygraphviz'
-['/usr/bin/python3', '-c', "\nimport pygraphviz as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n\tprint(str(version))\nelse:\n\tprint('unknown version')\n"]
-err: /usr/lib/python3/dist-packages/requests/__init__.py:89: RequestsDependencyWarning: urllib3 (1.26.12) or chardet (3.0.4) doesn't match a supported version!
-  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
-Traceback (most recent call last):
-  File "<string>", line 2, in <module>
-ModuleNotFoundError: No module named 'pygraphviz'
-
-not found
-from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/src/visualizer: Could not find the python module 'pygraphviz'
---------------------------------------------------------------------------
-Checking for python module 'gi.repository.Gtk'
-['/usr/bin/python3', '-c', "\nimport gi.repository.Gtk as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n\tprint(str(version))\nelse:\n\tprint('unknown version')\n"]
-err: /usr/lib/python3/dist-packages/requests/__init__.py:89: RequestsDependencyWarning: urllib3 (1.26.12) or chardet (3.0.4) doesn't match a supported version!
-  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
-Traceback (most recent call last):
-  File "<string>", line 2, in <module>
-  File "/usr/lib/python3/dist-packages/gi/importer.py", line 132, in load_module
-    raise ImportError('cannot import name %s, '
-ImportError: cannot import name Gtk, introspection typelib not found
-
-not found
-from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/src/visualizer: Could not find the python module 'gi.repository.Gtk'
---------------------------------------------------------------------------
-Checking for python module 'gi.repository.Gdk'
-['/usr/bin/python3', '-c', "\nimport gi.repository.Gdk as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n\tprint(str(version))\nelse:\n\tprint('unknown version')\n"]
-err: /usr/lib/python3/dist-packages/requests/__init__.py:89: RequestsDependencyWarning: urllib3 (1.26.12) or chardet (3.0.4) doesn't match a supported version!
-  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
-Traceback (most recent call last):
-  File "<string>", line 2, in <module>
-  File "/usr/lib/python3/dist-packages/gi/importer.py", line 132, in load_module
-    raise ImportError('cannot import name %s, '
-ImportError: cannot import name Gdk, introspection typelib not found
-
-not found
-from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/src/visualizer: Could not find the python module 'gi.repository.Gdk'
---------------------------------------------------------------------------
-Checking for python module 'gi.repository.Pango'
-['/usr/bin/python3', '-c', "\nimport gi.repository.Pango as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n\tprint(str(version))\nelse:\n\tprint('unknown version')\n"]
-err: /usr/lib/python3/dist-packages/requests/__init__.py:89: RequestsDependencyWarning: urllib3 (1.26.12) or chardet (3.0.4) doesn't match a supported version!
-  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
-Traceback (most recent call last):
-  File "<string>", line 2, in <module>
-  File "/usr/lib/python3/dist-packages/gi/importer.py", line 132, in load_module
-    raise ImportError('cannot import name %s, '
-ImportError: cannot import name Pango, introspection typelib not found
-
-not found
-from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/src/visualizer: Could not find the python module 'gi.repository.Pango'
---------------------------------------------------------------------------
-Checking for python module 'gi.repository.GooCanvas'
-['/usr/bin/python3', '-c', "\nimport gi.repository.GooCanvas as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n\tprint(str(version))\nelse:\n\tprint('unknown version')\n"]
-err: /usr/lib/python3/dist-packages/requests/__init__.py:89: RequestsDependencyWarning: urllib3 (1.26.12) or chardet (3.0.4) doesn't match a supported version!
-  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
-Traceback (most recent call last):
-  File "<string>", line 2, in <module>
-  File "/usr/lib/python3/dist-packages/gi/importer.py", line 132, in load_module
-    raise ImportError('cannot import name %s, '
-ImportError: cannot import name GooCanvas, introspection typelib not found
-
-not found
-from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/src/visualizer: Could not find the python module 'gi.repository.GooCanvas'
---------------------------------------------------------------------------
+------------------------------------------------------
 Checking for program 'sudo'
 /usr/bin/sudo
-find program=['sudo'] paths=['/home/tommaso/.vscode-server/bin/e2816fe719a4026ffa1ee0189dc89bdfdbafb164/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='SUDO' -> ['/usr/bin/sudo']
---------------------------------------------------------------------------
+find program=['sudo'] paths=['/home/tommaso/.vscode-server/bin/441438abd1ac652551dbe4d408dfcec8a499b8bf/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='SUDO' -> ['/usr/bin/sudo']
+------------------------------------------------------
 Checking for program 'valgrind'
 /usr/bin/valgrind
-find program=['valgrind'] paths=['/home/tommaso/.vscode-server/bin/e2816fe719a4026ffa1ee0189dc89bdfdbafb164/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='VALGRIND' -> ['/usr/bin/valgrind']
---------------------------------------------------------------------------
+find program=['valgrind'] paths=['/home/tommaso/.vscode-server/bin/441438abd1ac652551dbe4d408dfcec8a499b8bf/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='VALGRIND' -> ['/usr/bin/valgrind']
+------------------------------------------------------
 Checking for 'gsl'
 ['/usr/bin/pkg-config', '--cflags', '--libs', 'gsl']
 err: Package gsl was not found in the pkg-config search path.
@@ -1602,12 +1238,12 @@ No package 'gsl' found
 
 not found
 from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1: The configuration failed
---------------------------------------------------------------------------
+------------------------------------------------------
 libgcrypt-config
 not found
-find program=['libgcrypt-config'] paths=['/home/tommaso/.vscode-server/bin/e2816fe719a4026ffa1ee0189dc89bdfdbafb164/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='LIBGCRYPT_CONFIG' -> None
+find program=['libgcrypt-config'] paths=['/home/tommaso/.vscode-server/bin/441438abd1ac652551dbe4d408dfcec8a499b8bf/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='LIBGCRYPT_CONFIG' -> None
 from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1: Could not find the program ['libgcrypt-config']
---------------------------------------------------------------------------
+-------------------------------------------------------
 Checking for compilation flag -fstrict-aliasing support
 ==>
 int main() { return 0; }
@@ -1616,7 +1252,7 @@ int main() { return 0; }
 
 ['/usr/bin/gcc', '-fstrict-aliasing', '-DNS3_BUILD_PROFILE_DEBUG', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '-DHAVE_PACKET_H=1', '-DHAVE_IF_TUN_H=1', '../test.c', '-c', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_9c1e184cb7a8ee8b2d99ea7e4214752d/testbuild/test.c.1.o']
 ok
---------------------------------------------------------------------------
+-------------------------------------------------------
 Checking for compilation flag -Wstrict-aliasing support
 ==>
 int main() { return 0; }
@@ -1625,8 +1261,8 @@ int main() { return 0; }
 
 ['/usr/bin/gcc', '-Wstrict-aliasing', '-DNS3_BUILD_PROFILE_DEBUG', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DHAVE_SYS_IOCTL_H=1', '-DHAVE_IF_NETS_H=1', '-DHAVE_NET_ETHERNET_H=1', '-DHAVE_PACKET_H=1', '-DHAVE_IF_TUN_H=1', '../test.c', '-c', '-o/home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1/build/.conf_check_9c1e184cb7a8ee8b2d99ea7e4214752d/testbuild/test.c.1.o']
 ok
---------------------------------------------------------------------------
+-------------------------------------------------------
 Checking for program 'doxygen'
 not found
-find program=['doxygen'] paths=['/home/tommaso/.vscode-server/bin/e2816fe719a4026ffa1ee0189dc89bdfdbafb164/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='DOXYGEN' -> None
+find program=['doxygen'] paths=['/home/tommaso/.vscode-server/bin/441438abd1ac652551dbe4d408dfcec8a499b8bf/bin/remote-cli', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games', '/usr/local/games', '/usr/lib/wsl/lib', '/mnt/c/WINDOWS/system32', '/mnt/c/WINDOWS', '/mnt/c/WINDOWS/System32/Wbem', '/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/', '/mnt/c/WINDOWS/System32/OpenSSH/', '/mnt/c/Users/a-tbonato/AppData/Local/Microsoft/WindowsApps', '/mnt/c/Users/a-tbonato/AppData/Local/Programs/Microsoft VS Code/bin', '/snap/bin'] var='DOXYGEN' -> None
 from /home/tommaso/OriginalRDMANS3/ns-allinone-3.17/Modern NS-3/ns-3.30.1: Could not find the program ['doxygen']

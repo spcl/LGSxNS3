@@ -168,6 +168,8 @@ private:
   bool m_inc;                        //!< If true, cwnd needs to be incremented
   uint32_t m_ackCnt;                 //!< Number of received ACK
   uint32_t m_beta;                   //!< Threshold for congestion detection
+  bool last_packets[8] = { 0 };      // Check last 8 packets
+  int counter = 0;
 };
 
 } // namespace ns3

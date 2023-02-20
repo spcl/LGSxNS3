@@ -54,7 +54,11 @@ int main(int argc, char *argv[])
   // End Code Reserved for LGS 
 
   // Protocol Parameters
-  Config::SetDefault ("ns3::Ipv4GlobalRouting::RandomEcmpRouting",BooleanValue(true)); 
+  Config::SetDefault ("ns3::Ipv4GlobalRouting::RandomEcmpRouting",BooleanValue(false)); 
+  Config::SetDefault("ns3::TcpL4Protocol::SocketType", StringValue("ns3::TcpVeno"));
+  Config::SetDefault ("ns3::TcpSocket::DelAckCount", UintegerValue (1));
+  //Config::SetDefault ("ns3::TcpSocket::InitialCwnd", UintegerValue (1));
+
 
 
   // Fat Tree Parameters
@@ -83,8 +87,9 @@ int main(int argc, char *argv[])
   int ip2 = 1; int ip1 = 1;
   sprintf(ipstring, "10.%d.%d.0", ip1, ip2);
   PointToPointHelper pointToPoint;
-  pointToPoint.SetDeviceAttribute ("DataRate", StringValue ("400Gbps"));
-  pointToPoint.SetChannelAttribute ("Delay", StringValue ("80ns"));
+  pointToPoint.SetDeviceAttribute ("DataRate", StringValue ("100Gbps"));
+  pointToPoint.SetChannelAttribute ("Delay", StringValue ("100ns"));
+  //pointToPoint.SetQueue ("ns3::DropTailQueue<Packet>", "MaxSize", QueueSizeValue (QueueSize ("1000p"))); // p in 100p stands for packets
 
   // Connect Hosts to edge switches (edge switches start right after hosts in the node list)
   int edge_host_idx = 0 + total_supported_hosts;
